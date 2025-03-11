@@ -16,7 +16,7 @@ const home = () => {
         <Image source={ImgWeather} resizeMode="contain" />
 
         <View style={tw`justify-center items-center gap-3 my-8`}>
-          <Text style={tw`text-deepBlue text-3xl font-NunitoSansBold`}>
+          <Text style={tw`text-deepBlue text-3xl font-NunitoSansExtraBold`}>
             Book. Drive. Earn
           </Text>
           <Text

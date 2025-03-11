@@ -1,5 +1,3 @@
-const plugin = require("tailwindcss/plugin");
-
 module.exports = {
   theme: {
     screens: {
@@ -33,11 +31,12 @@ module.exports = {
         primary900: "#323D76",
         deepBlue: "#101E36",
         deepBlue50: "#E8EAED",
+        deepBlue300: "#172B4D",
 
         success600: "#5BB659",
 
         Warning500: "#EAD852",
-        base: "#F0F5FF",
+        base: "#FFFFFF",
         baseCircle: "rgba(174, 234, 0, 0.2)",
         baseCircleTwo: "rgba(85, 170, 202, 0.2)",
         danger600: "#DC3545",
@@ -68,19 +67,4 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    plugin(({ addUtilities }) => {
-      addUtilities({
-        ".btn": {
-          padding: 3,
-          borderRadius: 10,
-          textTransform: `uppercase`,
-          backgroundColor: `#333`,
-        },
-        ".resize-repeat": {
-          resizeMode: `repeat`,
-        },
-      });
-    }),
-  ],
 };
