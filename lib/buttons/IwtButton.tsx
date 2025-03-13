@@ -67,7 +67,10 @@ const IwtButton = ({
 
       {title && (
         <Text
-          style={[tw`text-white font-NunitoSansBold text-base `, titleStyle]}
+          style={[
+            tw`text-white font-NunitoSansSemiBold text-base `,
+            titleStyle,
+          ]}
         >
           {title}
         </Text>

@@ -11,7 +11,7 @@ import React from "react";
 const home = () => {
   const route = useRouter();
   return (
-    <View style={tw`flex-1`}>
+    <View style={tw`flex-1 bg-base`}>
       <View style={tw`flex-1 `}>
         <Image source={ImgWeather} resizeMode="contain" />
 

@@ -1,7 +1,7 @@
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import { ActivityIndicator, Image, View } from "react-native";
+import { ActivityIndicator, Image, StatusBar, View } from "react-native";
 
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
@@ -40,6 +40,7 @@ export default function App() {
         color="white"
         style={tw`absolute bottom-16`}
       />
+      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
     </View>
   );
 }
