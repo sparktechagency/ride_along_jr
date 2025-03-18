@@ -9,16 +9,25 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           statusBarAnimation: "fade",
-          statusBarStyle: "light",
-          statusBarBackgroundColor: PrimaryColor,
+          statusBarStyle: "dark",
+          statusBarBackgroundColor: "white",
           // animation: "slide_from_right",
+
           headerShown: false,
         }}
       >
-        <Stack.Screen name="index" />
+        <Stack.Screen
+          name="index"
+          options={{
+            statusBarAnimation: "fade",
+            statusBarStyle: "light",
+            statusBarBackgroundColor: PrimaryColor,
+          }}
+        />
         <Stack.Screen name="home/index" />
         <Stack.Screen name="auth/login" />
         <Stack.Screen name="auth/register" />
+        <Stack.Screen name="auth/otp_verify" />
         <Stack.Screen name="terms_and_conditions" />
         <Stack.Screen name="privacy_policy" />
       </Stack>

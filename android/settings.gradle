@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'ride_along_jr'
+rootProject.name = 'Ride Along JR'
 
 dependencyResolutionManagement {
   versionCatalogs {

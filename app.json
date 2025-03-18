@@ -1,8 +1,12 @@
 {
   "expo": {
-    "name": "ride_along_jr",
+    "name": "Ride Along JR",
     "slug": "ride_along_jr",
     "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -33,13 +37,20 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#5c7b7e",
-          "enableFullScreenImage_legacy" : true
-      
+          "enableFullScreenImage_legacy": true
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f8c3b1c9-a1bd-4e9c-9e5b-27e68c899b3a"
+      }
     }
   }
 }

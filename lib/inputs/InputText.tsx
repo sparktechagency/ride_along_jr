@@ -1,12 +1,15 @@
 import {
   Animated,
   Easing,
+  NativeSyntheticEvent,
   Text,
   TextInput,
+  TextInputFocusEventData,
   TouchableOpacity,
   View,
 } from "react-native";
 
+import { IconSmallErrorWarring } from "@/assets/icon/Icon";
 import React from "react";
 import { SvgXml } from "react-native-svg";
 import tw from "../tailwind";
@@ -14,43 +17,44 @@ import tw from "../tailwind";
 interface InputTextProps {
   onPress?: () => void;
   svgFirstIcon?: string;
-  svgSecondIcon?: string;
-  svgSecondOnPress?: () => void;
-
-  textInputProps?: InputTextProps & { secureTextEntry?: boolean };
-
-  containerStyle?: any;
   fieldStyle?: any;
-  Component?: React.ReactNode;
   focusSTyle?: any;
-  ref?: any;
   label?: string;
-  labelStyle?: any;
   required?: boolean;
-  errorText?: string;
-  touched?: boolean;
-  placeholderStyle?: any;
+  labelStyle?: any;
+  svgSecondIcon?: string;
   placeholder?: string;
+  textInputProps?: any;
+  svgSecondOnPress?: () => void;
   textXValue?: number;
+  svgSecondStyle?: any;
+  errorText?: string;
+  onFocus?: () => void;
+  onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+  onChangeText?: (text: string) => void;
+  value?: string;
+  touched?: boolean;
 }
 const InputText = ({
   onPress,
   svgFirstIcon,
-  containerStyle,
   fieldStyle,
   focusSTyle,
-  Component,
-  ref,
   label,
-  errorText,
   required,
-  touched,
   labelStyle,
   svgSecondIcon,
   placeholder,
   textXValue = -28,
   textInputProps,
+  errorText,
+  onBlur,
+  onChangeText,
+  onFocus,
+  svgSecondStyle,
   svgSecondOnPress,
+  value,
+  touched,
 }: InputTextProps) => {
   const [focus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
@@ -67,16 +71,22 @@ const InputText = ({
     setFocus(true);
   };
   const handleBlur = () => {
-    if (!text) {
-      Animated.timing(textY.current, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start();
-    }
+    Animated.timing(textY.current, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
     setFocus(false);
   };
+
+  React.useEffect(() => {
+    if (value?.trim().length) {
+      handleFocus();
+    } else {
+      handleBlur();
+    }
+  }, [value]);
 
   const textX = textY.current.interpolate({
     inputRange: [textXValue, 0],
@@ -86,11 +96,6 @@ const InputText = ({
   const textScale = textY.current.interpolate({
     inputRange: [-28, 0],
     outputRange: [0.8, 1],
-    extrapolate: "clamp",
-  });
-  const textBgOpacity = textY.current.interpolate({
-    inputRange: [-28, 0],
-    outputRange: [1, 0],
     extrapolate: "clamp",
   });
 
@@ -109,8 +114,9 @@ const InputText = ({
 
       <View
         style={[
-          tw`flex-row w-full border items-center  px-4  border-gray-300 rounded-full  h-14 `,
-          focus && focusSTyle,
+          tw`flex-row w-full border items-center  px-4  ${
+            errorText && touched ? "border-red-500" : " border-gray-300"
+          }  rounded-full  h-14 `,
         ]}
       >
         {svgFirstIcon && <SvgXml xml={svgFirstIcon} />}
@@ -119,7 +125,7 @@ const InputText = ({
           style={[
             tw`absolute  bg-white rounded-full text-base font-NunitoSansRegular  py-2 px-2 
               
-              text-gray-400
+             ${errorText && touched ? "text-red-500" : "text-gray-400"} 
              `,
             fieldStyle,
 
@@ -135,13 +141,20 @@ const InputText = ({
           {placeholder}
         </Animated.Text>
         <TextInput
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onChangeText={(text) => {
-            setText(text);
+          onFocus={() => {
+            handleFocus();
+            onFocus && onFocus();
+          }}
+          onBlur={(e) => {
+            onBlur && onBlur(e);
           }}
           style={tw`flex-1 px-2 text-base font-NunitoSansSemiBold`}
           {...textInputProps}
+          value={value || text}
+          onChangeText={(text) => {
+            setText(text);
+            onChangeText && onChangeText(text);
+          }}
         />
         {svgSecondIcon && (
           <TouchableOpacity
@@ -152,6 +165,12 @@ const InputText = ({
           </TouchableOpacity>
         )}
       </View>
+      {errorText && touched && (
+        <View style={tw`px-2 py-1 flex-row gap-1 items-center`}>
+          <SvgXml xml={IconSmallErrorWarring} />
+          <Text style={tw`text-red-500 text-xs`}>{errorText}</Text>
+        </View>
+      )}
     </View>
   );
 };
