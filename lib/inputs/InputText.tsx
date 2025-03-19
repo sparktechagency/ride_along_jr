@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TextInputFocusEventData,
+  TextInputProps,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -24,7 +25,7 @@ interface InputTextProps {
   labelStyle?: any;
   svgSecondIcon?: string;
   placeholder?: string;
-  textInputProps?: any;
+  textInputProps?: TextInputProps;
   svgSecondOnPress?: () => void;
   textXValue?: number;
   svgSecondStyle?: any;
@@ -34,6 +35,8 @@ interface InputTextProps {
   onChangeText?: (text: string) => void;
   value?: string;
   touched?: boolean;
+  containerLayoutStyle?: any;
+  containerStyle?: any;
 }
 const InputText = ({
   onPress,
@@ -55,6 +58,8 @@ const InputText = ({
   svgSecondOnPress,
   value,
   touched,
+  containerLayoutStyle,
+  containerStyle,
 }: InputTextProps) => {
   const [focus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
@@ -100,7 +105,7 @@ const InputText = ({
   });
 
   return (
-    <View style={tw``}>
+    <View style={[tw``, containerLayoutStyle]}>
       {label && (
         <Text
           style={[
@@ -117,29 +122,33 @@ const InputText = ({
           tw`flex-row w-full border items-center  px-4  ${
             errorText && touched ? "border-red-500" : " border-gray-300"
           }  rounded-full  h-14 `,
+          containerStyle,
         ]}
       >
         {svgFirstIcon && <SvgXml xml={svgFirstIcon} />}
-        <Animated.Text
-          numberOfLines={1}
-          style={[
-            tw`absolute  bg-white rounded-full text-base font-NunitoSansRegular  py-2 px-2 
+        {placeholder && (
+          <Animated.Text
+            numberOfLines={1}
+            style={[
+              tw`absolute  bg-white rounded-full text-base font-NunitoSansRegular  py-2 px-2 
               
              ${errorText && touched ? "text-red-500" : "text-gray-400"} 
              `,
-            fieldStyle,
+              fieldStyle,
 
-            {
-              transform: [
-                { translateY: textY.current },
-                { translateX: textX },
-                { scale: textScale },
-              ],
-            },
-          ]}
-        >
-          {placeholder}
-        </Animated.Text>
+              {
+                transform: [
+                  { translateY: textY.current },
+                  { translateX: textX },
+                  { scale: textScale },
+                ],
+              },
+            ]}
+          >
+            {placeholder}
+          </Animated.Text>
+        )}
+
         <TextInput
           onFocus={() => {
             handleFocus();

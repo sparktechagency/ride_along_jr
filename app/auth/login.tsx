@@ -47,7 +47,7 @@ const login = () => {
           <BackButton onPress={() => router.back()} />
           <View style={tw`px-4 gap-5 pt-2`}>
             <Text
-              style={tw`text-3xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
+              style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
             >
               Welcome to Ride Along JR!
             </Text>

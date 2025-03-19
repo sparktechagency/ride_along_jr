@@ -24,12 +24,21 @@ export default function RootLayout() {
             statusBarBackgroundColor: PrimaryColor,
           }}
         />
-        <Stack.Screen name="home/index" />
+        <Stack.Screen name="welcome" />
         <Stack.Screen name="auth/login" />
         <Stack.Screen name="auth/register" />
         <Stack.Screen name="auth/otp_verify" />
+        <Stack.Screen name="auth/name" />
         <Stack.Screen name="terms_and_conditions" />
         <Stack.Screen name="privacy_policy" />
+        <Stack.Screen
+          name="search"
+          options={{
+            presentation: "formSheet",
+            sheetAllowedDetents: "fitToContents",
+            contentStyle: tw`bg-transparent`,
+          }}
+        />
       </Stack>
     </SafeAreaView>
   );

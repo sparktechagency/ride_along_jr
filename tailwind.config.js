@@ -20,25 +20,20 @@ module.exports = {
       },
 
       colors: {
-        primary40: "rgba(153, 204, 223, 0.3)",
-        primary50: "rgba(85, 170, 202, 0.2)",
-        primary800: "rgba(9, 94, 126, 1)",
-        primary900: "rgba(0, 43, 75, 0.3)",
-        primary100: "#99CCDF",
-        primary500: "#55AACA",
-        primary600: "rgba(69, 69, 69, 0.3)",
         primary: "#5c7b7e",
         primary900: "#323D76",
         deepBlue: "#101E36",
         deepBlue50: "#E8EAED",
+        deepBlue200: "#3E4F6B",
         deepBlue300: "#172B4D",
+        deepBlue400: "#101E36",
+        brand400: "#405658",
 
         success600: "#5BB659",
 
         Warning500: "#EAD852",
         base: "#FFFFFF",
-        baseCircle: "rgba(174, 234, 0, 0.2)",
-        baseCircleTwo: "rgba(85, 170, 202, 0.2)",
+
         danger600: "#DC3545",
         danger50: "#FEF2F2",
 

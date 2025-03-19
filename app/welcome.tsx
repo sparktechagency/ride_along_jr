@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React from "react";
 
-const home = () => {
+const welcome = () => {
   const route = useRouter();
   return (
     <View style={tw`flex-1 bg-base`}>
@@ -16,7 +16,7 @@ const home = () => {
         <Image source={ImgWeather} resizeMode="contain" />
 
         <View style={tw`justify-center items-center gap-3 my-8`}>
-          <Text style={tw`text-deepBlue text-3xl font-NunitoSansExtraBold`}>
+          <Text style={tw`text-deepBlue text-4xl font-NunitoSansExtraBold`}>
             Book. Drive. Earn
           </Text>
           <Text
@@ -32,7 +32,7 @@ const home = () => {
           title="Need to book a ride for my kid"
           svg={IconUserWhite}
           onPress={async () => {
-            await AsyncStorage.setItem("role", "driver");
+            await AsyncStorage.setItem("role", "passenger");
             route.push("/auth/login");
           }}
         />
@@ -42,7 +42,7 @@ const home = () => {
           containerStyle={tw`mt-4 bg-deepBlue50 `}
           titleStyle={tw`text-black text-base `}
           onPress={async () => {
-            await AsyncStorage.setItem("role", "passenger");
+            await AsyncStorage.setItem("role", "driver");
             route.push("/auth/login");
           }}
         />
@@ -51,4 +51,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default welcome;

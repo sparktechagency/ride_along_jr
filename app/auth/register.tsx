@@ -47,7 +47,7 @@ const register = () => {
           <BackButton onPress={() => router.back()} />
           <View style={tw`px-4 gap-5 pt-2`}>
             <Text
-              style={tw`text-3xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
+              style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
             >
               Booking a fun ride for your kid
             </Text>
@@ -120,7 +120,7 @@ const register = () => {
                   </View>
                 </View>
 
-                <View style={tw`px-4 flex-row items-center mt-5 gap-2 `}>
+                <View style={tw`px-4 flex-row items-center mt-8 gap-2 `}>
                   <Checkbox
                     value={checkBox}
                     onValueChange={setCheckBox}
