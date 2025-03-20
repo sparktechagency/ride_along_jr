@@ -1,7 +1,7 @@
-import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
-import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import tw from "@/lib/tailwind";
 
 export default function RootLayout() {
   return (

@@ -1,12 +1,12 @@
 import { IconCardBlack, IconUserWhite } from "@/assets/icon/Icon";
 import { Image, Text, View } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ImgWeather } from "@/assets/images";
 import IwtButton from "@/lib/buttons/IwtButton";
-import tw from "@/lib/tailwind";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
 import React from "react";
+import tw from "@/lib/tailwind";
+import { useRouter } from "expo-router";
 
 const welcome = () => {
   const route = useRouter();
@@ -32,8 +32,9 @@ const welcome = () => {
           title="Need to book a ride for my kid"
           svg={IconUserWhite}
           onPress={async () => {
-            await AsyncStorage.setItem("role", "passenger");
-            route.push("/auth/login");
+            // await AsyncStorage.setItem("role", "passenger");
+            // route.push("/auth/login");
+            route.push("/search");
           }}
         />
         <IwtButton

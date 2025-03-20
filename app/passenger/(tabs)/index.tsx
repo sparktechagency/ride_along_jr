@@ -1,19 +1,37 @@
 import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
-import { useNavigation, useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
+import { useNavigation, useRouter } from "expo-router";
 
-import tw from "@/lib/tailwind";
+import { Avatar } from "react-native-ui-lib";
 import { GoogleMaps } from "expo-maps";
 import React from "react";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
+import tw from "@/lib/tailwind";
+import { useIsFocused } from "@react-navigation/native";
+
+export interface ILocation {
+  coords: {
+    accuracy: number;
+    altitude: number;
+    altitudeAccuracy: number;
+    heading: number;
+    latitude: number;
+    longitude: number;
+    speed: number;
+  };
+  mocked: boolean;
+  timestamp: number;
+}
 
 const home = () => {
   const navigation = useNavigation();
   const router = useRouter();
 
-  const [currentLocation, setCurrentLocation] = React.useState({});
   const [search, setShear] = React.useState("");
+
+  const isFocused = useIsFocused();
+
+  // console.log(currentLocation);
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -50,27 +68,31 @@ const home = () => {
             2208 W 8TH ST LOS ANGELES
           </Text>
         </View>
-        <View style={tw`w-full h-60 my-4 pb-0.5 shadow rounded-lg`}>
-          <GoogleMaps.View
-            style={tw`flex-1 rounded-lg`}
-            uiSettings={{
-              zoomControlsEnabled: false,
-            }}
-            properties={{
-              isTrafficEnabled: true,
-              isMyLocationEnabled: true,
-              mapType: GoogleMaps.MapType.HYBRID,
-            }}
-            userLocation={{
-              coordinates: {
-                latitude: 34.052235,
-                longitude: -118.243683,
-              },
-              followUserLocation: true,
-              // enabled: true,
-            }}
-          />
-        </View>
+        {isFocused && (
+          <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg`}>
+            <GoogleMaps.View
+              style={tw`flex-1 rounded-lg`}
+              uiSettings={{
+                zoomControlsEnabled: false,
+              }}
+              properties={{
+                isTrafficEnabled: true,
+                isMyLocationEnabled: true,
+                mapType: GoogleMaps.MapType.HYBRID,
+              }}
+              userLocation={{
+                coordinates: {
+                  latitude: 34.052235,
+                  longitude: -118.243683,
+                },
+
+                followUserLocation: true,
+                // enabled: true,
+              }}
+            />
+          </View>
+        )}
+
         <View style={tw`flex-row items-center gap-2`}>
           <View style={tw`shadow-md rounded-2xl self-start`}>
             <SvgXml xml={IconMapDirection} />

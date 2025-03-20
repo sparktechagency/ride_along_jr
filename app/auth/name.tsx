@@ -1,35 +1,34 @@
 import * as Location from "expo-location";
 
-import { Stack, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
+import { Stack, useRouter } from "expo-router";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IconSmallYellowLight } from "@/assets/icon/Icon";
+import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { SvgXml } from "react-native-svg";
 
-const name = () => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  useEffect(() => {
-    async function getCurrentLocation() {
+const NameScreen = () => {
+  const [name, setName] = useState("");
+
+  const router = useRouter();
+
+  // console.log(location);
+
+  React.useEffect(() => {
+    (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        console.log("Permission to access location was denied");
         return;
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    }
-
-    getCurrentLocation();
+      const location = await Location.getCurrentPositionAsync({});
+      AsyncStorage.setItem("location", JSON.stringify(location));
+    })();
   }, []);
-  const [name, setName] = useState("");
-  const router = useRouter();
+
   return (
     <View style={tw`bg-[#EFF2F2] flex-1`}>
       <Stack.Screen
@@ -41,7 +40,7 @@ const name = () => {
       <ScrollView contentContainerStyle={tw`py-12`}>
         <View style={tw`px-4 gap-2 justify-center items-center`}>
           <Text
-            style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
+            style={tw`text-4xl flex-1 text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
           >
             What’s your name?
           </Text>
@@ -52,27 +51,30 @@ const name = () => {
             </Text>
           </View>
         </View>
-        <View style={tw`px-4 py-12`}>
-          <TextInput
-            style={tw`rounded-xl bg-white border-0 h-20 text-black text-4xl font-NunitoSansExtraBold px-4`}
-            placeholder="Enter your name"
-            placeholderTextColor={"#A0A8B6"}
-            verticalAlign="middle"
-            onChangeText={setName}
-            // autoCorrect={true}
-            value={name}
+
+        {/* Check loading or error states */}
+
+        <>
+          <View style={tw`px-4 py-12`}>
+            <TextInput
+              style={tw`rounded-xl bg-white border-0  text-black text-3xl h-20 font-NunitoSansExtraBold px-4`}
+              placeholder="Enter your name"
+              placeholderTextColor={"#A0A8B6"}
+              onChangeText={(text) => setName(text)}
+              value={name}
+            />
+          </View>
+          <TButton
+            title="Next"
+            containerStyle={tw`my-5 mx-4`}
+            onPress={() => {
+              router.push("/passenger");
+            }}
           />
-        </View>
+        </>
       </ScrollView>
-      <TButton
-        title="Next"
-        containerStyle={tw`my-5 mx-4`}
-        onPress={() => {
-          router.push("/passenger");
-        }}
-      />
     </View>
   );
 };
 
-export default name;
+export default NameScreen;
