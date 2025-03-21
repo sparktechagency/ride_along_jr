@@ -24,6 +24,7 @@ module.exports = {
         primary900: "#323D76",
         deepBlue: "#101E36",
         deepBlue50: "#E8EAED",
+        deepBlue100: "#788498",
         deepBlue200: "#3E4F6B",
         deepBlue300: "#172B4D",
         deepBlue400: "#101E36",

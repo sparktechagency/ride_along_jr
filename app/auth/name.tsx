@@ -1,10 +1,7 @@
-import * as Location from "expo-location";
-
 import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IconSmallYellowLight } from "@/assets/icon/Icon";
 import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
@@ -16,18 +13,6 @@ const NameScreen = () => {
   const router = useRouter();
 
   // console.log(location);
-
-  React.useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
-      const location = await Location.getCurrentPositionAsync({});
-      AsyncStorage.setItem("location", JSON.stringify(location));
-    })();
-  }, []);
 
   return (
     <View style={tw`bg-[#EFF2F2] flex-1`}>

@@ -27,14 +27,14 @@ const welcome = () => {
           </Text>
         </View>
       </View>
+
       <View style={tw`px-4 pb-12`}>
         <IwtButton
           title="Need to book a ride for my kid"
           svg={IconUserWhite}
           onPress={async () => {
-            // await AsyncStorage.setItem("role", "passenger");
-            // route.push("/auth/login");
-            route.push("/search");
+            await AsyncStorage.setItem("role", "passenger");
+            route.push("/auth/login");
           }}
         />
         <IwtButton
@@ -48,6 +48,7 @@ const welcome = () => {
           }}
         />
       </View>
+      {/* <SearchModal /> */}
     </View>
   );
 };

@@ -14,9 +14,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.arifbiswas.ride-along-jr"
+      "bundleIdentifier": "com.arifbiswas.ride-along-jr",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to show your current address."
+      }
     },
     "android": {
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"

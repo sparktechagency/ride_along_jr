@@ -1,7 +1,10 @@
+import * as Location from "expo-location";
+
 import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Avatar } from "react-native-ui-lib";
 import { GoogleMaps } from "expo-maps";
 import React from "react";
@@ -10,28 +13,71 @@ import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 
 export interface ILocation {
-  coords: {
-    accuracy: number;
-    altitude: number;
-    altitudeAccuracy: number;
-    heading: number;
-    latitude: number;
-    longitude: number;
-    speed: number;
+  addressResponse: [
+    {
+      city: string;
+      country: string;
+      district: string;
+      formattedAddress: string;
+      isoCountryCode: string;
+      name: string;
+      postalCode: string;
+      region: string;
+      street: string;
+      streetNumber: string;
+      subregion: string;
+      timezone: string;
+    }
+  ];
+  location: {
+    coords: {
+      accuracy: number;
+      altitude: number;
+      altitudeAccuracy: number;
+      heading: number;
+      latitude: number;
+      longitude: number;
+      speed: number;
+    };
+    mocked: bigint;
+    timestamp: number;
   };
-  mocked: boolean;
-  timestamp: number;
 }
 
 const home = () => {
   const navigation = useNavigation();
   const router = useRouter();
 
+  const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
+
   const [search, setShear] = React.useState("");
 
   const isFocused = useIsFocused();
 
   // console.log(currentLocation);
+
+  const handleGetLocationFormLS = async () => {
+    // get location from local storage
+    const location = await AsyncStorage.getItem("location");
+    if (location) {
+      setCurrentLocation(JSON.parse(location));
+    } else {
+      const newLocation = await Location.getCurrentPositionAsync({});
+      // Reverse geocode to get address
+      let addressResponse = await Location.reverseGeocodeAsync({
+        latitude: newLocation.coords.latitude,
+        longitude: newLocation.coords.longitude,
+      });
+      AsyncStorage.setItem(
+        "location",
+        JSON.stringify({ location, addressResponse })
+      );
+    }
+  };
+
+  React.useEffect(() => {
+    handleGetLocationFormLS();
+  }, []);
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -65,7 +111,7 @@ const home = () => {
         <View style={tw`flex-row items-center gap-1`}>
           <SvgXml xml={IconLocation} />
           <Text style={tw`text-base font-NunitoSansBold text-[#405658]`}>
-            2208 W 8TH ST LOS ANGELES
+            {currentLocation?.addressResponse[0].formattedAddress}
           </Text>
         </View>
         {isFocused && (
@@ -82,8 +128,10 @@ const home = () => {
               }}
               userLocation={{
                 coordinates: {
-                  latitude: 34.052235,
-                  longitude: -118.243683,
+                  latitude:
+                    currentLocation?.location?.coords?.latitude || 34.052235,
+                  longitude:
+                    currentLocation?.location?.coords?.longitude || -118.243683,
                 },
 
                 followUserLocation: true,
@@ -99,7 +147,7 @@ const home = () => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              router.push("/search");
+              router.push("/passenger_map");
             }}
             style={tw`bg-white h-12 rounded-xl justify-center  shadow-md flex-1`}
           >

@@ -28,6 +28,8 @@ interface InputTextProps {
   textInputProps?: TextInputProps;
   svgSecondOnPress?: () => void;
   textXValue?: number;
+  textXOutRangeFirst?: number;
+  textXOutRangeSecond?: number;
   svgSecondStyle?: any;
   errorText?: string;
   onFocus?: () => void;
@@ -38,6 +40,7 @@ interface InputTextProps {
   containerLayoutStyle?: any;
   containerStyle?: any;
 }
+
 const InputText = ({
   onPress,
   svgFirstIcon,
@@ -49,6 +52,9 @@ const InputText = ({
   svgSecondIcon,
   placeholder,
   textXValue = -28,
+  textXOutRangeFirst = 25,
+  textXOutRangeSecond = 45,
+
   textInputProps,
   errorText,
   onBlur,
@@ -63,6 +69,7 @@ const InputText = ({
 }: InputTextProps) => {
   const [focus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
+  const textInputRef = React.useRef<TextInput>(null); // Ref to focus the TextInput
 
   const textY = React.useRef(new Animated.Value(0));
 
@@ -74,7 +81,9 @@ const InputText = ({
       easing: Easing.ease,
     }).start();
     setFocus(true);
+    textInputRef.current?.focus(); // Focus the TextInput
   };
+
   const handleBlur = () => {
     Animated.timing(textY.current, {
       toValue: 0,
@@ -95,7 +104,7 @@ const InputText = ({
 
   const textX = textY.current.interpolate({
     inputRange: [textXValue, 0],
-    outputRange: [25, 41],
+    outputRange: [textXOutRangeFirst, textXOutRangeSecond],
     extrapolate: "clamp",
   });
   const textScale = textY.current.interpolate({
@@ -105,7 +114,11 @@ const InputText = ({
   });
 
   return (
-    <View style={[tw``, containerLayoutStyle]}>
+    <TouchableOpacity
+      activeOpacity={1} // Ensure the opacity doesn't change on press
+      onPress={handleFocus} // Focus the input when the container is pressed
+      style={[tw``, containerLayoutStyle]}
+    >
       {label && (
         <Text
           style={[
@@ -119,9 +132,9 @@ const InputText = ({
 
       <View
         style={[
-          tw`flex-row w-full border items-center  px-4  ${
-            errorText && touched ? "border-red-500" : " border-gray-300"
-          }  rounded-full  h-14 `,
+          tw`flex-row w-full border items-center px-4 ${
+            errorText && touched ? "border-red-500" : "border-gray-300"
+          } rounded-full h-14`,
           containerStyle,
         ]}
       >
@@ -130,12 +143,10 @@ const InputText = ({
           <Animated.Text
             numberOfLines={1}
             style={[
-              tw`absolute  bg-white rounded-full text-base font-NunitoSansRegular  py-2 px-2 
-              
-             ${errorText && touched ? "text-red-500" : "text-gray-400"} 
-             `,
+              tw`absolute bg-white rounded-full text-base font-NunitoSansRegular py-2 px-2 ${
+                errorText && touched ? "text-red-500" : "text-gray-400"
+              }`,
               fieldStyle,
-
               {
                 transform: [
                   { translateY: textY.current },
@@ -150,8 +161,8 @@ const InputText = ({
         )}
 
         <TextInput
+          ref={textInputRef} // Assign the ref to the TextInput
           onFocus={() => {
-            handleFocus();
             onFocus && onFocus();
           }}
           onBlur={(e) => {
@@ -180,7 +191,7 @@ const InputText = ({
           <Text style={tw`text-red-500 text-xs`}>{errorText}</Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
