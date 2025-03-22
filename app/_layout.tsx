@@ -4,7 +4,6 @@ import { PrimaryColor } from "@/utils/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 import tw from "@/lib/tailwind";
-
 export default function RootLayout() {
   return (
     <SafeAreaView style={tw`flex-1`}>
@@ -12,6 +11,13 @@ export default function RootLayout() {
         style={{ flex: 1, backgroundColor: "transparent" }}
       >
         <BottomSheetModalProvider>
+          {/* <StripeProvider
+            publishableKey={
+              "pk_test_51M6AQECe4QqAuKX4hQuRPLKDeB192L6xZiop8yWhLLrmbBTZjSsPKPyGvhhHVlKQNikct3mhaeZgyGjYTA17VwbT00l34SeOAr"
+            }
+            merchantIdentifier="merchant.identifier" // required for Apple Pay
+            urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+          > */}
           <Stack
             screenOptions={{
               statusBarAnimation: "fade",
@@ -35,7 +41,19 @@ export default function RootLayout() {
             <Stack.Screen name="auth/name" />
             <Stack.Screen name="terms_and_conditions" />
             <Stack.Screen name="privacy_policy" />
-            <Stack.Screen name="passenger_map" />
+            <Stack.Screen name="where_go" />
+            <Stack.Screen
+              name="estimated_details"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="request_car"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
             <Stack.Screen
               name="search"
               options={{
@@ -49,6 +67,7 @@ export default function RootLayout() {
               }}
             />
           </Stack>
+          {/* </StripeProvider> */}
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </SafeAreaView>

@@ -22,8 +22,35 @@ import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 
-const passenger_map = () => {
+const where_go = () => {
   const router = useRouter();
+
+  const [selectMarker, setSelectMarker] = React.useState({
+    pickup: {
+      coordinates: {
+        latitude: 34.052235,
+        longitude: -118.243683,
+      },
+      title: "Your current location",
+
+      icon: "https://img.icons8.com/ios-glyphs/30/000000/marker.png",
+      draggable: true,
+      showCallout: true,
+      snippet: "Your current location",
+    },
+    destination: {
+      coordinates: {
+        latitude: 34.052235,
+        longitude: -118.243683,
+      },
+      title: "Your current location",
+
+      icon: "https://img.icons8.com/ios-glyphs/red/30/000000/marker.png",
+      draggable: true,
+      showCallout: true,
+      snippet: "Your current location",
+    },
+  });
 
   const [travelData, setTravelData] = React.useState({
     destination: "",
@@ -33,16 +60,10 @@ const passenger_map = () => {
   const sheetRef = React.useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = React.useMemo(() => ["1%", "45%", "60%", "90%"], []);
+  const snapPoints = React.useMemo(() => ["10%", "45%", "60%", "90%"], []);
 
   // callbacks
-  const handleSheetChange = React.useCallback((index: number) => {
-    if (index === 0 && !travelData?.destination && !travelData?.pickup) {
-      sheetRef.current?.close();
-
-      router.back();
-    }
-  }, []);
+  const handleSheetChange = React.useCallback((index: number) => {}, []);
 
   const handleClosePress = React.useCallback(() => {
     sheetRef.current?.close();
@@ -189,8 +210,13 @@ const passenger_map = () => {
           </View>
         </View>
 
-        <BottomSheetScrollView contentContainerStyle={tw``}>
-          <View style={tw`mt-4 mb-6 px-4 flex-row items-center gap-2`}>
+        <BottomSheetScrollView
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={tw``}
+        >
+          <View
+            style={tw`mt-4 mb-6 px-4 flex-row items-center gap-2 text-red-500`}
+          >
             {/* Search bar */}
             <SvgXml xml={IconLocationSelections} />
             <View style={tw`gap-4 flex-1`}>
@@ -199,7 +225,7 @@ const passenger_map = () => {
                 textXOutRangeSecond={15}
                 placeholder="Pickup from"
                 containerStyle={tw``}
-                value={travelData.destination}
+                value={travelData?.destination}
                 onChangeText={(text) => {
                   setTravelData({ ...travelData, destination: text });
                 }}
@@ -209,7 +235,7 @@ const passenger_map = () => {
                 textXOutRangeSecond={15}
                 placeholder="Destination"
                 containerStyle={tw``}
-                value={travelData.pickup}
+                value={travelData?.pickup}
                 onChangeText={(text) => {
                   setTravelData({ ...travelData, pickup: text });
                 }}
@@ -219,14 +245,16 @@ const passenger_map = () => {
           {travelData?.destination && travelData?.pickup && (
             <IwtButton
               onPress={() => {
-                sheetRef?.current?.close();
+                // sheetRef?.current?.close();
+                // setStep && setStep(1);
+                router?.push("/estimated_details");
               }}
               containerStyle={tw` mx-4`}
               svg={IconSmallSearch}
               title="Go "
             />
           )}
-          {travelData?.destination || (
+          {!travelData?.destination && (
             <TouchableOpacity
               onPress={() => {
                 setTravelData({
@@ -243,7 +271,7 @@ const passenger_map = () => {
               </Text>
             </TouchableOpacity>
           )}
-          {travelData.pickup || (
+          {!travelData?.pickup && (
             <>
               <TouchableOpacity
                 onPress={() => {
@@ -271,9 +299,11 @@ const passenger_map = () => {
             </>
           )}
         </BottomSheetScrollView>
+
+        {/* End screens */}
       </BottomSheet>
     </View>
   );
 };
 
-export default passenger_map;
+export default where_go;

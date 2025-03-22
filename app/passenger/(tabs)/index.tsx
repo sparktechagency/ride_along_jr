@@ -111,7 +111,8 @@ const home = () => {
         <View style={tw`flex-row items-center gap-1`}>
           <SvgXml xml={IconLocation} />
           <Text style={tw`text-base font-NunitoSansBold text-[#405658]`}>
-            {currentLocation?.addressResponse[0].formattedAddress}
+            {currentLocation?.addressResponse &&
+              currentLocation?.addressResponse![0]?.formattedAddress}
           </Text>
         </View>
         {isFocused && (
@@ -147,7 +148,7 @@ const home = () => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              router.push("/passenger_map");
+              router.push("/where_go");
             }}
             style={tw`bg-white h-12 rounded-xl justify-center  shadow-md flex-1`}
           >
