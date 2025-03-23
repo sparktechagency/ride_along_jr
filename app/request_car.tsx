@@ -100,7 +100,7 @@ const request_car = () => {
             properties={{
               isTrafficEnabled: true,
               isMyLocationEnabled: true,
-              mapType: GoogleMaps.MapType.HYBRID,
+              mapType: GoogleMaps.MapType.NORMAL,
 
               isIndoorEnabled: true,
               maxZoomPreference: 50,
@@ -114,7 +114,7 @@ const request_car = () => {
                 longitude:
                   currentLocation?.location?.coords?.longitude || -118.243683,
               },
-              zoom: 18,
+              zoom: 17.5,
             }}
             colorScheme={GoogleMaps.MapColorScheme.FOLLOW_SYSTEM}
             // onPOIClick={(event) => {

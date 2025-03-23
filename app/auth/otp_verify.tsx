@@ -1,13 +1,13 @@
 import { Text, TouchableOpacity, View } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "@/lib/backHeader/BackButton";
+import { OtpInput } from "react-native-otp-entry";
+import { PrimaryColor } from "@/utils/utils";
+import React from "react";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import React from "react";
-import { OtpInput } from "react-native-otp-entry";
 
 const otp_verify = () => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const otp_verify = () => {
           onFilled={async (text) => {
             console.log(`OTP is ${text}`);
             const role = await AsyncStorage.getItem("role");
-            console.log(role);
+            // console.log(role);
             if (role === "driver") {
             } else {
               router.push("/auth/name");

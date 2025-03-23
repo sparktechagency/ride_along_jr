@@ -12,8 +12,6 @@ const NameScreen = () => {
 
   const router = useRouter();
 
-  // console.log(location);
-
   return (
     <View style={tw`bg-[#EFF2F2] flex-1`}>
       <Stack.Screen
@@ -40,9 +38,9 @@ const NameScreen = () => {
         {/* Check loading or error states */}
 
         <>
-          <View style={tw`px-4 py-12`}>
+          <View style={tw`px-4 py-10`}>
             <TextInput
-              style={tw`rounded-xl bg-white border-0  text-black text-3xl h-20 font-NunitoSansExtraBold px-4`}
+              style={tw`rounded-xl bg-white border-0  text-deepBlue300 text-3xl h-20 font-NunitoSansExtraBold px-4`}
               placeholder="Enter your name"
               placeholderTextColor={"#A0A8B6"}
               onChangeText={(text) => setName(text)}
@@ -51,7 +49,7 @@ const NameScreen = () => {
           </View>
           <TButton
             title="Next"
-            containerStyle={tw`my-5 mx-4`}
+            containerStyle={tw`mt-4 mx-4`}
             onPress={() => {
               router.push("/passenger");
             }}

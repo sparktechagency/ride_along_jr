@@ -1,7 +1,7 @@
 import * as Location from "expo-location";
 
 import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,22 +13,21 @@ import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 
 export interface ILocation {
-  addressResponse: [
-    {
-      city: string;
-      country: string;
-      district: string;
-      formattedAddress: string;
-      isoCountryCode: string;
-      name: string;
-      postalCode: string;
-      region: string;
-      street: string;
-      streetNumber: string;
-      subregion: string;
-      timezone: string;
-    }
-  ];
+  addressResponse: {
+    city: string;
+    country: string;
+    district: string;
+    formattedAddress: string;
+    isoCountryCode: string;
+    name: string;
+    postalCode: string;
+    region: string;
+    street: string;
+    streetNumber: string;
+    subregion: string;
+    timezone: string;
+  };
+
   location: {
     coords: {
       accuracy: number;
@@ -58,8 +57,9 @@ const home = () => {
 
   const handleGetLocationFormLS = async () => {
     // get location from local storage
-    const location = await AsyncStorage.getItem("location");
-    if (location) {
+    const location: ILocation = await AsyncStorage.getItem("location");
+
+    if (location?.addressResponse) {
       setCurrentLocation(JSON.parse(location));
     } else {
       const newLocation = await Location.getCurrentPositionAsync({});
@@ -68,21 +68,30 @@ const home = () => {
         latitude: newLocation.coords.latitude,
         longitude: newLocation.coords.longitude,
       });
-      AsyncStorage.setItem(
+      setCurrentLocation({
+        location: newLocation,
+        addressResponse: addressResponse![0],
+      });
+      await AsyncStorage.setItem(
         "location",
-        JSON.stringify({ location, addressResponse })
+        JSON.stringify({
+          location: newLocation,
+          addressResponse: addressResponse![0],
+        })
       );
     }
   };
 
   React.useEffect(() => {
     handleGetLocationFormLS();
-  }, []);
+  }, [isFocused]);
+
+  // console.log(currentLocation);
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
       {/* header parts  */}
-      <View style={tw`p-4 flex-row items-center justify-between`}>
+      <View style={tw`p-4 flex-row items-center  justify-between`}>
         <TouchableOpacity
           onPress={() => {
             (navigation as any)?.openDrawer();
@@ -112,7 +121,7 @@ const home = () => {
           <SvgXml xml={IconLocation} />
           <Text style={tw`text-base font-NunitoSansBold text-[#405658]`}>
             {currentLocation?.addressResponse &&
-              currentLocation?.addressResponse![0]?.formattedAddress}
+              currentLocation?.addressResponse?.formattedAddress}
           </Text>
         </View>
         {isFocused && (
@@ -122,22 +131,42 @@ const home = () => {
               uiSettings={{
                 zoomControlsEnabled: false,
               }}
+              cameraPosition={{
+                zoom: 17.5,
+              }}
               properties={{
                 isTrafficEnabled: true,
                 isMyLocationEnabled: true,
-                mapType: GoogleMaps.MapType.HYBRID,
+                mapType: GoogleMaps.MapType.NORMAL,
               }}
               userLocation={{
                 coordinates: {
-                  latitude:
-                    currentLocation?.location?.coords?.latitude || 34.052235,
+                  latitude: currentLocation?.location?.coords?.latitude || 0.0,
                   longitude:
-                    currentLocation?.location?.coords?.longitude || -118.243683,
+                    currentLocation?.location?.coords?.longitude || 0.0,
                 },
 
                 followUserLocation: true,
                 // enabled: true,
               }}
+              markers={[
+                {
+                  coordinates: {
+                    latitude:
+                      currentLocation?.location?.coords?.latitude || 0.0,
+                    longitude:
+                      currentLocation?.location?.coords?.longitude || 0.0,
+                  },
+
+                  icon: (
+                    <Image
+                      source={require("@/assets/images/location_user.png")}
+                      style={tw`w-10 h-10`}
+                      resizeMode="contain"
+                    />
+                  ),
+                },
+              ]}
             />
           </View>
         )}

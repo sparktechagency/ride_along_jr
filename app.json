@@ -49,6 +49,8 @@
           "enableFullScreenImage_legacy": true
         }
       ],
+      
+    
      [ "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."

@@ -1,9 +1,6 @@
-import * as Location from "expo-location";
-
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import {
   IconClose,
-  IconLocation,
   IconLocationSelections,
   IconMyLocation,
   IconOtherLocation,
@@ -18,6 +15,7 @@ import InputText from "@/lib/inputs/InputText";
 import IwtButton from "@/lib/buttons/IwtButton";
 import React from "react";
 import { SvgXml } from "react-native-svg";
+import axios from "axios";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -80,23 +78,29 @@ const where_go = () => {
     const location = await AsyncStorage.getItem("location");
     if (location) {
       setCurrentLocation(JSON.parse(location));
-    } else {
-      const newLocation = await Location.getCurrentPositionAsync({});
-      // Reverse geocode to get address
-      let addressResponse = await Location.reverseGeocodeAsync({
-        latitude: newLocation.coords.latitude,
-        longitude: newLocation.coords.longitude,
-      });
-      AsyncStorage.setItem(
-        "location",
-        JSON.stringify({ location, addressResponse })
-      );
     }
   };
 
   React.useEffect(() => {
     handleGetLocationFormLS();
   }, []);
+
+  const handleSearchLocation = async (query: string) => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY`
+      );
+      console.log(response?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    // handleSearchLocation();
+  }, [travelData.pickup, travelData.destination]);
+
+  console.log(currentLocation);
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -121,7 +125,7 @@ const where_go = () => {
             properties={{
               isTrafficEnabled: true,
               isMyLocationEnabled: true,
-              mapType: GoogleMaps.MapType.HYBRID,
+              mapType: GoogleMaps.MapType.NORMAL,
 
               isIndoorEnabled: true,
               maxZoomPreference: 50,
@@ -129,13 +133,7 @@ const where_go = () => {
               selectionEnabled: true,
             }}
             cameraPosition={{
-              coordinates: {
-                latitude:
-                  currentLocation?.location?.coords?.latitude || 34.052235,
-                longitude:
-                  currentLocation?.location?.coords?.longitude || -118.243683,
-              },
-              zoom: 18,
+              zoom: 17.5,
             }}
             colorScheme={GoogleMaps.MapColorScheme.FOLLOW_SYSTEM}
             // onPOIClick={(event) => {
@@ -147,28 +145,11 @@ const where_go = () => {
             onMapClick={(event) => {
               console.log(event);
             }}
-            markers={[
-              {
-                coordinates: {
-                  latitude:
-                    currentLocation?.location?.coords?.latitude || 34.052235,
-                  longitude:
-                    currentLocation?.location?.coords?.longitude || -118.243683,
-                },
-                title: "Your current location",
-
-                icon: IconLocation,
-                draggable: true,
-                showCallout: true,
-                snippet: "Your current location",
-              },
-            ]}
+            markers={[]}
             userLocation={{
               coordinates: {
-                latitude:
-                  currentLocation?.location?.coords?.latitude || 34.052235,
-                longitude:
-                  currentLocation?.location?.coords?.longitude || -118.243683,
+                latitude: currentLocation?.location?.coords?.latitude || 0.0,
+                longitude: currentLocation?.location?.coords?.longitude || 0.0,
               },
 
               followUserLocation: true,
@@ -260,7 +241,7 @@ const where_go = () => {
                 setTravelData({
                   ...travelData,
                   destination:
-                    currentLocation?.addressResponse![0].formattedAddress,
+                    currentLocation?.addressResponse?.formattedAddress,
                 });
               }}
               style={tw`px-4 py-4 flex-row items-center border-t border-t-gray-200 gap-4`}
