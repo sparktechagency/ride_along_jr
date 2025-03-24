@@ -1,12 +1,13 @@
 import * as Location from "expo-location";
 
+import { Avatar, LoaderScreen } from "react-native-ui-lib";
 import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
-import { Image, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Avatar } from "react-native-ui-lib";
+import { PrimaryColor } from "@/utils/utils";
 import React from "react";
 import { SvgXml } from "react-native-svg";
 // import { GoogleMaps } from "expo-maps";
@@ -50,18 +51,20 @@ const home = () => {
 
   const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
 
-  const [search, setShear] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const isFocused = useIsFocused();
 
   // console.log(currentLocation);
 
   const handleGetLocationFormLS = async () => {
+    setLoading(true);
     // get location from local storage
     const location = await AsyncStorage.getItem("location");
-
-    if (location?.addressResponse) {
-      setCurrentLocation(JSON.parse(location));
+    const exitLocation = JSON.parse(location!);
+    if (exitLocation?.location) {
+      setCurrentLocation(exitLocation);
+      setLoading(false);
     } else {
       const newLocation = await Location.getCurrentPositionAsync({});
       // Reverse geocode to get address
@@ -73,6 +76,7 @@ const home = () => {
         location: newLocation,
         addressResponse: addressResponse![0],
       });
+      setLoading(false);
       await AsyncStorage.setItem(
         "location",
         JSON.stringify({
@@ -125,7 +129,13 @@ const home = () => {
               currentLocation?.addressResponse?.formattedAddress}
           </Text>
         </View>
-        {isFocused && (
+        {!isFocused || loading ? (
+          <LoaderScreen
+            color={PrimaryColor}
+            size={"large"}
+            containerStyle={tw`w-full min-h-80 my-4 pb-0.5  rounded-lg`}
+          />
+        ) : (
           <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg`}>
             <MapView
               mapType="standard"
@@ -136,20 +146,16 @@ const home = () => {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
-              cameraZoomRange={{
-                minCenterCoordinateDistance: 0,
-                maxCenterCoordinateDistance: 18,
-              }}
-              zoomEnabled
               region={{
                 latitude: currentLocation?.location?.coords?.latitude || 0.0,
                 longitude: currentLocation?.location?.coords?.longitude || 0.0,
-                latitudeDelta: 0.0022, // Zoom ~16.4
-                longitudeDelta: 0.0022, // Adjust based on aspect ratio
+                latitudeDelta: 0.0015, // Zoom ~16.4
+                longitudeDelta: 0.0015, // Adjust based on aspect ratio
               }}
               onMapReady={() => {
                 console.log("Map is ready!");
               }}
+              showsBuildings={false}
               // showsUserLocation={true} // Disable default user location marker
               provider="google"
               showsTraffic={true}
@@ -163,12 +169,16 @@ const home = () => {
                 }}
                 title="Your Location"
                 description="Your current location"
+                pinColor="green"
+                calloutAnchor={{ x: 0.5, y: 0.5 }}
                 anchor={{ x: 0.5, y: 0.5 }} // Center the marker (default: x=0.5, y=1.0)
               >
-                <Image
-                  source={require("@/assets/images/pick.png")}
-                  style={{ width: 40, height: 40 }} // Adjust width & height as needed
-                  resizeMode="contain"
+                <SvgXml
+                  xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11.633" cy="11.335" r="8.863" stroke="#5C7B7E" stroke-width="4"/>
+                <circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+                </svg>
+                `}
                 />
               </Marker>
             </MapView>

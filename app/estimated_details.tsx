@@ -1,10 +1,7 @@
-import * as Location from "expo-location";
-
 import {
   IconBackArray,
   IconCar,
   IconDot,
-  IconLocation,
   IconMinus,
   IconNormalUser,
   IconPlus,
@@ -12,12 +9,13 @@ import {
   IconVisaCard,
 } from "@/assets/icon/Icon";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { GoogleMaps } from "expo-maps";
 import { ILocation } from "./(tabs)";
 import { ImgCar } from "@/assets/images";
+import MapViewDirections from "react-native-maps-directions";
 import React from "react";
 import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
@@ -28,13 +26,13 @@ import { useRouter } from "expo-router";
 const estimated_details = () => {
   const router = useRouter();
 
-  const [step, setStep] = React.useState(0);
+  const [children, setChildren] = React.useState(2);
 
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
   });
-
+  const mapRef = React.useRef<MapView>(null);
   const sheetRef = React.useRef<BottomSheet>(null);
 
   // variables
@@ -58,107 +56,149 @@ const estimated_details = () => {
   }, []);
 
   const isFocused = useIsFocused();
-  const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
+  const [travelReadyData, setTravelReadyData] = React.useState<{
+    pickup: ILocation | null;
+    destination: ILocation | null;
+  }>();
   const handleGetLocationFormLS = async () => {
     // get location from local storage
-    const location = await AsyncStorage.getItem("location");
-    if (location) {
-      setCurrentLocation(JSON.parse(location));
-    } else {
-      const newLocation = await Location.getCurrentPositionAsync({});
-      // Reverse geocode to get address
-      let addressResponse = await Location.reverseGeocodeAsync({
-        latitude: newLocation.coords.latitude,
-        longitude: newLocation.coords.longitude,
-      });
-      AsyncStorage.setItem(
-        "location",
-        JSON.stringify({ location, addressResponse })
-      );
-    }
+    const location = await AsyncStorage.getItem("travelData");
+    setTravelReadyData(JSON.parse(location));
   };
 
   React.useEffect(() => {
     handleGetLocationFormLS();
   }, []);
 
+  console.log(travelData);
+
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
       {isFocused && (
         <View style={tw`w-full h-full `}>
-          <GoogleMaps.View
-            style={tw`flex-1 rounded-t-lg`}
-            uiSettings={{
-              zoomControlsEnabled: false,
-              compassEnabled: true,
-              myLocationButtonEnabled: true,
-              mapToolbarEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              zoomGesturesEnabled: true,
-              indoorLevelPickerEnabled: true,
-              rotationGesturesEnabled: true,
-              scaleBarEnabled: true,
-              scrollGesturesEnabledDuringRotateOrZoom: true,
-              togglePitchEnabled: true,
+          <MapView
+            ref={mapRef}
+            mapType="standard"
+            style={tw`flex-1 rounded-lg`}
+            rotateEnabled
+            scrollEnabled
+            loadingEnabled
+            userInterfaceStyle="light"
+            // showsUserLocation
+            // userLocationUpdateInterval={20}
+            followsUserLocation
+            region={{
+              latitude: travelReadyData?.pickup?.geometry?.location?.lat || 0.0,
+              longitude:
+                travelReadyData?.pickup?.geometry?.location?.lng || 0.0,
+              latitudeDelta: 0.0015, // Zoom ~16.4
+              longitudeDelta: 0.0015, // Adjust based on aspect ratio
             }}
-            properties={{
-              isTrafficEnabled: true,
-              isMyLocationEnabled: true,
-              mapType: GoogleMaps.MapType.HYBRID,
+            onMapReady={() => {
+              console.log("Map is ready!");
+            }}
+            // showsUserLocation={true} // Disable default user location marker
+            provider="google"
+            showsTraffic={true}
+            // mapPadding={{ bottom: -50, left: -50 }} // This pushes the logo off-screen
+            showsBuildings={false}
+            showsCompass
+            showsIndoors
+            showsMyLocationButton
+            showsScale
+            zoomEnabled
+            zoomControlEnabled
+          >
+            {/* Current Location Marker (if no pickup selected) */}
+            {/* {!travelReadyData?.pick && currentLocation?.location?.coords && (
+              <Marker
+                coordinate={{
+                  latitude: currentLocation.location.coords.latitude,
+                  longitude: currentLocation.location.coords.longitude,
+                }}
+                title={travelReadyData?.pick?.name}
+                description={travelReadyData?.pick?.formatted_address}
+                pinColor="blue"
+              />
+            )} */}
 
-              isIndoorEnabled: true,
-              maxZoomPreference: 50,
-              minZoomPreference: 17,
-              selectionEnabled: true,
-            }}
-            cameraPosition={{
-              coordinates: {
-                latitude:
-                  currentLocation?.location?.coords?.latitude || 34.052235,
-                longitude:
-                  currentLocation?.location?.coords?.longitude || -118.243683,
-              },
-              zoom: 18,
-            }}
-            colorScheme={GoogleMaps.MapColorScheme.FOLLOW_SYSTEM}
-            // onPOIClick={(event) => {
-            //   console.log(event);
-            // }}
-            onMarkerClick={(event) => {
-              console.log(event);
-            }}
-            onMapClick={(event) => {
-              console.log(event);
-            }}
-            markers={[
-              {
-                coordinates: {
-                  latitude:
-                    currentLocation?.location?.coords?.latitude || 34.052235,
-                  longitude:
-                    currentLocation?.location?.coords?.longitude || -118.243683,
-                },
-                title: "Your current location",
+            {/* Pickup Marker */}
+            {travelReadyData?.pickup?.geometry?.location && (
+              <Marker
+                coordinate={{
+                  latitude: travelReadyData.pickup.geometry.location.lat,
+                  longitude: travelReadyData.pickup.geometry.location.lng,
+                }}
+                title={travelReadyData.pickup.name} // Fallback if custom callout fails
+                description={travelReadyData.pickup.formatted_address} // Fallback
+                calloutOffset={{ x: 0, y: -8 }} // Adjust callout position
+                calloutAnchor={{ x: 0.5, y: 0 }} // Anchor point
+                style={tw`w-10 h-10`}
+              >
+                {/* Custom marker view */}
+                <SvgXml
+                  xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="11.633" cy="11.335" r="8.863" stroke="#5C7B7E" stroke-width="4"/>
+<circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+</svg>
+`}
+                />
+              </Marker>
+            )}
 
-                icon: IconLocation,
-                draggable: true,
-                showCallout: true,
-                snippet: "Your current location",
-              },
-            ]}
-            userLocation={{
-              coordinates: {
-                latitude:
-                  currentLocation?.location?.coords?.latitude || 34.052235,
-                longitude:
-                  currentLocation?.location?.coords?.longitude || -118.243683,
-              },
+            {/* Destination Marker */}
+            {travelReadyData?.destination?.geometry?.location && (
+              <Marker
+                coordinate={{
+                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
+                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                }}
+                title={travelReadyData.destination.name}
+                description={travelReadyData.destination.formatted_address}
+                pinColor="red"
+              >
+                <SvgXml
+                  xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="11.633" cy="11.335" r="8.863" stroke="#D21F18" stroke-width="4"/>
+<circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+</svg>
+`}
+                />
+              </Marker>
+            )}
 
-              followUserLocation: true,
-              // enabled: true,
-            }}
-          />
+            {/* Directions */}
+            {travelReadyData?.pickup?.geometry?.location &&
+              travelReadyData?.destination?.geometry?.location && (
+                <MapViewDirections
+                  origin={{
+                    latitude: travelReadyData.pickup.geometry.location.lat,
+                    longitude: travelReadyData.pickup.geometry.location.lng,
+                  }}
+                  destination={{
+                    latitude: travelReadyData.destination.geometry.location.lat,
+                    longitude:
+                      travelReadyData.destination.geometry.location.lng,
+                  }}
+                  apikey="AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"
+                  strokeWidth={8}
+                  strokeColor="#F5851E"
+                  mode="DRIVING"
+                  onReady={(result) => {
+                    mapRef.current?.fitToCoordinates(result.coordinates, {
+                      edgePadding: {
+                        top: 100,
+                        right: 50,
+                        bottom: 300, // Extra space at bottom for bottom sheet
+                        left: 50,
+                      },
+                      animated: true,
+                    });
+                  }}
+                  onError={(error) => console.log("Directions error:", error)}
+                />
+              )}
+          </MapView>
         </View>
       )}
 
@@ -201,14 +241,14 @@ const estimated_details = () => {
                     <Text
                       style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                     >
-                      2 kids
+                      {children} kids
                     </Text>
                   </View>
                 </View>
               </View>
               <View style={tw`flex-row items-center gap-2`}>
                 <Text style={tw`text-2xl font-NunitoSansBold text-black`}>
-                  $240.00
+                  ${240.0 * 0.2 * children}
                 </Text>
               </View>
             </View>
@@ -222,11 +262,21 @@ const estimated_details = () => {
               Kids
             </Text>
             <View style={tw`flex-row items-center gap-6`}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (children > 1) {
+                    setChildren(children - 1);
+                  }
+                }}
+              >
                 <SvgXml xml={IconMinus} />
               </TouchableOpacity>
-              <Text style={tw`text-base font-NunitoSansBold`}>2</Text>
-              <TouchableOpacity>
+              <Text style={tw`text-base font-NunitoSansBold`}>{children}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setChildren(children + 1);
+                }}
+              >
                 <SvgXml xml={IconPlus} />
               </TouchableOpacity>
             </View>
