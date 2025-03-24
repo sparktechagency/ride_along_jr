@@ -129,11 +129,17 @@ const login = () => {
                   </View>
                 </View>
                 <View style={tw`self-end mt-3 px-4`}>
-                  <Text
+                  {/* <Text
                     style={tw`text-sm font-NunitoSansBold text-primary underline`}
                   >
                     Forgot password?
-                  </Text>
+                  </Text> */}
+                  <Link
+                  href={"/auth/forgot_password"}
+                  style={tw`text-sm font-NunitoSansBold text-primary underline`}
+                  >
+                  Forgot Password?
+                  </Link>
                 </View>
                 <View style={tw`px-4 flex-row items-center mt-5 gap-2 `}>
                   <Checkbox
