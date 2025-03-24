@@ -2,13 +2,14 @@ import * as Location from "expo-location";
 
 import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { useNavigation, useRouter } from "expo-router";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Avatar } from "react-native-ui-lib";
-import { GoogleMaps } from "expo-maps";
 import React from "react";
 import { SvgXml } from "react-native-svg";
+// import { GoogleMaps } from "expo-maps";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -57,7 +58,7 @@ const home = () => {
 
   const handleGetLocationFormLS = async () => {
     // get location from local storage
-    const location: ILocation = await AsyncStorage.getItem("location");
+    const location = await AsyncStorage.getItem("location");
 
     if (location?.addressResponse) {
       setCurrentLocation(JSON.parse(location));
@@ -126,48 +127,51 @@ const home = () => {
         </View>
         {isFocused && (
           <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg`}>
-            <GoogleMaps.View
+            <MapView
+              mapType="standard"
               style={tw`flex-1 rounded-lg`}
-              uiSettings={{
-                zoomControlsEnabled: false,
+              initialRegion={{
+                latitude: currentLocation?.location?.coords?.latitude || 0.0,
+                longitude: currentLocation?.location?.coords?.longitude || 0.0,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
               }}
-              cameraPosition={{
-                zoom: 17.5,
+              cameraZoomRange={{
+                minCenterCoordinateDistance: 0,
+                maxCenterCoordinateDistance: 18,
               }}
-              properties={{
-                isTrafficEnabled: true,
-                isMyLocationEnabled: true,
-                mapType: GoogleMaps.MapType.NORMAL,
+              zoomEnabled
+              region={{
+                latitude: currentLocation?.location?.coords?.latitude || 0.0,
+                longitude: currentLocation?.location?.coords?.longitude || 0.0,
+                latitudeDelta: 0.0022, // Zoom ~16.4
+                longitudeDelta: 0.0022, // Adjust based on aspect ratio
               }}
-              userLocation={{
-                coordinates: {
+              onMapReady={() => {
+                console.log("Map is ready!");
+              }}
+              // showsUserLocation={true} // Disable default user location marker
+              provider="google"
+              showsTraffic={true}
+              mapPadding={{ bottom: -50, left: -50 }} // This pushes the logo off-screen
+            >
+              <Marker
+                coordinate={{
                   latitude: currentLocation?.location?.coords?.latitude || 0.0,
                   longitude:
                     currentLocation?.location?.coords?.longitude || 0.0,
-                },
-
-                followUserLocation: true,
-                // enabled: true,
-              }}
-              markers={[
-                {
-                  coordinates: {
-                    latitude:
-                      currentLocation?.location?.coords?.latitude || 0.0,
-                    longitude:
-                      currentLocation?.location?.coords?.longitude || 0.0,
-                  },
-
-                  icon: (
-                    <Image
-                      source={require("@/assets/images/location_user.png")}
-                      style={tw`w-10 h-10`}
-                      resizeMode="contain"
-                    />
-                  ),
-                },
-              ]}
-            />
+                }}
+                title="Your Location"
+                description="Your current location"
+                anchor={{ x: 0.5, y: 0.5 }} // Center the marker (default: x=0.5, y=1.0)
+              >
+                <Image
+                  source={require("@/assets/images/pick.png")}
+                  style={{ width: 40, height: 40 }} // Adjust width & height as needed
+                  resizeMode="contain"
+                />
+              </Marker>
+            </MapView>
           </View>
         )}
 

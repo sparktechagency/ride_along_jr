@@ -43,6 +43,8 @@
     "react-native": "0.76.7",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-maps": "1.18.0",
+    "react-native-maps-directions": "^1.9.0",
     "react-native-otp-entry": "^1.8.3",
     "react-native-reanimated": "~3.16.1",
     "react-native-render-html": "^6.3.4",
@@ -52,8 +54,7 @@
     "react-native-ui-lib": "^7.38.1",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-    "twrnc": "^4.6.1",
-    "react-native-maps": "1.18.0"
+    "twrnc": "^4.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
