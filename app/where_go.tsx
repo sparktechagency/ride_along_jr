@@ -1,25 +1,26 @@
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import {
   IconClose,
   IconLocationSelections,
   IconMyLocation,
+  IconOtherLocation,
   IconSmallSearch,
 } from "@/assets/icon/Icon";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ILocation } from "./(tabs)";
 import { IPlace } from "@/interfaces/map";
-import InputText from "@/lib/inputs/InputText";
 import IwtButton from "@/lib/buttons/IwtButton";
-import MapViewDirections from "react-native-maps-directions";
-import React from "react";
-import { SvgXml } from "react-native-svg";
-import axios from "axios";
+import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 import { useRouter } from "expo-router";
+import React from "react";
+import MapViewDirections from "react-native-maps-directions";
+import { SvgXml } from "react-native-svg";
+import { ILocation } from "./(tabs)";
 
 const where_go = () => {
   const router = useRouter();
@@ -148,8 +149,6 @@ const where_go = () => {
                 }}
                 title={travelReadyData.pickup.name} // Fallback if custom callout fails
                 description={travelReadyData.pickup.formatted_address} // Fallback
-                calloutOffset={{ x: 0, y: -8 }} // Adjust callout position
-                calloutAnchor={{ x: 0.5, y: 0 }} // Anchor point
                 style={tw`w-10 h-10`}
               >
                 {/* Custom marker view */}
@@ -360,13 +359,14 @@ const where_go = () => {
                     pickup: travelReadyData?.pickup || suggestion, // Ensure pickup is defined
                     destination: suggestion,
                   });
+                  handleSnapPress(1);
                   handleSearchLocation("");
                 }
               }}
               style={tw`px-4 py-4 flex-row items-center border-t border-t-gray-200 gap-4`}
             >
-              {/* <SvgXml xml={IconOtherLocation} /> */}
-              <Image source={{ uri: suggestion?.icon }} style={tw`w-8 h-8 `} />
+              <SvgXml xml={IconOtherLocation} />
+              {/* <Image source={{ uri: suggestion?.icon }} style={tw`w-8 h-8 `} /> */}
               <View style={tw`flex-1`}>
                 <Text style={tw` text-lg text-deepBlue400 font-NunitoSansBold`}>
                   {suggestion?.name}

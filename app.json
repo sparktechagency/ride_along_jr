@@ -16,7 +16,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.arifbiswas.ride-along-jr",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses your location to show your current address."
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to show your current address.",
+        "UIViewControllerBasedStatusBarAppearance": true,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       }
     },
     "android": {
