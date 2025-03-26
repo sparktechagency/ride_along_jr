@@ -10,6 +10,7 @@ const DrawerRoutes = () => {
         }}
       >
         {/* Add your screens here */}
+        {/* <Drawer.Screen name="profile" /> */}
       </Drawer>
     </GestureHandlerRootView>
   );
