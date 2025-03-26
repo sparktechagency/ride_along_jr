@@ -42,6 +42,7 @@ export default function RootLayout() {
             <Stack.Screen name="terms_and_conditions" />
             <Stack.Screen name="privacy_policy" />
             <Stack.Screen name="where_go" />
+            <Stack.Screen name="passenger/account/profile" />
             <Stack.Screen
               name="estimated_details"
               options={{

@@ -86,7 +86,7 @@ const welcome = () => {
           onPress={async () => {
             await AsyncStorage.setItem("role", "passenger");
             route.push("/auth/login");
-            // route.push("/test");
+            // route.push("/passenger/account/profile");
             // openPaymentSheet();
           }}
         />
