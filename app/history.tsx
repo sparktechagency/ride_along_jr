@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import tw from '@/lib/tailwind'
 import { SvgXml } from 'react-native-svg'
-import { IconCalendar, IconEmptyHistory, IconStar } from '@/assets/icon/Icon'
+import { IconCalendar, IconEmptyHistory, IconSmallStar } from '@/assets/icon/Icon'
 import TButton from '@/lib/buttons/TButton'
 import { useRouter } from 'expo-router'
 import { Image } from 'react-native'
@@ -34,7 +34,7 @@ const history = () => {
                                         <View>
                                             <View style={tw`flex-row items-center`}>
                                                 <Text style={tw`text-base font-bold text-[#172B4D]`}>John smith</Text>
-                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconStar} /> 4.2</Text>
+                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconSmallStar} /> 4.2</Text>
                                             </View>
 
                                             <View style={tw`flex-row items-center`}>
@@ -57,7 +57,7 @@ const history = () => {
                                         <View>
                                             <View style={tw`flex-row items-center`}>
                                                 <Text style={tw`text-base font-bold text-[#172B4D]`}>John smith</Text>
-                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconStar} /> 4.2</Text>
+                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconSmallStar} /> 4.2</Text>
                                             </View>
 
                                             <View style={tw`flex-row items-center`}>
@@ -80,7 +80,7 @@ const history = () => {
                                         <View>
                                             <View style={tw`flex-row items-center`}>
                                                 <Text style={tw`text-base font-bold text-[#172B4D]`}>John smith</Text>
-                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconStar} /> 4.2</Text>
+                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconSmallStar} /> 4.2</Text>
                                             </View>
 
                                             <View style={tw`flex-row items-center`}>
@@ -103,7 +103,7 @@ const history = () => {
                                         <View>
                                             <View style={tw`flex-row items-center`}>
                                                 <Text style={tw`text-base font-bold text-[#172B4D]`}>John smith</Text>
-                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconStar} /> 4.2</Text>
+                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconSmallStar} /> 4.2</Text>
                                             </View>
 
                                             <View style={tw`flex-row items-center`}>
@@ -126,7 +126,7 @@ const history = () => {
                                         <View>
                                             <View style={tw`flex-row items-center`}>
                                                 <Text style={tw`text-base font-bold text-[#172B4D]`}>John smith</Text>
-                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconStar} /> 4.2</Text>
+                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconSmallStar} /> 4.2</Text>
                                             </View>
 
                                             <View style={tw`flex-row items-center`}>
@@ -149,7 +149,7 @@ const history = () => {
                                         <View>
                                             <View style={tw`flex-row items-center`}>
                                                 <Text style={tw`text-base font-bold text-[#172B4D]`}>John smith</Text>
-                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconStar} /> 4.2</Text>
+                                                <Text style={tw`text-base font-bold text-[#172B4D]`}><SvgXml xml={IconSmallStar} /> 4.2</Text>
                                             </View>
 
                                             <View style={tw`flex-row items-center`}>
