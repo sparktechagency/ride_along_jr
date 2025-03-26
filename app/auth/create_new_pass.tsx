@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import InputText from '@/lib/inputs/InputText';
 import { IconCloseEye, IconEmail, IconLock, IconOpenEye, IconSmallRightTick } from '@/assets/icon/Icon';
 import TButton from '@/lib/buttons/TButton';
-import Icon from "react-native-vector-icons/Feather";
+import Icon from "@expo/vector-icons/Feather";
 
 const create_new_pass = () => {
     const router = useRouter();

@@ -161,6 +161,7 @@ const InputText = ({
         )}
 
         <TextInput
+      
           ref={textInputRef} // Assign the ref to the TextInput
           onFocus={() => {
             onFocus && onFocus();
