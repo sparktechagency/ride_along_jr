@@ -1,4 +1,3 @@
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import {
   IconClose,
   IconLocationSelections,
@@ -6,56 +5,40 @@ import {
   IconOtherLocation,
   IconSmallSearch,
 } from "@/assets/icon/Icon";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GoogleMaps } from "expo-maps";
-import { ILocation } from "./(tabs)";
-import InputText from "@/lib/inputs/InputText";
+import { IPlace } from "@/interfaces/map";
 import IwtButton from "@/lib/buttons/IwtButton";
-import React from "react";
-import { SvgXml } from "react-native-svg";
-import axios from "axios";
+import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 import { useRouter } from "expo-router";
+import React from "react";
+import MapViewDirections from "react-native-maps-directions";
+import { SvgXml } from "react-native-svg";
+import { ILocation } from "./(tabs)";
 
 const where_go = () => {
   const router = useRouter();
-
-  const [selectMarker, setSelectMarker] = React.useState({
-    pickup: {
-      coordinates: {
-        latitude: 34.052235,
-        longitude: -118.243683,
-      },
-      title: "Your current location",
-
-      icon: "https://img.icons8.com/ios-glyphs/30/000000/marker.png",
-      draggable: true,
-      showCallout: true,
-      snippet: "Your current location",
-    },
-    destination: {
-      coordinates: {
-        latitude: 34.052235,
-        longitude: -118.243683,
-      },
-      title: "Your current location",
-
-      icon: "https://img.icons8.com/ios-glyphs/red/30/000000/marker.png",
-      draggable: true,
-      showCallout: true,
-      snippet: "Your current location",
-    },
-  });
 
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
   });
+  const [travelReadyData, setTravelReadyData] = React.useState<{
+    pickup: IPlace;
+    destination: IPlace;
+  } | null>(null);
+
+  const [isPickup, setIsPickup] = React.useState<boolean>(false);
+  const [locationSuggestions, setLocationSuggestions] = React.useState<[]>([]);
 
   const sheetRef = React.useRef<BottomSheet>(null);
+  const mapRef = React.useRef<MapView>(null);
 
   // variables
   const snapPoints = React.useMemo(() => ["10%", "45%", "60%", "90%"], []);
@@ -90,72 +73,149 @@ const where_go = () => {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY`
       );
-      console.log(response?.data);
+      setLocationSuggestions(response?.data?.results);
     } catch (error) {
       console.log(error);
     }
   };
 
-  React.useEffect(() => {
-    // handleSearchLocation();
-  }, [travelData.pickup, travelData.destination]);
-
-  console.log(currentLocation);
-
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
       {isFocused && (
         <View style={tw`w-full h-full `}>
-          <GoogleMaps.View
-            style={tw`flex-1 rounded-t-lg`}
-            uiSettings={{
-              zoomControlsEnabled: false,
-              compassEnabled: true,
-              myLocationButtonEnabled: true,
-              mapToolbarEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              zoomGesturesEnabled: true,
-              indoorLevelPickerEnabled: true,
-              rotationGesturesEnabled: true,
-              scaleBarEnabled: true,
-              scrollGesturesEnabledDuringRotateOrZoom: true,
-              togglePitchEnabled: true,
+          <MapView
+            ref={mapRef}
+            mapType="standard"
+            style={tw`flex-1 rounded-lg`}
+            rotateEnabled
+            scrollEnabled
+            loadingEnabled
+            userInterfaceStyle="light"
+            // showsUserLocation
+            // userLocationUpdateInterval={20}
+            followsUserLocation
+            initialRegion={{
+              latitude: currentLocation?.location?.coords?.latitude || 0.0,
+              longitude: currentLocation?.location?.coords?.longitude || 0.0,
+              latitudeDelta: 0.0015,
+              longitudeDelta: 0.0015,
             }}
-            properties={{
-              isTrafficEnabled: true,
-              isMyLocationEnabled: true,
-              mapType: GoogleMaps.MapType.NORMAL,
+            region={{
+              latitude:
+                travelReadyData?.pickup?.geometry?.location?.lat ||
+                currentLocation?.location?.coords?.latitude ||
+                0.0,
+              longitude:
+                travelReadyData?.pickup?.geometry?.location?.lng ||
+                currentLocation?.location?.coords?.longitude ||
+                0.0,
+              latitudeDelta: 0.0015, // Zoom ~16.4
+              longitudeDelta: 0.0015, // Adjust based on aspect ratio
+            }}
+            onMapReady={() => {
+              console.log("Map is ready!");
+            }}
+            // showsUserLocation={true} // Disable default user location marker
+            provider="google"
+            showsTraffic={true}
+            // mapPadding={{ bottom: -50, left: -50 }} // This pushes the logo off-screen
+            showsBuildings={false}
+            showsCompass
+            showsIndoors
+            showsMyLocationButton
+            showsScale
+            zoomEnabled
+            zoomControlEnabled
+          >
+            {/* Current Location Marker (if no pickup selected) */}
+            {/* {!travelReadyData?.pick && currentLocation?.location?.coords && (
+              <Marker
+                coordinate={{
+                  latitude: currentLocation.location.coords.latitude,
+                  longitude: currentLocation.location.coords.longitude,
+                }}
+                title={travelReadyData?.pick?.name}
+                description={travelReadyData?.pick?.formatted_address}
+                pinColor="blue"
+              />
+            )} */}
 
-              isIndoorEnabled: true,
-              maxZoomPreference: 50,
-              minZoomPreference: 17,
-              selectionEnabled: true,
-            }}
-            cameraPosition={{
-              zoom: 17.5,
-            }}
-            colorScheme={GoogleMaps.MapColorScheme.FOLLOW_SYSTEM}
-            // onPOIClick={(event) => {
-            //   console.log(event);
-            // }}
-            onMarkerClick={(event) => {
-              console.log(event);
-            }}
-            onMapClick={(event) => {
-              console.log(event);
-            }}
-            markers={[]}
-            userLocation={{
-              coordinates: {
-                latitude: currentLocation?.location?.coords?.latitude || 0.0,
-                longitude: currentLocation?.location?.coords?.longitude || 0.0,
-              },
+            {/* Pickup Marker */}
+            {travelReadyData?.pickup?.geometry?.location && (
+              <Marker
+                coordinate={{
+                  latitude: travelReadyData.pickup.geometry.location.lat,
+                  longitude: travelReadyData.pickup.geometry.location.lng,
+                }}
+                title={travelReadyData.pickup.name} // Fallback if custom callout fails
+                description={travelReadyData.pickup.formatted_address} // Fallback
+                style={tw`w-10 h-10`}
+              >
+                {/* Custom marker view */}
+                <SvgXml
+                  xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="11.633" cy="11.335" r="8.863" stroke="#5C7B7E" stroke-width="4"/>
+<circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+</svg>
+`}
+                />
+              </Marker>
+            )}
 
-              followUserLocation: true,
-              // enabled: true,
-            }}
-          />
+            {/* Destination Marker */}
+            {travelReadyData?.destination?.geometry?.location && (
+              <Marker
+                coordinate={{
+                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
+                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                }}
+                title={travelReadyData.destination.name}
+                description={travelReadyData.destination.formatted_address}
+                pinColor="red"
+              >
+                <SvgXml
+                  xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="11.633" cy="11.335" r="8.863" stroke="#D21F18" stroke-width="4"/>
+<circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+</svg>
+`}
+                />
+              </Marker>
+            )}
+
+            {/* Directions */}
+            {travelReadyData?.pickup?.geometry?.location &&
+              travelReadyData?.destination?.geometry?.location && (
+                <MapViewDirections
+                  origin={{
+                    latitude: travelReadyData.pickup.geometry.location.lat,
+                    longitude: travelReadyData.pickup.geometry.location.lng,
+                  }}
+                  destination={{
+                    latitude: travelReadyData.destination.geometry.location.lat,
+                    longitude:
+                      travelReadyData.destination.geometry.location.lng,
+                  }}
+                  apikey="AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"
+                  strokeWidth={8}
+                  strokeColor="#F5851E"
+                  mode="DRIVING"
+                  onReady={(result) => {
+                    // Fit the map to show the entire route
+                    mapRef.current?.fitToCoordinates(result.coordinates, {
+                      edgePadding: {
+                        top: 100,
+                        right: 50,
+                        bottom: 300, // Extra space at bottom for bottom sheet
+                        left: 50,
+                      },
+                      animated: true,
+                    });
+                  }}
+                  onError={(error) => console.log("Directions error:", error)}
+                />
+              )}
+          </MapView>
         </View>
       )}
 
@@ -206,9 +266,11 @@ const where_go = () => {
                 textXOutRangeSecond={15}
                 placeholder="Pickup from"
                 containerStyle={tw``}
-                value={travelData?.destination}
+                value={travelData?.pickup}
                 onChangeText={(text) => {
-                  setTravelData({ ...travelData, destination: text });
+                  handleSearchLocation(text);
+                  setIsPickup(true);
+                  setTravelData({ ...travelData, pickup: text });
                 }}
               />
               <InputText
@@ -216,33 +278,55 @@ const where_go = () => {
                 textXOutRangeSecond={15}
                 placeholder="Destination"
                 containerStyle={tw``}
-                value={travelData?.pickup}
+                value={travelData?.destination}
                 onChangeText={(text) => {
-                  setTravelData({ ...travelData, pickup: text });
+                  handleSearchLocation(text);
+                  setIsPickup(false);
+                  setTravelData({ ...travelData, destination: text });
                 }}
               />
             </View>
           </View>
-          {travelData?.destination && travelData?.pickup && (
-            <IwtButton
-              onPress={() => {
-                // sheetRef?.current?.close();
-                // setStep && setStep(1);
-                router?.push("/estimated_details");
-              }}
-              containerStyle={tw` mx-4`}
-              svg={IconSmallSearch}
-              title="Go "
-            />
-          )}
-          {!travelData?.destination && (
+          {travelReadyData?.destination?.formatted_address &&
+            travelReadyData?.destination?.formatted_address && (
+              <IwtButton
+                onPress={() => {
+                  // sheetRef?.current?.close();
+                  // setStep && setStep(1);
+                  AsyncStorage.setItem(
+                    "travelData",
+                    JSON.stringify(travelReadyData)
+                  );
+                  router?.push("/estimated_details");
+                }}
+                containerStyle={tw` mx-4`}
+                svg={IconSmallSearch}
+                title="Go "
+              />
+            )}
+          {!travelData?.pickup && (
             <TouchableOpacity
               onPress={() => {
                 setTravelData({
                   ...travelData,
-                  destination:
-                    currentLocation?.addressResponse?.formattedAddress,
+                  pickup: currentLocation?.addressResponse?.formattedAddress,
                 });
+                setTravelReadyData({
+                  ...travelReadyData,
+                  pickup: {
+                    name: currentLocation?.addressResponse?.formattedAddress,
+                    geometry: {
+                      location: {
+                        lat: currentLocation?.location?.coords?.latitude || 0.0,
+                        lng:
+                          currentLocation?.location?.coords?.longitude || 0.0,
+                      },
+                    },
+                    formatted_address:
+                      currentLocation?.addressResponse?.formattedAddress,
+                  },
+                });
+                handleSearchLocation("");
               }}
               style={tw`px-4 py-4 flex-row items-center border-t border-t-gray-200 gap-4`}
             >
@@ -252,33 +336,49 @@ const where_go = () => {
               </Text>
             </TouchableOpacity>
           )}
-          {!travelData?.pickup && (
-            <>
-              <TouchableOpacity
-                onPress={() => {
+          {locationSuggestions?.map((suggestion: IPlace) => (
+            <TouchableOpacity
+              onPress={() => {
+                if (isPickup) {
                   setTravelData({
                     ...travelData,
-                    pickup: "Los Angeles, CA, near Griffith Park",
+                    pickup: suggestion?.formatted_address,
                   });
-                }}
-                style={tw`px-4 py-4 flex-row items-center border-t border-t-gray-200 gap-4`}
-              >
-                <SvgXml xml={IconOtherLocation} />
-                <View>
-                  <Text
-                    style={tw`text-lg text-deepBlue400 font-NunitoSansBold`}
-                  >
-                    Hollywood Sign,
-                  </Text>
-                  <Text
-                    style={tw`text-base text-deepBlue100 font-NunitoSansMedium`}
-                  >
-                    Los Angeles, CA, near Griffith Park
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </>
-          )}
+                  setTravelReadyData({
+                    ...travelReadyData,
+                    pickup: suggestion,
+                    destination: travelReadyData?.destination || suggestion, // Ensure destination is defined
+                  });
+                  handleSearchLocation("");
+                } else {
+                  setTravelData({
+                    ...travelData,
+                    destination: suggestion?.formatted_address,
+                  });
+                  setTravelReadyData({
+                    pickup: travelReadyData?.pickup || suggestion, // Ensure pickup is defined
+                    destination: suggestion,
+                  });
+                  handleSnapPress(1);
+                  handleSearchLocation("");
+                }
+              }}
+              style={tw`px-4 py-4 flex-row items-center border-t border-t-gray-200 gap-4`}
+            >
+              <SvgXml xml={IconOtherLocation} />
+              {/* <Image source={{ uri: suggestion?.icon }} style={tw`w-8 h-8 `} /> */}
+              <View style={tw`flex-1`}>
+                <Text style={tw` text-lg text-deepBlue400 font-NunitoSansBold`}>
+                  {suggestion?.name}
+                </Text>
+                <Text
+                  style={tw`text-base text-deepBlue100 font-NunitoSansMedium`}
+                >
+                  {suggestion?.formatted_address}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
         </BottomSheetScrollView>
 
         {/* End screens */}

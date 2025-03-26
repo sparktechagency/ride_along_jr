@@ -1,9 +1,9 @@
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { PrimaryColor } from "@/utils/utils";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack } from "expo-router";
 import tw from "@/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function RootLayout() {
   return (
     <SafeAreaView style={tw`flex-1`}>
@@ -51,6 +51,24 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="request_car"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver_responding"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver_arriving"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver_arrived"
               options={{
                 animation: "slide_from_right",
               }}
