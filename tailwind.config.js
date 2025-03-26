@@ -34,7 +34,7 @@ module.exports = {
         success600: "#5BB659",
 
         Warning500: "#EAD852",
-        base: "#FFFFFF",
+        base: "#EFF2F2",
 
         danger600: "#DC3545",
         danger50: "#FEF2F2",
