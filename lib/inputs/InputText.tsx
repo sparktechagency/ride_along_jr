@@ -39,6 +39,7 @@ interface InputTextProps {
   touched?: boolean;
   containerLayoutStyle?: any;
   containerStyle?: any;
+  editable?: boolean;
 }
 
 const InputText = ({
@@ -66,6 +67,7 @@ const InputText = ({
   touched,
   containerLayoutStyle,
   containerStyle,
+  editable = true,
 }: InputTextProps) => {
   const [focus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
@@ -161,7 +163,7 @@ const InputText = ({
         )}
 
         <TextInput
-      
+          editable={editable}
           ref={textInputRef} // Assign the ref to the TextInput
           onFocus={() => {
             onFocus && onFocus();
