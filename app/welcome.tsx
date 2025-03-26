@@ -85,9 +85,10 @@ const welcome = () => {
           svg={IconUserWhite}
           onPress={async () => {
             await AsyncStorage.setItem("role", "passenger");
-            route.push("/auth/login");
+            // route.push("/auth/login");
             // route.push("/history");
-            // // route.push("/notification");
+            // route.push("/notification");
+            route.push("/payment");
             // openPaymentSheet();
           }}
         />

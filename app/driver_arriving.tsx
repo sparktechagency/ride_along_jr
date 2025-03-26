@@ -59,7 +59,7 @@ const driver_arriving = () => {
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("travelData");
-    setTravelReadyData(JSON.parse(location));
+    setTravelReadyData(JSON.parse(location as any));
   };
 
   React.useEffect(() => {
