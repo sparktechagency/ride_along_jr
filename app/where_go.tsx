@@ -1,3 +1,4 @@
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import {
   IconClose,
   IconLocationSelections,
@@ -5,22 +6,21 @@ import {
   IconOtherLocation,
   IconSmallSearch,
 } from "@/assets/icon/Icon";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { Text, TouchableOpacity, View } from "react-native";
 
-import { IPlace } from "@/interfaces/map";
-import IwtButton from "@/lib/buttons/IwtButton";
-import InputText from "@/lib/inputs/InputText";
-import tw from "@/lib/tailwind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useIsFocused } from "@react-navigation/native";
-import axios from "axios";
-import { useRouter } from "expo-router";
-import React from "react";
-import MapViewDirections from "react-native-maps-directions";
-import { SvgXml } from "react-native-svg";
 import { ILocation } from "./(tabs)";
+import { IPlace } from "@/interfaces/map";
+import InputText from "@/lib/inputs/InputText";
+import IwtButton from "@/lib/buttons/IwtButton";
+import MapViewDirections from "react-native-maps-directions";
+import React from "react";
+import { SvgXml } from "react-native-svg";
+import axios from "axios";
+import tw from "@/lib/tailwind";
+import { useIsFocused } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 const where_go = () => {
   const router = useRouter();
@@ -73,6 +73,8 @@ const where_go = () => {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY`
       );
+      // country scoope search
+      // https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&region=IN&key=AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY
       setLocationSuggestions(response?.data?.results);
     } catch (error) {
       console.log(error);

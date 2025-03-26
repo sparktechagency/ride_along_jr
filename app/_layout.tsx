@@ -6,7 +6,7 @@ import { Stack } from "expo-router";
 import tw from "@/lib/tailwind";
 export default function RootLayout() {
   return (
-    <SafeAreaView style={tw`flex-1`}>
+    <SafeAreaView style={tw`flex-1 bg-base`}>
       <GestureHandlerRootView
         style={{ flex: 1, backgroundColor: "transparent" }}
       >
@@ -22,7 +22,7 @@ export default function RootLayout() {
             screenOptions={{
               statusBarAnimation: "fade",
               statusBarStyle: "dark",
-              statusBarBackgroundColor: "white",
+              statusBarBackgroundColor: "#EFF2F2",
               headerShown: false,
             }}
           >
