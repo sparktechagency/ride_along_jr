@@ -1,7 +1,7 @@
 import {
   IconCall,
-  IconCloseRed,
   IconDestination,
+  IconLockWhite,
   IconMessage,
   IconOtpLocker,
   IconPaymentMethod,
@@ -22,7 +22,7 @@ import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 
-const driver_arrived = () => {
+const arrived_done = () => {
   const router = useRouter();
   const [travelData, setTravelData] = React.useState({
     destination: "",
@@ -64,14 +64,6 @@ const driver_arrived = () => {
 
   React.useEffect(() => {
     handleGetLocationFormLS();
-  }, []);
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      router?.push("/arrived_done");
-    }, 3000);
-
-    return () => {};
   }, []);
 
   return (
@@ -218,10 +210,10 @@ const driver_arrived = () => {
           >
             <View style={tw`gap-0.1`}>
               <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Your driver has arrived!
+                Your kids arrived safely
               </Text>
               <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Meet your driver at the pickup spot to begin your kid’s ride.
+                Share the PIN code with the driver.
               </Text>
             </View>
             {/* <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
@@ -345,21 +337,20 @@ const driver_arrived = () => {
                 </View>
               </View>
             </View>
+            <View style={tw`py-4`}>
+              <IwtButton
+                onPress={() => {
+                  router.push("/trip_done");
+                }}
+                svg={IconLockWhite}
+                title="Send OTP"
+              />
+            </View>
           </View>
-
-          <IwtButton
-            svg={IconCloseRed}
-            title="Cancel Ride"
-            containerStyle={tw`mt-4 bg-transparent gap-1 h-14`}
-            titleStyle={tw`text-[#D21F18] font-NunitoSansBold `}
-            onPress={() => {
-              router?.back();
-            }}
-          />
         </View>
       </BottomSheet>
     </View>
   );
 };
 
-export default driver_arrived;
+export default arrived_done;
