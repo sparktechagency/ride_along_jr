@@ -1,13 +1,13 @@
 import { IconCardBlack, IconUserWhite } from "@/assets/icon/Icon";
-import { Image, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import { Image, Text, View } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ImgWeather } from "@/assets/images";
 import IwtButton from "@/lib/buttons/IwtButton";
 import tw from "@/lib/tailwind";
-import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStripe } from "@stripe/stripe-react-native";
+import { useRouter } from "expo-router";
 
 const welcome = () => {
   const route = useRouter();
@@ -85,13 +85,13 @@ const welcome = () => {
           svg={IconUserWhite}
           onPress={async () => {
             await AsyncStorage.setItem("role", "passenger");
-            // route.push("/auth/login");
+            route.push("/auth/login");
             // route.push("/history");
             // route.push("/notification");
             // route.push("/payment");
+
             route.push("/namePage");
-            // openPaymentSheet();
-          }}
+
         />
         <IwtButton
           title="I'd like to drive"

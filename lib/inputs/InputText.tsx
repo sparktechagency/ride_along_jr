@@ -25,6 +25,7 @@ interface InputTextProps {
   labelStyle?: any;
   svgSecondIcon?: string;
   placeholder?: string;
+  placeholderStyle?: any;
   textInputProps?: TextInputProps;
   svgSecondOnPress?: () => void;
   textXValue?: number;
@@ -68,6 +69,7 @@ const InputText = ({
   containerLayoutStyle,
   containerStyle,
   editable = true,
+  placeholderStyle,
 }: InputTextProps) => {
   const [focus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
@@ -148,7 +150,7 @@ const InputText = ({
               tw`absolute bg-base rounded-full text-base font-NunitoSansRegular py-2 px-2 ${
                 errorText && touched ? "text-red-500" : "text-gray-400"
               }`,
-              fieldStyle,
+              placeholderStyle,
               {
                 transform: [
                   { translateY: textY.current },

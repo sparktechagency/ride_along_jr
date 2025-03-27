@@ -1,4 +1,3 @@
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import {
   IconClose,
   IconLocationSelections,
@@ -6,17 +5,18 @@ import {
   IconOtherLocation,
   IconSmallSearch,
 } from "@/assets/icon/Icon";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ILocation } from "./passenger/(tabs)";
-import InputText from "@/lib/inputs/InputText";
 import IwtButton from "@/lib/buttons/IwtButton";
+import InputText from "@/lib/inputs/InputText";
+import tw from "@/lib/tailwind";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SvgXml } from "react-native-svg";
-import tw from "@/lib/tailwind";
-import { useRouter } from "expo-router";
+import { ILocation } from "./passenger/drawer/home";
 
 const search = () => {
   const router = useRouter();
