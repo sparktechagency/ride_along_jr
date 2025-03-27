@@ -89,8 +89,9 @@ const welcome = () => {
             // route.push("/history");
             // route.push("/notification");
             // route.push("/payment");
-            // openPaymentSheet();
-          }}
+
+            route.push("/namePage");
+
         />
         <IwtButton
           title="I'd like to drive"
