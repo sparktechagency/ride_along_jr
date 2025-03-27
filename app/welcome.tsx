@@ -88,7 +88,8 @@ const welcome = () => {
             // route.push("/auth/login");
             // route.push("/history");
             // route.push("/notification");
-            route.push("/payment");
+            // route.push("/payment");
+            route.push("/namePage");
             // openPaymentSheet();
           }}
         />
