@@ -80,7 +80,7 @@ const CustomDrawerContent = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                router?.push("/passenger/about");
+                router?.push("/passenger/payment");
               }}
               style={tw` pt-2 pb-4.5  flex-row items-center gap-3 justify-between border-b border-gray-200`}
             >
