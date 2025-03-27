@@ -1,17 +1,20 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import BackWithComponent from '@/lib/backHeader/BackWithCoponent'
 import tw from '@/lib/tailwind'
-import { Icon } from 'react-native-ui-lib'
 import { SvgXml } from 'react-native-svg'
 import { IconPlus, IconVisa } from '@/assets/icon/Icon'
+import { useRouter } from 'expo-router'
 
 const payment = () => {
+    const router  = useRouter();
     return (
         <>
             <View>
 
-                <BackWithComponent togather title='Payment method' />
+                <BackWithComponent togather title='Payment method' 
+                onPress={() => router.back()}
+                />
 
                 <View style={tw`p-4 rounded-lg gap-4`}>
                     <View style={tw`border border-gray-300 rounded-lg px-2 py-2 flex-row justify-between items-center`}>
@@ -24,9 +27,12 @@ const payment = () => {
 
                     
 
-                    <TouchableOpacity style={tw`mt-4 bg-gray-200 py-3 rounded-full flex-row items-center justify-center`}>
+                    <TouchableOpacity 
+                    onPress={() => router.push("/add_new_pyment_card")}
+                    style={tw`mt-4 bg-gray-200 py-3 rounded-full flex-row items-center justify-center`}>
                         <SvgXml xml={IconPlus} />
-                        <Text style={tw`text-[#1E3050] text-lg font-semibold ml-2`}>Add a new card</Text>
+                        <Text 
+                        style={tw`text-[#1E3050] text-lg font-semibold ml-2`}>Add a new card</Text>
                     </TouchableOpacity>
                 </View>
             </View>
