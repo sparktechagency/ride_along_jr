@@ -25,7 +25,7 @@ interface InputTextProps {
   labelStyle?: any;
   svgSecondIcon?: string;
   placeholder?: string;
-  placeholderStyle: any;
+  placeholderStyle?: any;
   textInputProps?: TextInputProps;
   svgSecondOnPress?: () => void;
   textXValue?: number;

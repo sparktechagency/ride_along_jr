@@ -1,4 +1,3 @@
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import {
   IconClose,
   IconLocationSelections,
@@ -6,21 +5,22 @@ import {
   IconOtherLocation,
   IconSmallSearch,
 } from "@/assets/icon/Icon";
-import MapView, { Marker } from "react-native-maps";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ILocation } from "./(tabs)";
 import { IPlace } from "@/interfaces/map";
-import InputText from "@/lib/inputs/InputText";
 import IwtButton from "@/lib/buttons/IwtButton";
-import MapViewDirections from "react-native-maps-directions";
-import React from "react";
-import { SvgXml } from "react-native-svg";
-import axios from "axios";
+import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 import { useRouter } from "expo-router";
+import React from "react";
+import MapViewDirections from "react-native-maps-directions";
+import { SvgXml } from "react-native-svg";
+import { ILocation } from "./(tabs)";
 
 const where_go = () => {
   const router = useRouter();
@@ -230,7 +230,7 @@ const where_go = () => {
         // backdropComponent={renderBackdrop}
       >
         {/* Content part */}
-        <View style={tw`bg-base rounded-t-2xl pb-5`}>
+        <View style={tw`bg-white rounded-t-2xl pb-5`}>
           {/* Header part */}
 
           {/* <View
@@ -264,6 +264,7 @@ const where_go = () => {
             <SvgXml xml={IconLocationSelections} />
             <View style={tw`gap-4 flex-1`}>
               <InputText
+                placeholderStyle={tw`bg-white`}
                 textXOutRangeFirst={10}
                 textXOutRangeSecond={15}
                 placeholder="Pickup from"
@@ -276,6 +277,7 @@ const where_go = () => {
                 }}
               />
               <InputText
+                placeholderStyle={tw`bg-white`}
                 textXOutRangeFirst={10}
                 textXOutRangeSecond={15}
                 placeholder="Destination"

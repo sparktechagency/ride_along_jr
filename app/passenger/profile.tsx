@@ -11,14 +11,14 @@ import {
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 import BackWithComponent from "@/lib/backHeader/BackWithCoponent";
-import { Formik } from "formik";
-import InputText from "@/lib/inputs/InputText";
-import React from "react";
-import SideModal from "@/lib/modals/SideModal";
-import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
+import InputText from "@/lib/inputs/InputText";
+import SideModal from "@/lib/modals/SideModal";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import { Formik } from "formik";
+import React from "react";
+import { SvgXml } from "react-native-svg";
 
 const profile = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -46,7 +46,7 @@ const profile = () => {
         <View style={tw`relative`}>
           <Image
             style={tw`mb-6 w-24 h-24`}
-            source={require("../../../assets/images/Ellipse118.png")}
+            source={require("@/assets/images/Ellipse118.png")}
           />
           <SvgXml
             xml={IconCamera}
@@ -93,6 +93,7 @@ const profile = () => {
                   <InputText
                     value={values.name}
                     onBlur={handleBlur("name")}
+                    placeholderStyle={tw`bg-white`}
                     onChangeText={handleChange("name")}
                     errorText={errors.name}
                     touched={touched.name}
@@ -105,6 +106,7 @@ const profile = () => {
                 <View style={tw``}>
                   <InputText
                     value={values.email}
+                    placeholderStyle={tw`bg-white`}
                     onBlur={handleBlur("email")}
                     onChangeText={handleChange("email")}
                     errorText={errors.email}

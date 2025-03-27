@@ -1,9 +1,9 @@
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { PrimaryColor } from "@/utils/utils";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack } from "expo-router";
 import tw from "@/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function RootLayout() {
   return (
     <SafeAreaView style={tw`flex-1 bg-base`}>
@@ -42,7 +42,7 @@ export default function RootLayout() {
             <Stack.Screen name="terms_and_conditions" />
             <Stack.Screen name="privacy_policy" />
             <Stack.Screen name="where_go" />
-            <Stack.Screen name="passenger/account/profile" />
+
             <Stack.Screen
               name="trip_done"
               options={{
