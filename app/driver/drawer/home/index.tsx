@@ -290,6 +290,9 @@ const home = () => {
               </View>
               <View>
                 <TButton
+                  onPress={() => {
+                    router?.push("/driver/driver_arriving");
+                  }}
                   title="$500 Accept"
                   containerStyle={tw` w-[70%] self-end rounded-md`}
                   titleStyle={tw`text-xs font-NunitoSansBold text-white`}

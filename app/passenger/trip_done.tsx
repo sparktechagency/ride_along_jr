@@ -1,13 +1,13 @@
 import { IconTripLocation, IconVisaCardWithOutBg } from "@/assets/icon/Icon";
 import { ScrollView, Text, View } from "react-native";
 
+import { PrimaryColor } from "@/utils/utils";
+import { Rating } from "react-native-ratings";
+import React from "react";
+import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Rating } from "react-native-ratings";
-import { SvgXml } from "react-native-svg";
 
 const trip_done = () => {
   const [isFeedBack, setIsFeedBack] = React.useState("");
@@ -53,7 +53,7 @@ const trip_done = () => {
             <Text
               style={tw`text-base text-black font-NunitoSansExtraBold text-center`}
             >
-              Better
+              {isFeedBack ? isFeedBack : "Select your rating"}
             </Text>
             <Rating
               ratingBackgroundColor={PrimaryColor}
@@ -163,6 +163,7 @@ const trip_done = () => {
           <View style={tw`flex-row gap-4 py-4 mx-4`}>
             <TButton
               onPress={() => {
+                router.dismissAll();
                 router.replace("/passenger/drawer/home");
               }}
               title="Done"

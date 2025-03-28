@@ -1,3 +1,5 @@
+import * as Linking from "expo-linking";
+
 import {
   IconCall,
   IconCloseRed,
@@ -66,6 +68,10 @@ const driver_arrived = () => {
   React.useEffect(() => {
     handleGetLocationFormLS();
   }, []);
+
+  const callNumber = (phone: string) => {
+    Linking.openURL(`tel:${phone}`);
+  };
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -250,10 +256,18 @@ const driver_arrived = () => {
                 </View>
               </View>
               <View style={tw`flex-row items-center gap-2`}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    router?.push("/passenger/message");
+                  }}
+                >
                   <SvgXml xml={IconMessage} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    callNumber("4985467868");
+                  }}
+                >
                   <SvgXml xml={IconCall} />
                 </TouchableOpacity>
               </View>
@@ -302,7 +316,7 @@ const driver_arrived = () => {
             containerStyle={tw`mt-4  gap-1 h-14`}
             titleStyle={tw``}
             onPress={() => {
-              router?.push("/auth/otp_verify");
+              router?.push("/auth/driver_otp_verify");
             }}
           />
           <IwtButton

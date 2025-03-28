@@ -1,13 +1,13 @@
 import { IconTripLocation, IconVisaCardWithOutBg } from "@/assets/icon/Icon";
 import { ScrollView, Text, View } from "react-native";
 
+import { PrimaryColor } from "@/utils/utils";
+import { Rating } from "react-native-ratings";
+import React from "react";
+import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Rating } from "react-native-ratings";
-import { SvgXml } from "react-native-svg";
 
 const trip_done = () => {
   const [isFeedBack, setIsFeedBack] = React.useState("");
@@ -24,7 +24,7 @@ const trip_done = () => {
             style={tw`gap-4 pt-4 pb-6 justify-center items-center border-b border-b-gray-200 w-full`}
           >
             <Text style={tw`text-2xl text-deepBlue300 font-NunitoSansBold`}>
-              Your kids' trip is over
+              Your trip has ended!
             </Text>
             <View style={tw`flex-row gap-1  justify-center`}>
               <Text
@@ -48,12 +48,12 @@ const trip_done = () => {
             <Text
               style={tw`text-base text-black text-center font-NunitoSansRegular`}
             >
-              Rate your experience with John
+              How was your experience with Lana's child?
             </Text>
             <Text
               style={tw`text-base text-black font-NunitoSansExtraBold text-center`}
             >
-              Better
+              {isFeedBack ? isFeedBack : "Select your rating"}
             </Text>
             <Rating
               ratingBackgroundColor={PrimaryColor}
@@ -121,49 +121,11 @@ const trip_done = () => {
             </View>
           </View>
 
-          <View style={tw`gap-4 py-3`}>
-            <Text
-              style={tw`text-base text-center text-deepBlue300 font-NunitoSansRegular`}
-            >
-              Tip for John
-            </Text>
-            <View style={tw`flex-row gap-3`}>
-              <TButton
-                title="$5"
-                containerStyle={tw`h-12 w-12 rounded-full ${
-                  isTrips === "5" ? "bg-deepBlue100" : "bg-deepBlue50"
-                }`}
-                titleStyle={tw`text-sm text-deepBlue300 font-NunitoSansBold `}
-                onPress={() => {
-                  setTrips("5");
-                }}
-              />
-              <TButton
-                title="$10"
-                containerStyle={tw`h-12 w-12 rounded-full ${
-                  isTrips === "10" ? "bg-deepBlue100" : "bg-deepBlue50"
-                }`}
-                titleStyle={tw`text-sm text-deepBlue300 font-NunitoSansBold `}
-                onPress={() => {
-                  setTrips("10");
-                }}
-              />
-              <TButton
-                title="$15"
-                containerStyle={tw`h-12 w-12 rounded-full ${
-                  isTrips === "15" ? "bg-deepBlue100" : "bg-deepBlue50"
-                }`}
-                titleStyle={tw`text-sm text-deepBlue300 font-NunitoSansBold `}
-                onPress={() => {
-                  setTrips("15");
-                }}
-              />
-            </View>
-          </View>
           <View style={tw`flex-row gap-4 py-4 mx-4`}>
             <TButton
               onPress={() => {
-                router.replace("/passenger/drawer/home");
+                router.dismissAll();
+                router.replace("/driver/drawer/home");
               }}
               title="Done"
               containerStyle={tw`flex-1 `}

@@ -1,3 +1,5 @@
+import * as Linking from "expo-linking";
+
 import {
   IconCall,
   IconCloseRed,
@@ -74,6 +76,10 @@ const driver_arriving = () => {
 
   //   return () => {};
   // }, []);
+
+  const callNumber = (phone: string) => {
+    Linking.openURL(`tel:${phone}`);
+  };
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -258,10 +264,18 @@ const driver_arriving = () => {
                 </View>
               </View>
               <View style={tw`flex-row items-center gap-2`}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    router?.push("/passenger/message");
+                  }}
+                >
                   <SvgXml xml={IconMessage} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    callNumber("4985467868");
+                  }}
+                >
                   <SvgXml xml={IconCall} />
                 </TouchableOpacity>
               </View>
