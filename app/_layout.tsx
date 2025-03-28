@@ -44,6 +44,8 @@ export default function RootLayout() {
             <Stack.Screen name="terms_and_conditions" />
             <Stack.Screen name="privacy_policy" />
 
+            {/* Passenger parts here */}
+
             <Stack.Screen name="passenger/where_go" />
             <Stack.Screen
               name="passenger/trip_done"
@@ -83,6 +85,39 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="passenger/driver_arrived"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            {/* Driver parts here */}
+            <Stack.Screen
+              name="driver/trip_done"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+
+            <Stack.Screen
+              name="driver/arrived_done"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+
+            <Stack.Screen
+              name="driver/driver_responding"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver/driver_arriving"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver/driver_arrived"
               options={{
                 animation: "slide_from_right",
               }}
