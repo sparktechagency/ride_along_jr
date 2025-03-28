@@ -123,10 +123,10 @@ const CustomDrawerContent = (props) => {
           {/* Toggle and Logout */}
           <View style={tw`mt-auto pt-5  `}>
             <IwtButton
-              title="Become a Driver"
+              title="Book a ride for your child"
               svg={IconDriver}
               onPress={() => {
-                router?.push("/driver/drawer/home");
+                router?.push("/passenger/drawer/home");
               }}
               containerStyle={tw`mb-4 shadow-md`}
             />

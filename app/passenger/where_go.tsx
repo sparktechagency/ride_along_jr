@@ -301,7 +301,7 @@ const where_go = () => {
                     "travelData",
                     JSON.stringify(travelReadyData)
                   );
-                  router?.push("/estimated_details");
+                  router?.push("/passenger/estimated_details");
                 }}
                 containerStyle={tw` mx-4`}
                 svg={IconSmallSearch}

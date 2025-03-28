@@ -163,7 +163,7 @@ const trip_done = () => {
           <View style={tw`flex-row gap-4 py-4 mx-4`}>
             <TButton
               onPress={() => {
-                router.replace("/passenger");
+                router.replace("/passenger/drawer/home");
               }}
               title="Done"
               containerStyle={tw`flex-1 `}

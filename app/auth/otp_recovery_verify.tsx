@@ -1,17 +1,15 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import tw from '@/lib/tailwind';
-import BackButton from '@/lib/backHeader/BackButton';
-import { router } from 'expo-router';
-import { OtpInput } from 'react-native-otp-entry';
-import { PrimaryColor } from '@/utils/utils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import TButton from '@/lib/buttons/TButton';
+import { Text, TouchableOpacity, View } from "react-native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import BackButton from "@/lib/backHeader/BackButton";
+import { OtpInput } from "react-native-otp-entry";
+import { PrimaryColor } from "@/utils/utils";
+import React from "react";
+import TButton from "@/lib/buttons/TButton";
+import { router } from "expo-router";
+import tw from "@/lib/tailwind";
 
 const otp_recovery_verify = () => {
-
-
-
   return (
     <View style={tw`flex-1 bg-base `}>
       <BackButton onPress={() => router.back()} />
@@ -41,8 +39,9 @@ const otp_recovery_verify = () => {
             console.log(`OTP is ${text}`);
             const role = await AsyncStorage.getItem("role");
             if (role === "driver") {
+              router.push("/driver/name");
             } else {
-              router.push("/auth/name");
+              router.push("/passenger/name");
             }
           }}
           textInputProps={{
@@ -84,7 +83,7 @@ const otp_recovery_verify = () => {
         />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default otp_recovery_verify
+export default otp_recovery_verify;

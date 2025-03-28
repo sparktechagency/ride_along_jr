@@ -1,11 +1,11 @@
-import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
+import { Stack, useRouter } from "expo-router";
 
 import { IconSmallYellowLight } from "@/assets/icon/Icon";
+import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { SvgXml } from "react-native-svg";
 
 const NameScreen = () => {
   const [name, setName] = useState("");
@@ -47,11 +47,12 @@ const NameScreen = () => {
               value={name}
             />
           </View>
+
           <TButton
-            title="Next"
+            title="Next 1/6"
             containerStyle={tw`mt-4 mx-4`}
             onPress={() => {
-              router.push("/passenger/drawer");
+              router.push("/driver/contact_information");
             }}
           />
         </>

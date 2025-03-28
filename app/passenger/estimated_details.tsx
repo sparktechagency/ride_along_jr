@@ -1,13 +1,18 @@
 import {
-  IconCloseRed,
-  IconDestination,
-  IconPaymentMethod,
-  IconPickup,
+  IconBackArray,
+  IconCar,
+  IconDot,
+  IconMinus,
+  IconNormalUser,
+  IconPlus,
+  IconRightArrow,
+  IconVisaCard,
 } from "@/assets/icon/Icon";
-import { Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-import IwtButton from "@/lib/buttons/IwtButton";
+import { ImgCar } from "@/assets/images";
+import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,8 +23,11 @@ import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
 import { ILocation } from "./(tabs)";
 
-const request_car = () => {
+const estimated_details = () => {
   const router = useRouter();
+
+  const [children, setChildren] = React.useState(2);
+
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
@@ -28,10 +36,16 @@ const request_car = () => {
   const sheetRef = React.useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = React.useMemo(() => ["10%", "55%"], []);
+  const snapPoints = React.useMemo(() => ["1%", "60%"], []);
 
   // callbacks
-  const handleSheetChange = React.useCallback((index: number) => {}, []);
+  const handleSheetChange = React.useCallback((index: number) => {
+    if (index === 0 && !travelData?.destination && !travelData?.pickup) {
+      sheetRef.current?.close();
+
+      router.back();
+    }
+  }, []);
 
   const handleClosePress = React.useCallback(() => {
     sheetRef.current?.close();
@@ -56,13 +70,7 @@ const request_car = () => {
     handleGetLocationFormLS();
   }, []);
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      router?.push("/driver_responding");
-    }, 3000);
-
-    return () => {};
-  }, []);
+  // console.log(travelData);
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -103,16 +111,16 @@ const request_car = () => {
           >
             {/* Current Location Marker (if no pickup selected) */}
             {/* {!travelReadyData?.pick && currentLocation?.location?.coords && (
-            <Marker
-              coordinate={{
-                latitude: currentLocation.location.coords.latitude,
-                longitude: currentLocation.location.coords.longitude,
-              }}
-              title={travelReadyData?.pick?.name}
-              description={travelReadyData?.pick?.formatted_address}
-              pinColor="blue"
-            />
-          )} */}
+              <Marker
+                coordinate={{
+                  latitude: currentLocation.location.coords.latitude,
+                  longitude: currentLocation.location.coords.longitude,
+                }}
+                title={travelReadyData?.pick?.name}
+                description={travelReadyData?.pick?.formatted_address}
+                pinColor="blue"
+              />
+            )} */}
 
             {/* Pickup Marker */}
             {travelReadyData?.pickup?.geometry?.location && (
@@ -202,99 +210,104 @@ const request_car = () => {
         onChange={handleSheetChange}
         // backdropComponent={renderBackdrop}
       >
-        <View style={tw`px-4 `}>
-          <View
-            style={tw`flex-row justify-between items-center pb-2 border-b border-b-gray-200`}
-          >
-            <View style={tw`gap-0.1`}>
-              <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Checking vehicle nearby...
-              </Text>
-              <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Only a few seconds to go
-              </Text>
-            </View>
-            <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
-              28 sec
-            </Text>
-          </View>
-
-          <View>
-            <View
-              style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
-            >
-              <SvgXml xml={IconPickup} />
-              <View style={tw` `}>
-                <Text
-                  style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
-                >
-                  Pickup
-                </Text>
-                <Text
-                  style={tw`text-base font-NunitoSansBold text-deepBlue300`}
-                >
-                  {travelReadyData?.pickup?.formatted_address}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
-            >
-              <SvgXml xml={IconDestination} />
-              <View style={tw` `}>
-                <Text
-                  style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
-                >
-                  Destination
-                </Text>
-                <Text
-                  style={tw`text-base font-NunitoSansBold text-deepBlue300`}
-                >
-                  {travelReadyData?.destination?.formatted_address}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={tw`flex-row items-center  gap-2 py-4 border-b border-b-gray-200`}
-            >
-              <SvgXml xml={IconPaymentMethod} />
-              <View style={tw`flex-1 flex-row justify-between items-end`}>
-                <View style={tw``}>
-                  <Text
-                    style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
-                  >
-                    Payment method
-                  </Text>
-                  <Text
-                    style={tw`text-base font-NunitoSansBold text-deepBlue300`}
-                  >
-                    VISA Card
-                  </Text>
-                </View>
-                <View>
-                  <Text
-                    style={tw` text-base font-NunitoSansBold text-deepBlue300`}
-                  >
-                    $124.00
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <IwtButton
-            svg={IconCloseRed}
-            title="Cancel Ride"
-            containerStyle={tw`mt-4 bg-transparent gap-1 h-14`}
-            titleStyle={tw`text-[#D21F18] font-NunitoSansBold `}
+        <View>
+          <TouchableOpacity
             onPress={() => {
               router?.back();
             }}
-          />
+            style={tw`flex-row items-center gap-2 px-4 pb-4`}
+          >
+            <SvgXml xml={IconBackArray} />
+            <Text style={tw`text-base font-NunitoSansBold`}>
+              Estimated Details
+            </Text>
+          </TouchableOpacity>
+          <View>
+            <View>
+              <Image source={ImgCar} style={tw` self-center`} />
+            </View>
+            <View style={tw`px-4 flex-row justify-between items-end`}>
+              <View>
+                <SvgXml xml={IconCar} />
+                <View style={tw`flex-row items-center `}>
+                  <Text
+                    style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
+                  >
+                    In 15 min
+                  </Text>
+                  <SvgXml xml={IconDot} />
+                  <View style={tw`flex-row items-center gap-2`}>
+                    <SvgXml xml={IconNormalUser} />
+                    <Text
+                      style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
+                    >
+                      {children} kids
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={tw`flex-row items-center gap-2`}>
+                <Text style={tw`text-2xl font-NunitoSansBold text-black`}>
+                  ${240.0 * 0.2 * children}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View
+            style={tw`flex-row justify-between items-center px-4 py-5 border-b border-b-gray-200`}
+          >
+            <Text
+              style={tw`text-base font-NunitoSansRegular text-deepBlue100 `}
+            >
+              Kids
+            </Text>
+            <View style={tw`flex-row items-center gap-6`}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (children > 1) {
+                    setChildren(children - 1);
+                  }
+                }}
+              >
+                <SvgXml xml={IconMinus} />
+              </TouchableOpacity>
+              <Text style={tw`text-base font-NunitoSansBold`}>{children}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setChildren(children + 1);
+                }}
+              >
+                <SvgXml xml={IconPlus} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={tw`flex-row items-center justify-between px-4 py-5`}
+          >
+            <View>
+              <Text style={tw`text-base font-NunitoSansBold text-black  `}>
+                Payment method
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center`}>
+              <SvgXml xml={IconVisaCard} />
+              <SvgXml xml={IconRightArrow} />
+            </View>
+          </TouchableOpacity>
+          <View style={tw`px-4`}>
+            <TButton
+              title="Request Now"
+              onPress={() => {
+                router?.push("/passenger/request_car");
+              }}
+            />
+          </View>
         </View>
+
+        {/* End screens */}
       </BottomSheet>
     </View>
   );
 };
 
-export default request_car;
+export default estimated_details;

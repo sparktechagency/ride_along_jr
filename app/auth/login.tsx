@@ -6,7 +6,6 @@ import {
   IconOpenEye,
   IconSmallRightTick,
 } from "@/assets/icon/Icon";
-import { Link, useRouter } from "expo-router";
 import {
   Keyboard,
   ScrollView,
@@ -15,16 +14,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Link, useRouter } from "expo-router";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "@/lib/backHeader/BackButton";
-import IwtButton from "@/lib/buttons/IwtButton";
-import TButton from "@/lib/buttons/TButton";
-import InputText from "@/lib/inputs/InputText";
-import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
-import { Formik } from "formik";
-import React from "react";
 import { Checkbox } from "react-native-ui-lib";
+import { Formik } from "formik";
+import InputText from "@/lib/inputs/InputText";
+import IwtButton from "@/lib/buttons/IwtButton";
+import { PrimaryColor } from "@/utils/utils";
+import React from "react";
+import TButton from "@/lib/buttons/TButton";
+import tw from "@/lib/tailwind";
 
 const login = () => {
   const router = useRouter();
@@ -135,10 +136,10 @@ const login = () => {
                     Forgot password?
                   </Text> */}
                   <Link
-                  href={"/auth/forgot_password"}
-                  style={tw`text-sm font-NunitoSansBold text-primary underline`}
+                    href={"/auth/forgot_password"}
+                    style={tw`text-sm font-NunitoSansBold text-primary underline`}
                   >
-                  Forgot Password?
+                    Forgot Password?
                   </Link>
                 </View>
                 <View style={tw`px-4 flex-row items-center mt-5 gap-2 `}>
@@ -164,9 +165,15 @@ const login = () => {
                 <View style={tw`px-4 mt-5 gap-5`}>
                   <TButton
                     title="Login"
-                    onPress={() => {
+                    onPress={async () => {
+                      const role = await AsyncStorage.getItem("role");
                       // handleSubmit
-                      router.push("/auth/otp_verify");
+                      // router.push("/auth/otp_verify");
+                      if (role === "passenger") {
+                        router.push("/passenger/drawer/home");
+                      } else {
+                        router.push("/driver/drawer/home");
+                      }
                     }}
                   />
                   <IwtButton
