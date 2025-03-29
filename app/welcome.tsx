@@ -81,7 +81,7 @@ const welcome = () => {
 
       <View style={tw`px-4 pb-12`}>
         <IwtButton
-          title="Need to book a ride for my kid"
+          title="Book a Ride for My Child(ren)"
           svg={IconUserWhite}
           onPress={async () => {
             await AsyncStorage.setItem("role", "passenger");
@@ -94,7 +94,7 @@ const welcome = () => {
           }}
         />
         <IwtButton
-          title="I'd like to drive"
+          title="Become a Driver"
           svg={IconCardBlack}
           containerStyle={tw`mt-4 bg-deepBlue50 `}
           titleStyle={tw`text-black text-base `}
