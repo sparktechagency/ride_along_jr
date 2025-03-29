@@ -1,13 +1,12 @@
 import { IconTripLocation, IconVisaCardWithOutBg } from "@/assets/icon/Icon";
 import { ScrollView, Text, View } from "react-native";
 
-import { PrimaryColor } from "@/utils/utils";
-import { Rating } from "react-native-ratings";
-import React from "react";
-import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Rating } from "react-native-ratings";
+import { SvgXml } from "react-native-svg";
 
 const trip_done = () => {
   const [isFeedBack, setIsFeedBack] = React.useState("");
@@ -56,7 +55,8 @@ const trip_done = () => {
               {isFeedBack ? isFeedBack : "Select your rating"}
             </Text>
             <Rating
-              ratingBackgroundColor={PrimaryColor}
+              type="custom"
+              ratingBackgroundColor={"#A0A8B6"}
               // ratingColor={PrimaryColor}
               tintColor="#EFF2F2"
               // showRating
