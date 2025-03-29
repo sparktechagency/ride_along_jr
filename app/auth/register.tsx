@@ -158,7 +158,13 @@ const register = () => {
                   </TouchableOpacity>
                 </View>
                 <View style={tw`px-4 mt-5 gap-5`}>
-                  <TButton title="Sign up" onPress={handleSubmit} />
+                  <TButton
+                    title="Sign up"
+                    onPress={() => {
+                      // handleSubmit()
+                      router.push("/auth/otp_verify");
+                    }}
+                  />
                   <IwtButton
                     svg={IconGoogleIcon}
                     title="Continue with google"

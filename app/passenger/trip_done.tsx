@@ -3,7 +3,6 @@ import { ScrollView, Text, View } from "react-native";
 
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Rating } from "react-native-ratings";
@@ -53,10 +52,11 @@ const trip_done = () => {
             <Text
               style={tw`text-base text-black font-NunitoSansExtraBold text-center`}
             >
-              Better
+              {isFeedBack ? isFeedBack : "Select your rating"}
             </Text>
             <Rating
-              ratingBackgroundColor={PrimaryColor}
+              type="custom"
+              ratingBackgroundColor={"#A0A8B6"}
               // ratingColor={PrimaryColor}
               tintColor="#EFF2F2"
               // showRating
@@ -163,7 +163,8 @@ const trip_done = () => {
           <View style={tw`flex-row gap-4 py-4 mx-4`}>
             <TButton
               onPress={() => {
-                router.replace("/passenger");
+                router.dismissAll();
+                router.replace("/passenger/drawer/home");
               }}
               title="Done"
               containerStyle={tw`flex-1 `}

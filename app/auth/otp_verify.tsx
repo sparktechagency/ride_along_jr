@@ -41,12 +41,7 @@ const otp_verify = () => {
           // onTextChange={(text) => console.log(text)}
           onFilled={async (text) => {
             console.log(`OTP is ${text}`);
-            const role = await AsyncStorage.getItem("role");
-            // console.log(role);
-            if (role === "driver") {
-            } else {
-              router.push("/auth/name");
-            }
+            router.push("/auth/name");
           }}
           textInputProps={{
             accessibilityLabel: "One-Time Password",
@@ -77,8 +72,9 @@ const otp_verify = () => {
             const role = await AsyncStorage.getItem("role");
             console.log(role);
             if (role === "driver") {
+              router.push("/driver/name");
             } else {
-              router.push("/auth/name");
+              router.push("/passenger/name");
             }
           }}
           title="Submit OTP"

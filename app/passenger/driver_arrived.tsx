@@ -1,28 +1,28 @@
 import {
   IconCall,
+  IconCloseRed,
   IconDestination,
-  IconLockWhite,
   IconMessage,
   IconOtpLocker,
   IconPaymentMethod,
   IconStar,
 } from "@/assets/icon/Icon";
-import MapView, { Marker } from "react-native-maps";
 import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Avatar } from "react-native-ui-lib";
-import BottomSheet from "@gorhom/bottom-sheet";
-import { ILocation } from "./(tabs)";
 import IwtButton from "@/lib/buttons/IwtButton";
-import MapViewDirections from "react-native-maps-directions";
-import React from "react";
-import { SvgXml } from "react-native-svg";
 import tw from "@/lib/tailwind";
+import BottomSheet from "@gorhom/bottom-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import React from "react";
+import MapViewDirections from "react-native-maps-directions";
+import { SvgXml } from "react-native-svg";
+import { Avatar } from "react-native-ui-lib";
+import { ILocation } from "./(tabs)";
 
-const arrived_done = () => {
+const driver_arrived = () => {
   const router = useRouter();
   const [travelData, setTravelData] = React.useState({
     destination: "",
@@ -64,6 +64,14 @@ const arrived_done = () => {
 
   React.useEffect(() => {
     handleGetLocationFormLS();
+  }, []);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      router?.push("/passenger/arrived_done");
+    }, 3000);
+
+    return () => {};
   }, []);
 
   return (
@@ -210,10 +218,10 @@ const arrived_done = () => {
           >
             <View style={tw`gap-0.1`}>
               <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Your kids arrived safely
+                Your driver has arrived!
               </Text>
               <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Share the PIN code with the driver.
+                Meet your driver at the pickup spot to begin your kid’s ride.
               </Text>
             </View>
             {/* <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
@@ -337,20 +345,21 @@ const arrived_done = () => {
                 </View>
               </View>
             </View>
-            <View style={tw`py-4`}>
-              <IwtButton
-                onPress={() => {
-                  router.push("/trip_done");
-                }}
-                svg={IconLockWhite}
-                title="Send OTP"
-              />
-            </View>
           </View>
+
+          <IwtButton
+            svg={IconCloseRed}
+            title="Cancel Ride"
+            containerStyle={tw`mt-4 bg-transparent gap-1 h-14`}
+            titleStyle={tw`text-[#D21F18] font-NunitoSansBold `}
+            onPress={() => {
+              router?.back();
+            }}
+          />
         </View>
       </BottomSheet>
     </View>
   );
 };
 
-export default arrived_done;
+export default driver_arrived;

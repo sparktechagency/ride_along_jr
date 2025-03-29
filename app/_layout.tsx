@@ -1,9 +1,9 @@
-import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { PrimaryColor } from "@/utils/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import tw from "@/lib/tailwind";
 export default function RootLayout() {
   return (
     <SafeAreaView style={tw`flex-1 bg-base`}>
@@ -38,63 +38,88 @@ export default function RootLayout() {
             <Stack.Screen name="auth/login" />
             <Stack.Screen name="auth/register" />
             <Stack.Screen name="auth/otp_verify" />
-            <Stack.Screen name="auth/name" />
+            <Stack.Screen name="passenger/name" />
+            <Stack.Screen name="driver/name" />
+            <Stack.Screen name="driver/contact_information" />
             <Stack.Screen name="terms_and_conditions" />
             <Stack.Screen name="privacy_policy" />
-            <Stack.Screen name="where_go" />
+
+            {/* Passenger parts here */}
+
+            <Stack.Screen name="passenger/where_go" />
+            <Stack.Screen
+              name="passenger/trip_done"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="passenger/estimated_details"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="passenger/arrived_done"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="passenger/request_car"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="passenger/driver_responding"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="passenger/driver_arriving"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="passenger/driver_arrived"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            {/* Driver parts here */}
+            <Stack.Screen
+              name="driver/trip_done"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
 
             <Stack.Screen
-              name="trip_done"
+              name="driver/arrived_done"
               options={{
                 animation: "slide_from_right",
               }}
             />
-            <Stack.Screen
-              name="estimated_details"
-              options={{
-                animation: "slide_from_right",
-              }}
-            />
-            <Stack.Screen
-              name="arrived_done"
-              options={{
-                animation: "slide_from_right",
-              }}
-            />
-            <Stack.Screen
-              name="request_car"
-              options={{
-                animation: "slide_from_right",
-              }}
-            />
-            <Stack.Screen
-              name="driver_responding"
-              options={{
-                animation: "slide_from_right",
-              }}
-            />
-            <Stack.Screen
-              name="driver_arriving"
-              options={{
-                animation: "slide_from_right",
-              }}
-            />
-            <Stack.Screen
-              name="driver_arrived"
-              options={{
-                animation: "slide_from_right",
-              }}
-            />
-            <Stack.Screen
-              name="search"
-              options={{
-                presentation: "containedTransparentModal",
-                animation: "slide_from_bottom",
-                contentStyle: tw`bg-transparent `,
 
-                // animation: "slide_from_bottom",
-                // contentStyle: tw`bg-transparent pt-3`,
-                // keyboardHandlingEnabled: true,
+            <Stack.Screen
+              name="driver/driver_responding"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver/driver_arriving"
+              options={{
+                animation: "slide_from_right",
+              }}
+            />
+            <Stack.Screen
+              name="driver/driver_arrived"
+              options={{
+                animation: "slide_from_right",
               }}
             />
           </Stack>

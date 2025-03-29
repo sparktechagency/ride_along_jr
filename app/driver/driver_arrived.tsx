@@ -1,11 +1,13 @@
+import * as Linking from "expo-linking";
+
 import {
   IconCall,
   IconCloseRed,
   IconDestination,
   IconMessage,
-  IconOtpLocker,
   IconPaymentMethod,
   IconStar,
+  IconTiming,
 } from "@/assets/icon/Icon";
 import MapView, { Marker } from "react-native-maps";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -18,6 +20,7 @@ import IwtButton from "@/lib/buttons/IwtButton";
 import MapViewDirections from "react-native-maps-directions";
 import React from "react";
 import { SvgXml } from "react-native-svg";
+import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -66,13 +69,9 @@ const driver_arrived = () => {
     handleGetLocationFormLS();
   }, []);
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      router?.push("/arrived_done");
-    }, 3000);
-
-    return () => {};
-  }, []);
+  const callNumber = (phone: string) => {
+    Linking.openURL(`tel:${phone}`);
+  };
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -189,9 +188,9 @@ const driver_arrived = () => {
                   onReady={(result) => {
                     mapRef.current?.fitToCoordinates(result.coordinates, {
                       edgePadding: {
-                        top: 100,
+                        top: 20,
                         right: 50,
-                        bottom: 300, // Extra space at bottom for bottom sheet
+                        bottom: 500, // Extra space at bottom for bottom sheet
                         left: 50,
                       },
                       animated: true,
@@ -216,17 +215,20 @@ const driver_arrived = () => {
           <View
             style={tw`flex-row justify-between items-center pb-2 border-b border-b-gray-200`}
           >
-            <View style={tw`gap-0.1`}>
+            <View style={tw`gap-1 flex-row items-center justify-center`}>
+              <SvgXml xml={IconTiming} />
               <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Your driver has arrived!
+                2:30s
               </Text>
-              <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Meet your driver at the pickup spot to begin your kid’s ride.
+              <Text
+                style={tw`text-sm  font-NunitoSansRegular text-deepBlue200`}
+              >
+                Until pickup
               </Text>
             </View>
             {/* <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
-                28 sec
-              </Text>  */}
+              28 sec
+            </Text> */}
           </View>
           <View>
             <View
@@ -240,7 +242,7 @@ const driver_arrived = () => {
                   }}
                 />
                 <View>
-                  <View style={tw`flex-row items-center gap-1`}>
+                  <View style={tw` gap-1`}>
                     <Text
                       style={tw`text-base font-NunitoSansBold text-deepBlue300`}
                     >
@@ -251,55 +253,23 @@ const driver_arrived = () => {
                       <Text>4.5</Text>
                     </View>
                   </View>
-                  <View style={tw`gap-1`}>
-                    <Text
-                      style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
-                    >
-                      Toyota Corolla
-                    </Text>
-                    <Text
-                      style={tw`text-xs font-NunitoSansBold text-deepBlue200 border border-deepBlue200 self-start px-2 py-0.1 rounded `}
-                    >
-                      4985467868
-                    </Text>
-                  </View>
                 </View>
               </View>
               <View style={tw`flex-row items-center gap-2`}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    router?.push("/passenger/message");
+                  }}
+                >
                   <SvgXml xml={IconMessage} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    callNumber("4985467868");
+                  }}
+                >
                   <SvgXml xml={IconCall} />
                 </TouchableOpacity>
-              </View>
-            </View>
-            <View
-              style={tw`flex-row items-center justify-between py-4 border-b border-b-gray-200`}
-            >
-              <View style={tw`flex-row items-center gap-2`}>
-                <SvgXml xml={IconOtpLocker} />
-                <Text
-                  style={tw`text-base font-NunitoSansBold text-deepBlue300`}
-                >
-                  OTP for this ride
-                </Text>
-              </View>
-              <View style={tw`flex-row gap-1`}>
-                {[...Array(4)].map((o, i) => {
-                  return (
-                    <View
-                      key={i}
-                      style={tw`text-base font-NunitoSansBold bg-deepBlue50 h-10 w-10   self-center rounded-full justify-center items-center`}
-                    >
-                      <Text
-                        style={tw`text-base font-NunitoSansBold  text-deepBlue300 `}
-                      >
-                        {i + 1}
-                      </Text>
-                    </View>
-                  );
-                })}
               </View>
             </View>
             <View
@@ -319,6 +289,7 @@ const driver_arrived = () => {
                 </Text>
               </View>
             </View>
+
             <View
               style={tw`flex-row items-center  gap-2 py-4 border-b border-b-gray-200`}
             >
@@ -328,15 +299,8 @@ const driver_arrived = () => {
                   <Text
                     style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                   >
-                    Payment method
+                    Estimated price
                   </Text>
-                  <Text
-                    style={tw`text-base font-NunitoSansBold text-deepBlue300`}
-                  >
-                    VISA Card
-                  </Text>
-                </View>
-                <View>
                   <Text
                     style={tw` text-base font-NunitoSansBold text-deepBlue300`}
                   >
@@ -347,6 +311,14 @@ const driver_arrived = () => {
             </View>
           </View>
 
+          <TButton
+            title="Complete ride"
+            containerStyle={tw`mt-4  gap-1 h-14`}
+            titleStyle={tw``}
+            onPress={() => {
+              router?.push("/auth/driver_otp_verify");
+            }}
+          />
           <IwtButton
             svg={IconCloseRed}
             title="Cancel Ride"

@@ -10,16 +10,16 @@ import {
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { Avatar } from "react-native-ui-lib";
-import { Drawer } from "expo-router/drawer";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import IButton from "@/lib/buttons/IButton";
 import IwtButton from "@/lib/buttons/IwtButton";
-import { SvgXml } from "react-native-svg";
-import tw from "twrnc"; // or your preferred tailwind solution
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useRouter } from "expo-router";
+import { Drawer } from "expo-router/drawer";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SvgXml } from "react-native-svg";
+import { Avatar } from "react-native-ui-lib";
+import tw from "twrnc"; // or your preferred tailwind solution
 
 const CustomDrawerContent = (props) => {
   const insets = useSafeAreaInsets();
@@ -123,10 +123,10 @@ const CustomDrawerContent = (props) => {
           {/* Toggle and Logout */}
           <View style={tw`mt-auto pt-5  `}>
             <IwtButton
-              title="Become a Driver"
+              title="Book a Ride for My Child(ren)"
               svg={IconDriver}
               onPress={() => {
-                router?.push("/driver/drawer/home");
+                router?.push("/passenger/drawer/home");
               }}
               containerStyle={tw`mb-4 shadow-md`}
             />

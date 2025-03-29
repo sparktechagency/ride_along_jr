@@ -58,7 +58,7 @@ const driver_responding = () => {
 
   React.useEffect(() => {
     setTimeout(() => {
-      router?.push("/driver_arriving");
+      router?.push("/passenger/driver_arriving");
     }, 3000);
 
     return () => {};

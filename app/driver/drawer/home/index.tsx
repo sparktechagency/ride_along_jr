@@ -1,16 +1,21 @@
 import * as Location from "expo-location";
 
-import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
+import {
+  IconLocationOnly,
+  IconMenu,
+  IconOverviewCar,
+  IconOverviewClosed,
+  IconOverviewDollar,
+} from "@/assets/icon/Icon";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import { Avatar, LoaderScreen } from "react-native-ui-lib";
 
-import { PrimaryColor } from "@/utils/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Avatar } from "react-native-ui-lib";
 import React from "react";
 import { SvgXml } from "react-native-svg";
 // import { GoogleMaps } from "expo-maps";
+import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -108,11 +113,11 @@ const home = () => {
           <Text style={tw`font-NunitoSansRegular text-black text-xl`}>
             Welcome back,
           </Text>
-          <Text style={tw`font-NunitoSansBold text-black text-xl`}>Lana</Text>
+          <Text style={tw`font-NunitoSansBold text-black text-xl`}>John</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
-            router?.push("/passenger/profile");
+            router?.push("/driver /profile");
           }}
         >
           <Avatar
@@ -123,9 +128,49 @@ const home = () => {
           />
         </TouchableOpacity>
       </View>
+      <View style={tw`px-4  gap-3`}>
+        <View>
+          <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
+            Overview
+          </Text>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={tw` gap-3`}
+        >
+          <View style={tw`bg-white p-3 rounded-lg gap-2  w-30`}>
+            <SvgXml xml={IconOverviewCar} />
+            <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue300`}>
+              Completed today
+            </Text>
+            <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
+              05
+            </Text>
+          </View>
+          <View style={tw`bg-white p-3 rounded-lg gap-2  w-30`}>
+            <SvgXml xml={IconOverviewClosed} />
+            <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue300`}>
+              Cancelled today
+            </Text>
+            <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
+              01
+            </Text>
+          </View>
+          <View style={tw`bg-white p-3 rounded-lg gap-2  w-30`}>
+            <SvgXml xml={IconOverviewDollar} />
+            <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue300`}>
+              Revenue this week
+            </Text>
+            <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
+              $1240
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
       <View style={tw`px-4 my-8 gap-3`}>
         {/* main content  */}
-        <Text style={tw`text-deepBlue200 font-NunitoSansRegular text-sm`}>
+        {/* <Text style={tw`text-deepBlue200 font-NunitoSansRegular text-sm`}>
           Your current location
         </Text>
         <View style={tw`flex-row items-center gap-1`}>
@@ -142,7 +187,7 @@ const home = () => {
             containerStyle={tw`w-full min-h-80 my-4 pb-0.5  rounded-lg`}
           />
         ) : (
-          <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg`}>
+          <View style={tw`w-full h-52 my-4 pb-0.5  rounded-lg`}>
             <MapView
               mapType="standard"
               style={tw`flex-1 rounded-lg`}
@@ -189,22 +234,71 @@ const home = () => {
               </Marker>
             </MapView>
           </View>
-        )}
+        )} */}
 
-        <View style={tw`flex-row items-center gap-2`}>
-          <View style={tw`shadow-md rounded-2xl self-start`}>
-            <SvgXml xml={IconMapDirection} />
+        <View style={tw`flex-row items-center  gap-2`}>
+          <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
+            Passenger request's
+          </Text>
+          <View style={tw`px-2 py-1 rounded-full bg-primary`}>
+            <Text style={tw`text-xs  text-white `}>1</Text>
           </View>
+        </View>
+        {/* <View>
+          <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue100`}>
+            You have no passenger request's today.
+          </Text>
+        </View> */}
+        {/* create card first user show image name price locaion etc */}
+        <View>
           <TouchableOpacity
             onPress={() => {
-              // router.push("/where_go");
-              router.push("/passenger/where_go");
+              router?.push("/driver/driver_responding");
             }}
-            style={tw`bg-white h-12 rounded-xl justify-center  shadow-md flex-1`}
+            style={tw`bg-white p-3 rounded-lg`}
           >
-            <Text style={tw`px-4 font-NunitoSansRegular text-deepBlue `}>
-              Where do you wanna go?
-            </Text>
+            <View style={tw` flex-row items-center justify-center pb-4 gap-2`}>
+              <SvgXml xml={IconLocationOnly} />
+              <Text
+                style={tw`flex-1 text-base font-NunitoSansBold text-deepBlue300 pt-2`}
+              >
+                2208 W 8TH ST LOS ANGELES, CA 90015
+              </Text>
+            </View>
+            <View
+              style={tw` bg-base p-3 rounded-lg gap-4 flex-row items-center justify-between`}
+            >
+              <View style={tw`flex-row gap-2 items-center`}>
+                <Avatar
+                  size={50}
+                  source={{
+                    uri: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                  }}
+                />
+                <View style={tw``}>
+                  <Text
+                    style={tw`text-base font-NunitoSansBold text-deepBlue300`}
+                  >
+                    John Doe
+                  </Text>
+                  <Text
+                    style={tw`text-sm font-NunitoSansMedium text-deepBlue300`}
+                  >
+                    kids : 4
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <TButton
+                  onPress={() => {
+                    router?.push("/driver/driver_arriving");
+                  }}
+                  title="$500 Accept"
+                  containerStyle={tw` w-[70%] self-end rounded-md`}
+                  titleStyle={tw`text-xs font-NunitoSansBold text-white`}
+                />
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
