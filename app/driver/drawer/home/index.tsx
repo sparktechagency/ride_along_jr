@@ -7,13 +7,13 @@ import {
   IconOverviewClosed,
   IconOverviewDollar,
 } from "@/assets/icon/Icon";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Avatar } from "react-native-ui-lib";
 import React from "react";
 import { SvgXml } from "react-native-svg";
+import { Avatar } from "react-native-ui-lib";
 // import { GoogleMaps } from "expo-maps";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
@@ -71,6 +71,8 @@ const home = () => {
       setCurrentLocation(exitLocation);
       setLoading(false);
     } else {
+      Location.requestForegroundPermissionsAsync();
+      Location.requestBackgroundPermissionsAsync();
       const newLocation = await Location.getCurrentPositionAsync({});
       // Reverse geocode to get address
       let addressResponse = await Location.reverseGeocodeAsync({
@@ -117,7 +119,7 @@ const home = () => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            router?.push("/driver /profile");
+            router?.push("/driver/profile");
           }}
         >
           <Avatar

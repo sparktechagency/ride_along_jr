@@ -31,7 +31,7 @@
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.arifbiswas.ride_along_jr"
@@ -48,9 +48,9 @@
         {
           "image": "./assets/images/iconm.png",
           "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#5c7b7e",
-          "enableFullScreenImage_legacy": true
+          "resizeMode": "cover",
+          "backgroundColor": "#5c7b7e"
+     
         }
       ],
       [

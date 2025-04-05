@@ -99,12 +99,12 @@ const InputText = ({
   };
 
   React.useEffect(() => {
-    if (value?.trim().length) {
+    if (value?.trim().length && editable) {
       handleFocus();
     } else {
       handleBlur();
     }
-  }, [value]);
+  }, [value, editable]);
 
   const textX = textY.current.interpolate({
     inputRange: [textXValue, 0],
@@ -117,10 +117,12 @@ const InputText = ({
     extrapolate: "clamp",
   });
 
+  // console.log(editable);
+
   return (
     <TouchableOpacity
       activeOpacity={1} // Ensure the opacity doesn't change on press
-      onPress={handleFocus} // Focus the input when the container is pressed
+      // onPress={handleFocus} // Focus the input when the container is pressed
       style={[tw``, containerLayoutStyle]}
     >
       {label && (

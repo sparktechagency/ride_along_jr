@@ -66,6 +66,8 @@ const home = () => {
       setCurrentLocation(exitLocation);
       setLoading(false);
     } else {
+      Location.requestForegroundPermissionsAsync();
+      Location.requestBackgroundPermissionsAsync();
       const newLocation = await Location.getCurrentPositionAsync({});
       // Reverse geocode to get address
       let addressResponse = await Location.reverseGeocodeAsync({

@@ -1,11 +1,11 @@
+import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
-import { Stack, useRouter } from "expo-router";
 
 import { IconSmallYellowLight } from "@/assets/icon/Icon";
-import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import { SvgXml } from "react-native-svg";
 
 const NameScreen = () => {
   const [name, setName] = useState("");
@@ -20,6 +20,7 @@ const NameScreen = () => {
           statusBarAnimation: "fade",
         }}
       />
+
       <ScrollView contentContainerStyle={tw`py-12`}>
         <View style={tw`px-4 gap-2 justify-center items-center`}>
           <Text
