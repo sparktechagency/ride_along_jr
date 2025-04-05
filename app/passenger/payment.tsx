@@ -5,16 +5,19 @@ import BackWithComponent from "@/lib/backHeader/BackWithCoponent";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
 
 const payment = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+
   return (
     <>
       <View>
         <BackWithComponent
           togather
-          title="Payment method"
+          title={t("passenger.payment.paymentMethods")}
           onPress={() => router.back()}
         />
 
@@ -23,7 +26,9 @@ const payment = () => {
             style={tw`border border-gray-300 rounded-lg px-2 py-2 flex-row justify-between items-center`}
           >
             <View>
-              <Text style={tw`text-gray-500 text-sm`}>Card number</Text>
+              <Text style={tw`text-gray-500 text-sm`}>
+                {t("passenger.payment.cardNumber")}
+              </Text>
               <Text style={tw`text-lg font-semibold`}>123********1542</Text>
             </View>
             <SvgXml xml={IconVisa} />
@@ -35,7 +40,7 @@ const payment = () => {
           >
             <SvgXml xml={IconPlus} />
             <Text style={tw`text-[#1E3050] text-lg font-semibold ml-2`}>
-              Add a new card
+              {t("passenger.payment.addPaymentMethod")}
             </Text>
           </TouchableOpacity>
         </View>

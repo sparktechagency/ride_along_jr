@@ -5,13 +5,14 @@ import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Rating } from "react-native-ratings";
 import { SvgXml } from "react-native-svg";
 
 const trip_done = () => {
   const [isFeedBack, setIsFeedBack] = React.useState("");
   const [isTrips, setTrips] = React.useState("");
-
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -23,7 +24,7 @@ const trip_done = () => {
             style={tw`gap-4 pt-4 pb-6 justify-center items-center border-b border-b-gray-200 w-full`}
           >
             <Text style={tw`text-2xl text-deepBlue300 font-NunitoSansBold`}>
-              Your kids' trip is over
+              {t("passenger.trip.yourKidsTripIsOver")}
             </Text>
             <View style={tw`flex-row gap-1  justify-center`}>
               <Text
@@ -47,12 +48,12 @@ const trip_done = () => {
             <Text
               style={tw`text-base text-black text-center font-NunitoSansRegular`}
             >
-              Rate your experience with John
+              {t("passenger.trip.howWasYourRide")}
             </Text>
             <Text
               style={tw`text-base text-black font-NunitoSansExtraBold text-center`}
             >
-              {isFeedBack ? isFeedBack : "Select your rating"}
+              {isFeedBack ? isFeedBack : t("passenger.trip.selectYourRating")}
             </Text>
             <Rating
               type="custom"
@@ -60,14 +61,16 @@ const trip_done = () => {
               // ratingColor={PrimaryColor}
               tintColor="#EFF2F2"
               // showRating
-              onFinishRating={(rating) => console.log("Rating is: ", rating)}
+              onFinishRating={(rating: number) =>
+                console.log("Rating is: ", rating)
+              }
               style={{ paddingVertical: 10 }}
             />
             <View
               style={tw`flex-row flex-wrap gap-4 w-[80%] justify-center items-center`}
             >
               <TButton
-                title="Poor"
+                title={t("passenger.trip.ratingFeedback.poor")}
                 containerStyle={tw`h-10 px-6 ${
                   isFeedBack === "Poor" ? "bg-deepBlue100" : "bg-deepBlue50"
                 }`}
@@ -77,7 +80,7 @@ const trip_done = () => {
                 }}
               />
               <TButton
-                title="Good"
+                title={t("passenger.trip.ratingFeedback.good")}
                 containerStyle={tw`h-10 px-6 ${
                   isFeedBack === "Good" ? "bg-deepBlue100" : "bg-deepBlue50"
                 }`}
@@ -87,7 +90,7 @@ const trip_done = () => {
                 }}
               />
               <TButton
-                title="Better"
+                title={t("passenger.trip.ratingFeedback.better")}
                 containerStyle={tw`h-10 px-6 ${
                   isFeedBack === "Better" ? "bg-deepBlue100" : "bg-deepBlue50"
                 }`}
@@ -97,7 +100,7 @@ const trip_done = () => {
                 }}
               />
               <TButton
-                title="Best"
+                title={t("passenger.trip.ratingFeedback.best")}
                 containerStyle={tw`h-10 px-6 ${
                   isFeedBack === "Best" ? "bg-deepBlue100" : "bg-deepBlue50"
                 }`}
@@ -107,7 +110,7 @@ const trip_done = () => {
                 }}
               />
               <TButton
-                title="Excellent"
+                title={t("passenger.trip.ratingFeedback.excellent")}
                 containerStyle={tw`h-10 px-6 ${
                   isFeedBack === "Excellent"
                     ? "bg-deepBlue100"
@@ -125,7 +128,7 @@ const trip_done = () => {
             <Text
               style={tw`text-base text-center text-deepBlue300 font-NunitoSansRegular`}
             >
-              Tip for John
+              {t("passenger.trip.tipFor")} John
             </Text>
             <View style={tw`flex-row gap-3`}>
               <TButton
@@ -166,7 +169,7 @@ const trip_done = () => {
                 router.dismissAll();
                 router.replace("/passenger/drawer/home");
               }}
-              title="Done"
+              title={t("common.done")}
               containerStyle={tw`flex-1 `}
             />
           </View>

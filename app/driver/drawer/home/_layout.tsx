@@ -10,6 +10,7 @@ import { Text, TouchableOpacity } from "react-native";
 
 import tw from "@/lib/tailwind";
 import { Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
 import { View } from "react-native-ui-lib";
 
@@ -18,6 +19,8 @@ const TabBarButton = (props: any) => {
 };
 
 const TabsRoutes = () => {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       screenOptions={{
@@ -40,7 +43,7 @@ const TabsRoutes = () => {
                     props.focused && tw`text-deepBlue400`,
                   ]}
                 >
-                  Home
+                  {t("driver.drawer.home")}
                 </Text>
               </View>
             );
@@ -64,7 +67,7 @@ const TabsRoutes = () => {
                     props.focused && tw`text-deepBlue400`,
                   ]}
                 >
-                  History
+                  {t("driver.drawer.history")}
                 </Text>
               </View>
             );
@@ -88,7 +91,7 @@ const TabsRoutes = () => {
                     props.focused && tw`text-deepBlue400`,
                   ]}
                 >
-                  Notifications
+                  {t("driver.drawer.notifications")}
                 </Text>
               </View>
             );

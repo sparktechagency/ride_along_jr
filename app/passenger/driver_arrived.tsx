@@ -5,6 +5,7 @@ import {
   IconMessage,
   IconOtpLocker,
   IconPaymentMethod,
+  IconPickup,
   IconStar,
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -17,13 +18,26 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
 import { Avatar } from "react-native-ui-lib";
-import { ILocation } from "./(tabs)";
+
+// Define the ILocation interface locally to avoid the import error
+interface ILocation {
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+  name: string;
+  formatted_address: string;
+}
 
 const driver_arrived = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
@@ -32,16 +46,10 @@ const driver_arrived = () => {
   const sheetRef = React.useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = React.useMemo(() => ["1%", "62%"], []);
+  const snapPoints = React.useMemo(() => ["1%", "75%"], []);
 
   // callbacks
-  const handleSheetChange = React.useCallback((index: number) => {
-    if (index === 0 && !travelData?.destination && !travelData?.pickup) {
-      sheetRef.current?.close();
-
-      router.back();
-    }
-  }, []);
+  const handleSheetChange = React.useCallback((index: number) => {}, []);
 
   const handleClosePress = React.useCallback(() => {
     sheetRef.current?.close();
@@ -59,7 +67,9 @@ const driver_arrived = () => {
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("travelData");
-    setTravelReadyData(JSON.parse(location));
+    if (location) {
+      setTravelReadyData(JSON.parse(location));
+    }
   };
 
   React.useEffect(() => {
@@ -73,6 +83,16 @@ const driver_arrived = () => {
 
     return () => {};
   }, []);
+
+  const DRIVER_DETAILS = {
+    name: "John Smith",
+    rating: 4.5,
+    vehicleDetails: "Toyota Corolla",
+    vehicleNumber: "4985467868",
+    img: require("@/assets/images/profile.png"),
+  };
+
+  const OTP = "1234";
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -111,19 +131,6 @@ const driver_arrived = () => {
             zoomEnabled
             zoomControlEnabled
           >
-            {/* Current Location Marker (if no pickup selected) */}
-            {/* {!travelReadyData?.pick && currentLocation?.location?.coords && (
-                  <Marker
-                    coordinate={{
-                      latitude: currentLocation.location.coords.latitude,
-                      longitude: currentLocation.location.coords.longitude,
-                    }}
-                    title={travelReadyData?.pick?.name}
-                    description={travelReadyData?.pick?.formatted_address}
-                    pinColor="blue"
-                  />
-                )} */}
-
             {/* Pickup Marker */}
             {travelReadyData?.pickup?.geometry?.location && (
               <Marker
@@ -140,10 +147,10 @@ const driver_arrived = () => {
                 {/* Custom marker view */}
                 <SvgXml
                   xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="11.633" cy="11.335" r="8.863" stroke="#5C7B7E" stroke-width="4"/>
-      <circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
-      </svg>
-      `}
+  <circle cx="11.633" cy="11.335" r="8.863" stroke="#5C7B7E" stroke-width="4"/>
+  <circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+  </svg>
+  `}
                 />
               </Marker>
             )}
@@ -152,8 +159,8 @@ const driver_arrived = () => {
             {travelReadyData?.destination?.geometry?.location && (
               <Marker
                 coordinate={{
-                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
-                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                  latitude: travelReadyData.destination.geometry.location.lat,
+                  longitude: travelReadyData.destination.geometry.location.lng,
                 }}
                 title={travelReadyData.destination.name}
                 description={travelReadyData.destination.formatted_address}
@@ -161,10 +168,10 @@ const driver_arrived = () => {
               >
                 <SvgXml
                   xml={`<svg width="35" height="35" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="11.633" cy="11.335" r="8.863" stroke="#D21F18" stroke-width="4"/>
-      <circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
-      </svg>
-      `}
+  <circle cx="11.633" cy="11.335" r="8.863" stroke="#D21F18" stroke-width="4"/>
+  <circle cx="11.633" cy="11.335" r="5.751" fill="white"/>
+  </svg>
+  `}
                 />
               </Marker>
             )}
@@ -218,16 +225,17 @@ const driver_arrived = () => {
           >
             <View style={tw`gap-0.1`}>
               <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Your driver has arrived!
+                {t("passenger.trip.driverArrived")}
               </Text>
               <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Meet your driver at the pickup spot to begin your kid’s ride.
+                {t("passenger.trip.waitingAtPickup")}
               </Text>
             </View>
             {/* <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
                 28 sec
               </Text>  */}
           </View>
+
           <View>
             <View
               style={tw`flex-row items-center justify-between gap-2 pt-3 pb-4 border-b border-b-gray-200`}
@@ -244,23 +252,23 @@ const driver_arrived = () => {
                     <Text
                       style={tw`text-base font-NunitoSansBold text-deepBlue300`}
                     >
-                      John Smith
+                      {DRIVER_DETAILS.name}
                     </Text>
                     <View style={tw`flex-row items-center gap-1`}>
                       <SvgXml xml={IconStar} />
-                      <Text>4.5</Text>
+                      <Text>{DRIVER_DETAILS.rating}</Text>
                     </View>
                   </View>
                   <View style={tw`gap-1`}>
                     <Text
                       style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                     >
-                      Toyota Corolla
+                      {DRIVER_DETAILS.vehicleDetails}
                     </Text>
                     <Text
                       style={tw`text-xs font-NunitoSansBold text-deepBlue200 border border-deepBlue200 self-start px-2 py-0.1 rounded `}
                     >
-                      4985467868
+                      {DRIVER_DETAILS.vehicleNumber}
                     </Text>
                   </View>
                 </View>
@@ -282,11 +290,11 @@ const driver_arrived = () => {
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
                 >
-                  OTP for this ride
+                  {t("passenger.trip.otpForRide")}
                 </Text>
               </View>
               <View style={tw`flex-row gap-1`}>
-                {[...Array(4)].map((o, i) => {
+                {OTP.split("").map((digit, i) => {
                   return (
                     <View
                       key={i}
@@ -295,7 +303,7 @@ const driver_arrived = () => {
                       <Text
                         style={tw`text-base font-NunitoSansBold  text-deepBlue300 `}
                       >
-                        {i + 1}
+                        {digit}
                       </Text>
                     </View>
                   );
@@ -305,12 +313,29 @@ const driver_arrived = () => {
             <View
               style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
             >
-              <SvgXml xml={IconDestination} />
-              <View style={tw` `}>
+              <SvgXml xml={IconPickup} />
+              <View style={tw` flex-1`}>
                 <Text
                   style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                 >
-                  Destination
+                  {t("passenger.trip.pickupLocation")}
+                </Text>
+                <Text
+                  style={tw`text-base font-NunitoSansBold text-deepBlue300`}
+                >
+                  {travelReadyData?.pickup?.formatted_address}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
+            >
+              <SvgXml xml={IconDestination} />
+              <View style={tw` flex-1`}>
+                <Text
+                  style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
+                >
+                  {t("passenger.trip.dropoffLocation")}
                 </Text>
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -324,11 +349,11 @@ const driver_arrived = () => {
             >
               <SvgXml xml={IconPaymentMethod} />
               <View style={tw`flex-1 flex-row justify-between items-end`}>
-                <View style={tw``}>
+                <View style={tw`flex-1`}>
                   <Text
                     style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                   >
-                    Payment method
+                    {t("passenger.trip.paymentMethod")}
                   </Text>
                   <Text
                     style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -349,7 +374,7 @@ const driver_arrived = () => {
 
           <IwtButton
             svg={IconCloseRed}
-            title="Cancel Ride"
+            title={t("passenger.trip.cancelRide")}
             containerStyle={tw`mt-4 bg-transparent gap-1 h-14`}
             titleStyle={tw`text-[#D21F18] font-NunitoSansBold `}
             onPress={() => {

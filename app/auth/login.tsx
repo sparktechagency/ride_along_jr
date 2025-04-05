@@ -6,6 +6,7 @@ import {
   IconOpenEye,
   IconSmallRightTick,
 } from "@/assets/icon/Icon";
+import { Link, useRouter } from "expo-router";
 import {
   Keyboard,
   ScrollView,
@@ -14,21 +15,22 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Link, useRouter } from "expo-router";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "@/lib/backHeader/BackButton";
-import { Checkbox } from "react-native-ui-lib";
-import { Formik } from "formik";
-import InputText from "@/lib/inputs/InputText";
 import IwtButton from "@/lib/buttons/IwtButton";
-import { PrimaryColor } from "@/utils/utils";
-import React from "react";
 import TButton from "@/lib/buttons/TButton";
+import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Formik } from "formik";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Checkbox } from "react-native-ui-lib";
 
 const login = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [checkBox, setCheckBox] = React.useState(false);
   const [IsShow, setIsShow] = React.useState(false);
@@ -50,11 +52,11 @@ const login = () => {
             <Text
               style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
             >
-              Welcome to Ride Along JR!
+              {t("auth.login.welcome")}
             </Text>
 
             <Text style={tw`text-base text-deepBlue300 font-NunitoSansMedium`}>
-              Get started by login here.
+              {t("auth.login.getStarted")}
             </Text>
           </View>
           <Formik
@@ -62,16 +64,16 @@ const login = () => {
             validate={(values) => {
               const errors = {} as any;
               if (!values.email) {
-                errors.email = "Required";
+                errors.email = t("auth.login.emailRequired");
               } else if (
                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
               ) {
-                errors.email = "Invalid email address. Please try again. ";
+                errors.email = t("auth.login.invalidEmail");
               }
               if (!values.password) {
-                errors.password = "Required";
+                errors.password = t("auth.login.passwordRequired");
               } else if (values.password.length < 8) {
-                errors.password = "Password must be at least 8 characters long";
+                errors.password = t("auth.login.passwordLength");
               }
               return errors;
             }}
@@ -97,7 +99,7 @@ const login = () => {
                       errorText={errors.email}
                       touched={touched.email}
                       textXValue={-36}
-                      placeholder="Email"
+                      placeholder={t("auth.login.email")}
                       svgFirstIcon={IconEmail}
                       svgSecondIcon={
                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
@@ -111,7 +113,7 @@ const login = () => {
                   </View>
                   <View style={tw``}>
                     <InputText
-                      placeholder="Password"
+                      placeholder={t("auth.login.password")}
                       textInputProps={{
                         secureTextEntry: !IsShow,
                       }}
@@ -130,16 +132,11 @@ const login = () => {
                   </View>
                 </View>
                 <View style={tw`self-end mt-3 px-4`}>
-                  {/* <Text
-                    style={tw`text-sm font-NunitoSansBold text-primary underline`}
-                  >
-                    Forgot password?
-                  </Text> */}
                   <Link
                     href={"/auth/forgot_password"}
                     style={tw`text-sm font-NunitoSansBold text-primary underline`}
                   >
-                    Forgot Password?
+                    {t("auth.login.forgotPassword")}
                   </Link>
                 </View>
                 <View style={tw`px-4 flex-row items-center mt-5 gap-2 `}>
@@ -158,13 +155,13 @@ const login = () => {
                     <Text
                       style={tw`text-sm font-NunitoSansRegular text-gray-800`}
                     >
-                      Remember me
+                      {t("auth.login.rememberMe")}
                     </Text>
                   </TouchableOpacity>
                 </View>
                 <View style={tw`px-4 mt-5 gap-5`}>
                   <TButton
-                    title="Login"
+                    title={t("auth.login.loginButton")}
                     onPress={async () => {
                       const role = await AsyncStorage.getItem("role");
                       // handleSubmit
@@ -178,7 +175,7 @@ const login = () => {
                   />
                   <IwtButton
                     svg={IconGoogleIcon}
-                    title="Continue with google"
+                    title={t("auth.login.continueWithGoogle")}
                     containerStyle={tw`bg-[#E8EAED] `}
                     titleStyle={tw`text-black`}
                   />
@@ -189,13 +186,13 @@ const login = () => {
 
           <View style={tw`flex-row gap-2 justify-center mt-7`}>
             <Text style={tw`text-sm font-NunitoSansRegular text-gray-900`}>
-              Don’t have an account?
+              {t("auth.login.noAccount")}
             </Text>
             <Link
               href={"/auth/register"}
               style={tw`text-sm font-NunitoSansRegular text-primary underline`}
             >
-              Sign up
+              {t("auth.login.signUp")}
             </Link>
           </View>
         </ScrollView>

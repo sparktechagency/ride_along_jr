@@ -9,14 +9,16 @@ import IwtButton from "@/lib/buttons/IwtButton";
 import tw from "@/lib/tailwind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
 
 export const LocationPermission = () => {
   const [locationPermission, setLocationPermission] = useState<string | null>(
     null
   );
-
+  const { t } = useTranslation();
   const router = useRouter();
+
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("location");
@@ -65,19 +67,19 @@ export const LocationPermission = () => {
 
         <View style={tw`justify-center items-center gap-3 my-8`}>
           <Text style={tw`text-deepBlue text-4xl font-NunitoSansExtraBold`}>
-            Enable location
+            {t("auth.location.enableLocation")}
           </Text>
           <Text
             style={tw`text-base text-black font-NunitoSansRegular text-center`}
           >
-            Get accurate pickups by allowing us to use your device's location.
+            {t("auth.location.description")}
           </Text>
         </View>
       </View>
 
       <View style={tw`px-4 pb-12`}>
         <IwtButton
-          title="Enable location"
+          title={t("auth.location.enableLocation")}
           svg={IconLocationWhite}
           onPress={async () => {
             const granted = await Location.requestForegroundPermissionsAsync();

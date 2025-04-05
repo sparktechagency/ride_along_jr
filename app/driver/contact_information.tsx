@@ -12,15 +12,17 @@ import {
 } from "react-native";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import { Formik } from "formik";
-import InputText from "@/lib/inputs/InputText";
-import React from "react";
 import TButton from "@/lib/buttons/TButton";
+import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import { Formik } from "formik";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 const contact_information = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [checkBox, setCheckBox] = React.useState(false);
   const [IsShow, setIsShow] = React.useState(false);
@@ -42,7 +44,7 @@ const contact_information = () => {
             <Text
               style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
             >
-              Enter your contact information
+              {t("driver.contactInfo.title")}
             </Text>
           </View>
           <Formik
@@ -50,13 +52,13 @@ const contact_information = () => {
             validate={(values) => {
               const errors = {} as any;
               if (errors.contact) {
-                errors.contact = "Required";
+                errors.contact = t("auth.login.emailRequired");
               }
               if (errors.address) {
-                errors.address = "Required";
+                errors.address = t("auth.login.emailRequired");
               }
               if (errors.city) {
-                errors.city = "Required";
+                errors.city = t("auth.login.emailRequired");
               }
               return errors;
             }}
@@ -82,14 +84,14 @@ const contact_information = () => {
                       errorText={errors.contact}
                       touched={touched.contact}
                       // textXValue={-36}
-                      placeholder="Contact number"
+                      placeholder={t("driver.contactInfo.contactNumber")}
                       svgFirstIcon={IconCallOnly}
                       focusSTyle={tw`border border-primary`}
                     />
                   </View>
                   <View style={tw``}>
                     <InputText
-                      placeholder="Your address"
+                      placeholder={t("driver.contactInfo.address")}
                       touched={touched.address}
                       onBlur={handleBlur("address")}
                       onChangeText={handleChange("address")}
@@ -101,7 +103,7 @@ const contact_information = () => {
                   </View>
                   <View style={tw``}>
                     <InputText
-                      placeholder="City you drive in"
+                      placeholder={t("driver.contactInfo.city")}
                       touched={touched.city}
                       onBlur={handleBlur("city")}
                       onChangeText={handleChange("city")}
@@ -117,7 +119,7 @@ const contact_information = () => {
                     onPress={() => {
                       router?.push("/driver/passport_submit");
                     }}
-                    title="Next 2/6"
+                    title={t("driver.contactInfo.nextButton")}
                   />
                 </View>
               </>

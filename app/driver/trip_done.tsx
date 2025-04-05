@@ -5,13 +5,14 @@ import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Rating } from "react-native-ratings";
 import { SvgXml } from "react-native-svg";
 
 const trip_done = () => {
   const [isFeedBack, setIsFeedBack] = React.useState("");
   const [isTrips, setTrips] = React.useState("");
-
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -23,7 +24,7 @@ const trip_done = () => {
             style={tw`gap-4 pt-4 pb-6 justify-center items-center border-b border-b-gray-200 w-full`}
           >
             <Text style={tw`text-2xl text-deepBlue300 font-NunitoSansBold`}>
-              Your trip has ended!
+              {t("driver.trip.tripCompleted")}
             </Text>
             <View style={tw`flex-row gap-1  justify-center`}>
               <Text
@@ -47,12 +48,12 @@ const trip_done = () => {
             <Text
               style={tw`text-base text-black text-center font-NunitoSansRegular`}
             >
-              How was your experience with Lana's child?
+              {t("driver.trip.rateYourTrip")}
             </Text>
             <Text
               style={tw`text-base text-black font-NunitoSansExtraBold text-center`}
             >
-              {isFeedBack ? isFeedBack : "Select your rating"}
+              {isFeedBack ? isFeedBack : t("driver.trip.rating")}
             </Text>
             <Rating
               type="custom"
@@ -60,7 +61,9 @@ const trip_done = () => {
               // ratingColor={PrimaryColor}
               tintColor="#EFF2F2"
               // showRating
-              onFinishRating={(rating) => console.log("Rating is: ", rating)}
+              onFinishRating={(rating: number) =>
+                console.log("Rating is: ", rating)
+              }
               style={{ paddingVertical: 10 }}
             />
             <View
@@ -127,7 +130,7 @@ const trip_done = () => {
                 router.dismissAll();
                 router.replace("/driver/drawer/home");
               }}
-              title="Done"
+              title={t("common.done")}
               containerStyle={tw`flex-1 `}
             />
           </View>

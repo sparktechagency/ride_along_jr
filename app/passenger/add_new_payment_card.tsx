@@ -19,6 +19,7 @@ import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-native-element-dropdown";
 import { SvgXml } from "react-native-svg";
 import { Checkbox } from "react-native-ui-lib";
@@ -38,6 +39,7 @@ const add_new_pyment_card = () => {
   const router = useRouter();
   const [value, setValue] = React.useState(null);
   const [isFocus, setIsFocus] = React.useState(false);
+  const { t } = useTranslation();
 
   const renderLabel = () => {
     if (value || isFocus) {
@@ -49,7 +51,7 @@ const add_new_pyment_card = () => {
             tw`bg-[#ecf0f1] rounded-lg`,
           ]}
         >
-          Card number
+          {t("passenger.payment.cardNumber")}
         </Text>
       );
     }
@@ -60,21 +62,21 @@ const add_new_pyment_card = () => {
     <View>
       <BackWithComponent
         togather
-        title="Add card"
+        title={t("passenger.payment.addPaymentMethod")}
         onPress={() => router.back()}
       />
 
       <View style={tw`px-4`}>
         <View style={tw`flex-row justify-between `}>
           <Text style={tw`font-bold text-sm font-NunitoSansRegular`}>
-            Card Information
+            {t("driver.payment.cardInformation")}
           </Text>
           <TouchableOpacity style={tw`flex-row items-center gap-1`}>
             <SvgXml xml={IconCamera} />
             <Text
               style={tw`text-[#5C7B7E]  font-bold text-sm font-NunitoSansRegular`}
             >
-              Scan card
+              {t("driver.payment.scanCard")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -83,7 +85,7 @@ const add_new_pyment_card = () => {
           <View style={tw`border border-gray-300 rounded-lg p-3`}>
             <View style={tw`flex-row justify-between items-center`}>
               <TextInput
-                placeholder="card number"
+                placeholder={t("passenger.payment.cardNumber")}
                 keyboardType="numeric"
                 style={tw`text-lg flex-1`}
               />
@@ -96,14 +98,14 @@ const add_new_pyment_card = () => {
           <View style={tw`flex-row mt-3`}>
             <View style={tw`flex-1 border border-gray-300 rounded-lg p-3 mr-2`}>
               <TextInput
-                placeholder="MM / YY"
+                placeholder={t("driver.payment.expiryDate")}
                 keyboardType="numeric"
                 style={tw`text-lg`}
               />
             </View>
             <View style={tw`flex-1 border border-gray-300 rounded-lg p-3`}>
               <TextInput
-                placeholder="CVC"
+                placeholder={t("passenger.payment.cvv")}
                 keyboardType="numeric"
                 secureTextEntry
                 style={tw`text-lg`}
@@ -111,7 +113,9 @@ const add_new_pyment_card = () => {
             </View>
           </View>
 
-          <Text style={tw`text-lg font-semibold mt-5`}>Billing address</Text>
+          <Text style={tw`text-lg font-semibold mt-5`}>
+            {t("driver.payment.billingAddress")}
+          </Text>
 
           <View style={tw`mt-2`}>
             {renderLabel()}
@@ -131,8 +135,8 @@ const add_new_pyment_card = () => {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus ? "Select Country" : "..."}
-              searchPlaceholder="Search..."
+              placeholder={!isFocus ? t("driver.payment.selectCountry") : "..."}
+              searchPlaceholder={t("driver.payment.search")}
               value={value}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
@@ -144,7 +148,7 @@ const add_new_pyment_card = () => {
           </View>
           <View style={tw`border border-gray-300 rounded-lg p-3 mt-2`}>
             <TextInput
-              placeholder="ZIP"
+              placeholder={t("driver.payment.zipCode")}
               keyboardType="numeric"
               style={tw`text-lg`}
             />
@@ -158,12 +162,12 @@ const add_new_pyment_card = () => {
               color={PrimaryColor}
             />
             <Text style={tw`text-sm font-medium text-gray-700`}>
-              Save this card for future RideAlongJr. payments
+              {t("driver.payment.saveCardFuture")}
             </Text>
           </View>
 
           <TButton
-            title="Save my Card"
+            title={t("passenger.payment.saveCard")}
             onPress={() => {
               router.back();
             }}

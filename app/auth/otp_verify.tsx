@@ -6,10 +6,13 @@ import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { OtpInput } from "react-native-otp-entry";
 
 const otp_verify = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+
   return (
     <View style={tw`flex-1 bg-base `}>
       <BackButton onPress={() => router.back()} />
@@ -17,10 +20,10 @@ const otp_verify = () => {
         <Text
           style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
         >
-          Enter OTP
+          {t("auth.otp.title")}
         </Text>
         <Text style={tw`text-base text-deepBlue300 font-NunitoSansMedium`}>
-          Please enter the 4-digit OTP sent to your registered email.
+          {t("auth.otp.description")}
         </Text>
       </View>
       <View style={tw`px-4 py-12 gap-1`}>
@@ -56,13 +59,13 @@ const otp_verify = () => {
           <Text
             style={tw`text-center text-deepBlue300 text-base font-NunitoSansMedium `}
           >
-            Didn't receive the OTP?
+            {t("auth.otp.enterOTP")}
           </Text>
           <TouchableOpacity onPress={() => console.log("Resend OTP")}>
             <Text
               style={tw`text-center text-primary underline text-sm font-NunitoSansMedium hover:text-deepBlue600 `}
             >
-              Resend OTP
+              {t("auth.otp.resendCode")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -77,7 +80,7 @@ const otp_verify = () => {
             // }
             router.push("/auth/location");
           }}
-          title="Submit OTP"
+          title={t("auth.otp.verify")}
           containerStyle={tw`mt-10`}
           titleStyle={tw`font-NunitoSansBold text-base`}
         />

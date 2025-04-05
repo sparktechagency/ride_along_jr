@@ -67,6 +67,7 @@ const IwtButton = ({
 
       {title && (
         <Text
+          numberOfLines={1}
           style={[
             tw`text-white font-NunitoSansSemiBold text-base `,
             titleStyle,

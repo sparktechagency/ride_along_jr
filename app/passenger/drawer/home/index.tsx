@@ -13,6 +13,7 @@ import { SvgXml } from "react-native-svg";
 // import { GoogleMaps } from "expo-maps";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 export interface ILocation {
   addressResponse: {
@@ -48,6 +49,7 @@ export interface ILocation {
 const home = () => {
   const navigation = useNavigation();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
 
@@ -108,7 +110,7 @@ const home = () => {
         </TouchableOpacity>
         <View style={tw`flex-row items-center gap-2`}>
           <Text style={tw`font-NunitoSansRegular text-black text-xl`}>
-            Welcome back,
+            {t("passenger.home.welcomeBack")}
           </Text>
           <Text style={tw`font-NunitoSansBold text-black text-xl`}>Lana</Text>
         </View>
@@ -128,7 +130,7 @@ const home = () => {
       <View style={tw`px-4 my-8 gap-3`}>
         {/* main content  */}
         <Text style={tw`text-deepBlue200 font-NunitoSansRegular text-sm`}>
-          Your current location
+          {t("passenger.home.currentLocation")}
         </Text>
         <View style={tw`flex-row items-center gap-1`}>
           <SvgXml xml={IconLocation} />
@@ -175,8 +177,8 @@ const home = () => {
                   longitude:
                     currentLocation?.location?.coords?.longitude || 0.0,
                 }}
-                title="Your Location"
-                description="Your current location"
+                title={t("passenger.home.currentLocation")}
+                description={t("passenger.home.currentLocation")}
                 pinColor="green"
                 calloutAnchor={{ x: 0.5, y: 0.5 }}
                 anchor={{ x: 0.5, y: 0.5 }} // Center the marker (default: x=0.5, y=1.0)
@@ -205,7 +207,7 @@ const home = () => {
             style={tw`bg-white h-12 rounded-xl justify-center  shadow-md flex-1`}
           >
             <Text style={tw`px-4 font-NunitoSansRegular text-deepBlue `}>
-              Where do you wanna go?
+              {t("passenger.home.whereTo")}
             </Text>
           </TouchableOpacity>
         </View>
