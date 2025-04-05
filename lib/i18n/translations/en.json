@@ -1,0 +1,13 @@
+{
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "languageSettings": {
+    "title": "Language settings",
+    "selectPrimary": "Select your primary language",
+    "english": "English",
+    "spanish": "Spanish"
+  }
+}

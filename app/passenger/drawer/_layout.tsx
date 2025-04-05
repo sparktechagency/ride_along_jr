@@ -10,16 +10,16 @@ import {
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { Avatar } from "react-native-ui-lib";
-import { Drawer } from "expo-router/drawer";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import IButton from "@/lib/buttons/IButton";
 import IwtButton from "@/lib/buttons/IwtButton";
-import { SvgXml } from "react-native-svg";
-import tw from "twrnc"; // or your preferred tailwind solution
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useRouter } from "expo-router";
+import { Drawer } from "expo-router/drawer";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SvgXml } from "react-native-svg";
+import { Avatar } from "react-native-ui-lib";
+import tw from "twrnc"; // or your preferred tailwind solution
 
 const CustomDrawerContent = (props) => {
   const insets = useSafeAreaInsets();
@@ -106,7 +106,7 @@ const CustomDrawerContent = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                router?.push("/passenger/language_setting");
+                router?.push("/language_setting");
               }}
               style={tw` pt-2 pb-4.5  flex-row items-center gap-3 justify-between border-b border-gray-200`}
             >

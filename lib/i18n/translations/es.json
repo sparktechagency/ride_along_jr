@@ -1,0 +1,13 @@
+{
+  "common": {
+    "back": "Atrás",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "languageSettings": {
+    "title": "Configuración de idioma",
+    "selectPrimary": "Selecciona tu idioma principal",
+    "english": "Inglés",
+    "spanish": "Español"
+  }
+}
