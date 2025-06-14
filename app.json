@@ -13,6 +13,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "config": {
+        "googleMapsApiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.arifbiswas.ride-along-jr",
       "infoPlist": {
@@ -24,7 +27,10 @@
       }
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"
@@ -43,6 +49,13 @@
     },
     "plugins": [
       "expo-router",
+      // [
+      //   "react-native-maps",
+      //   {
+      //     "iosGoogleMapsApiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY",
+      //     "androidGoogleMapsApiKey": ""
+      //   }
+      // ],
       [
         "expo-splash-screen",
         {
@@ -50,7 +63,6 @@
           "imageWidth": 200,
           "resizeMode": "cover",
           "backgroundColor": "#5c7b7e"
-     
         }
       ],
       [
@@ -67,7 +79,8 @@
           "recordAudioAndroid": true
         }
       ],
-     [ "expo-location",
+      [
+        "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
@@ -78,7 +91,8 @@
           "merchantIdentifier": "",
           "enableGooglePay": true
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
