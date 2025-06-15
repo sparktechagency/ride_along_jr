@@ -23,10 +23,10 @@ import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox } from "react-native-ui-lib";
 
 const login = () => {
   const router = useRouter();

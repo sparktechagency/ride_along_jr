@@ -4,9 +4,8 @@ import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
 import { useNavigation, useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { Avatar, LoaderScreen } from "react-native-ui-lib";
 
-import { PrimaryColor } from "@/utils/utils";
+import Avatar from "@/lib/ui/Avatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { SvgXml } from "react-native-svg";
@@ -140,11 +139,9 @@ const home = () => {
           </Text>
         </View>
         {!isFocused || loading ? (
-          <LoaderScreen
-            color={PrimaryColor}
-            size={"large"}
-            containerStyle={tw`w-full min-h-80 my-4 pb-0.5  rounded-lg`}
-          />
+          <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg bg-gray-300`}>
+            <Text>Loading...</Text>
+          </View>
         ) : (
           <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg`}>
             <MapView

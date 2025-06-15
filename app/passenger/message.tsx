@@ -9,11 +9,11 @@ import {
 import { IconOnlyArrayRight } from "@/assets/icon/Icon";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import Avatar from "@/lib/ui/Avatar";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
 
 const message = () => {
   const router = useRouter();

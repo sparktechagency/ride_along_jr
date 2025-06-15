@@ -10,10 +10,10 @@ import {
 import { useNavigation, useRouter } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import Avatar from "@/lib/ui/Avatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
 // import { GoogleMaps } from "expo-maps";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";

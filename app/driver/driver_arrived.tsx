@@ -15,6 +15,7 @@ import MapView, { Marker } from "react-native-maps";
 import IwtButton from "@/lib/buttons/IwtButton";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import Avatar from "@/lib/ui/Avatar";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
@@ -23,7 +24,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
 
 interface ILocation {
   geometry: {

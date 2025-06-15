@@ -6,13 +6,12 @@ import {
   IconNotificationsSelect,
   IconNotificationsUnSelect,
 } from "@/assets/icon/Icon";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import tw from "@/lib/tailwind";
 import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
-import { View } from "react-native-ui-lib";
 
 const TabBarButton = (props: any) => {
   return <TouchableOpacity {...props} />;

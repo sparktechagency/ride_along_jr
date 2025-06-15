@@ -40,93 +40,13 @@ export default function RootLayout() {
                 }}
               />
               <Stack.Screen name="welcome" />
-              <Stack.Screen name="auth/login" />
-              <Stack.Screen name="auth/register" />
-              <Stack.Screen name="auth/otp_verify" />
-              <Stack.Screen name="passenger/name" />
-              <Stack.Screen name="driver/name" />
-              <Stack.Screen name="driver/contact_information" />
+              <Stack.Screen name="auth" />
+
+              <Stack.Screen name="passenger" />
+              <Stack.Screen name="driver" />
+
               <Stack.Screen name="terms_and_conditions" />
               <Stack.Screen name="privacy_policy" />
-
-              {/* Passenger parts here */}
-
-              <Stack.Screen name="passenger/where_go" />
-              <Stack.Screen
-                name="passenger/trip_done"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="passenger/estimated_details"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="passenger/arrived_done"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="passenger/request_car"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="passenger/driver_responding"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="passenger/driver_arriving"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="passenger/driver_arrived"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              {/* Driver parts here */}
-              <Stack.Screen
-                name="driver/trip_done"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-
-              <Stack.Screen
-                name="driver/arrived_done"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-
-              <Stack.Screen
-                name="driver/driver_responding"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="driver/driver_arriving"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
-              <Stack.Screen
-                name="driver/driver_arrived"
-                options={{
-                  animation: "slide_from_right",
-                }}
-              />
             </Stack>
             {/* </StripeProvider> */}
           </BottomSheetModalProvider>

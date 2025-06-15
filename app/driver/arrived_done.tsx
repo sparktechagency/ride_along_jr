@@ -14,6 +14,7 @@ import MapView, { Marker } from "react-native-maps";
 
 import IwtButton from "@/lib/buttons/IwtButton";
 import tw from "@/lib/tailwind";
+import Avatar from "@/lib/ui/Avatar";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
@@ -21,7 +22,6 @@ import { useRouter } from "expo-router";
 import React from "react";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
 import { ILocation } from "./(tabs)";
 
 const arrived_done = () => {

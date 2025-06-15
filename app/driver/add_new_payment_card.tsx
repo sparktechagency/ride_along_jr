@@ -17,12 +17,12 @@ import BackWithComponent from "@/lib/backHeader/BackWithCoponent";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
+import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-native-element-dropdown";
 import { SvgXml } from "react-native-svg";
-import { Checkbox } from "react-native-ui-lib";
 
 const data = [
   { label: "United States", value: "1" },

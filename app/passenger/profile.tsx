@@ -15,8 +15,9 @@ import BackWithComponent from "@/lib/backHeader/BackWithCoponent";
 import IwtButton from "@/lib/buttons/IwtButton";
 import TButton from "@/lib/buttons/TButton";
 import InputText from "@/lib/inputs/InputText";
-import SideModal from "@/lib/modals/SideModal";
+import { useBottomModal } from "@/lib/modals/BottomModalHook";
 import tw from "@/lib/tailwind";
+import { HIGHT } from "@/utils/utils";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -32,6 +33,8 @@ const profile = () => {
   const router = useRouter();
   const { t } = useTranslation();
 
+  const { BottomModal, close, open } = useBottomModal();
+
   return (
     <View style={tw`flex-1 bg-base gap-2`}>
       <BackWithComponent
@@ -39,12 +42,10 @@ const profile = () => {
         onPress={() => {
           router?.back();
         }}
-        title={t("passenger.profile.accountSettings")}
+        title={t("driver.profile.accountSettings")}
         ComponentBtn={
           <IwtButton
-            title={
-              isEdit ? t("common.save") : t("passenger.profile.editProfile")
-            }
+            title={isEdit ? t("common.save") : t("driver.profile.editProfile")}
             svg={IconEdit}
             containerStyle={tw`bg-transparent h-10 flex-row-reverse gap-1 `}
             titleStyle={tw`text-primary`}
@@ -91,7 +92,7 @@ const profile = () => {
           <Text
             style={tw`text-2xl mt-5 ml-4 font-bold text-[#172B4D] font-NunitoSansRegular`}
           >
-            {t("passenger.profile.personalInformation")}
+            {t("driver.profile.personalInformation")}
           </Text>
           <Formik
             initialValues={{ name: "", email: "" }}
@@ -123,7 +124,7 @@ const profile = () => {
                       touched={touched.name}
                       editable={isEdit}
                       textXValue={-36}
-                      placeholder={t("passenger.profile.name")}
+                      placeholder={t("driver.profile.name")}
                       svgFirstIcon={IconProfile}
                       focusSTyle={tw`border border-primary`}
                     />
@@ -138,7 +139,7 @@ const profile = () => {
                       touched={touched.email}
                       editable={isEdit}
                       textXValue={-36}
-                      placeholder={t("passenger.profile.email")}
+                      placeholder={t("driver.profile.email")}
                       svgFirstIcon={IconEmail}
                       svgSecondIcon={
                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
@@ -161,18 +162,18 @@ const profile = () => {
                     <Text
                       style={tw`text-xl font-bold font-NunitoSansRegular text-gray-800`}
                     >
-                      {t("auth.login.password")}
+                      {t("driver.profile.accountSettings")}
                     </Text>
                   </TouchableOpacity>
                 </View>
                 <View style={tw`pb-8`}>
                   <TouchableOpacity style={tw`px-4 mt-5 gap-5`}>
                     <TButton
-                      title={t("passenger.profile.changePassword")}
+                      title={t("driver.profile.changePassword")}
                       containerStyle={tw`bg-[#E8EAED] `}
                       titleStyle={tw`text-[#5C7B7E]`}
                       onPress={() => {
-                        setModalVisible(!modalVisible);
+                        open();
                       }}
                     />
                   </TouchableOpacity>
@@ -185,13 +186,13 @@ const profile = () => {
 
       {/* ============= Modal for Updating Password =============== */}
 
-      <SideModal visible={modalVisible} setVisible={setModalVisible}>
+      <BottomModal _height={HIGHT * 0.4}>
         <View style={tw` bg-black bg-opacity-50 justify-center items-center`}>
           <View style={tw`w-full bg-white py-5  shadow-lg`}>
             <Text
               style={tw`px-4 text-2xl font-bold text-[#172B4D] font-NunitoSansRegular`}
             >
-              {t("passenger.profile.changePassword")}
+              {t("driver.profile.changePassword")}
             </Text>
             <Formik
               initialValues={{ password: "" }}
@@ -211,51 +212,59 @@ const profile = () => {
               {({ handleChange, handleBlur, values, errors, touched }) => (
                 <>
                   <View style={tw`px-4 gap-5 mt-8`}>
-                    <View style={tw`w-full`}>
+                    <View style={tw``}>
                       <InputText
-                        value={values.password}
-                        onBlur={handleBlur("password")}
-                        placeholderStyle={tw`bg-white`}
-                        onChangeText={handleChange("password")}
-                        errorText={errors.password}
-                        touched={touched.password}
-                        textXValue={-36}
                         placeholder={t("auth.newPassword.newPassword")}
+                        textInputProps={{
+                          secureTextEntry: !IsShow,
+                        }}
+                        placeholderStyle={tw`bg-white`}
+                        touched={touched.password}
+                        onBlur={handleBlur("password")}
+                        onChangeText={handleChange("password")}
+                        value={values.password}
                         svgFirstIcon={IconLock}
-                        svgSecondIcon={IsShow ? IconOpenEye : IconCloseEye}
-                        secureTextEntry={!IsShow}
+                        errorText={errors.password}
                         focusSTyle={tw`border border-primary`}
-                        onPressIcon={() => {
+                        svgSecondOnPress={() => {
                           setIsShow(!IsShow);
                         }}
                       />
                     </View>
-                    <View
-                      style={tw`flex-row w-full gap-3 mt-4 px-0.3 justify-center`}
-                    >
-                      <TButton
-                        title={t("common.cancel")}
-                        containerStyle={tw`bg-[#E8EAED] flex-1 `}
-                        titleStyle={tw`text-[#5C7B7E]`}
-                        onPress={() => {
-                          setModalVisible(!modalVisible);
+                    <View style={tw``}>
+                      <InputText
+                        placeholder={t("auth.newPassword.confirmPassword")}
+                        textInputProps={{
+                          secureTextEntry: !IsShow,
                         }}
-                      />
-                      <TButton
-                        title={t("common.save")}
-                        containerStyle={tw`flex-1 `}
-                        onPress={() => {
-                          setModalVisible(!modalVisible);
+                        placeholderStyle={tw`bg-white`}
+                        touched={touched.password}
+                        onBlur={handleBlur("password")}
+                        onChangeText={handleChange("password")}
+                        value={values.password}
+                        svgFirstIcon={IconLock}
+                        errorText={errors.password}
+                        svgSecondIcon={IsShow ? IconOpenEye : IconCloseEye}
+                        focusSTyle={tw`border border-primary`}
+                        svgSecondOnPress={() => {
+                          setIsShow(!IsShow);
                         }}
                       />
                     </View>
+                  </View>
+
+                  <View style={tw`px-4 mt-14 gap-5`}>
+                    <TButton
+                      title={t("auth.newPassword.saveChanges")}
+                      onPress={() => setModalVisible(!modalVisible)}
+                    />
                   </View>
                 </>
               )}
             </Formik>
           </View>
         </View>
-      </SideModal>
+      </BottomModal>
     </View>
   );
 };

@@ -5,12 +5,12 @@ import BackWithComponent from "@/lib/backHeader/BackWithCoponent";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
 import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
+import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native-gesture-handler";
 import { SvgXml } from "react-native-svg";
-import { Checkbox } from "react-native-ui-lib";
 
 const LanguageSettings = () => {
   const { t } = useTranslation();

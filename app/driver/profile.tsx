@@ -15,8 +15,9 @@ import BackWithComponent from "@/lib/backHeader/BackWithCoponent";
 import IwtButton from "@/lib/buttons/IwtButton";
 import TButton from "@/lib/buttons/TButton";
 import InputText from "@/lib/inputs/InputText";
-import SideModal from "@/lib/modals/SideModal";
+import { useBottomModal } from "@/lib/modals/BottomModalHook";
 import tw from "@/lib/tailwind";
+import { HIGHT } from "@/utils/utils";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -31,6 +32,8 @@ const profile = () => {
   const [image, setImage] = React.useState<string | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
+
+  const { BottomModal, close, open } = useBottomModal();
 
   return (
     <View style={tw`flex-1 bg-base gap-2`}>
@@ -170,7 +173,7 @@ const profile = () => {
                       containerStyle={tw`bg-[#E8EAED] `}
                       titleStyle={tw`text-[#5C7B7E]`}
                       onPress={() => {
-                        setModalVisible(!modalVisible);
+                        open();
                       }}
                     />
                   </TouchableOpacity>
@@ -183,7 +186,7 @@ const profile = () => {
 
       {/* ============= Modal for Updating Password =============== */}
 
-      <SideModal visible={modalVisible} setVisible={setModalVisible}>
+      <BottomModal _height={HIGHT * 0.4}>
         <View style={tw` bg-black bg-opacity-50 justify-center items-center`}>
           <View style={tw`w-full bg-white py-5  shadow-lg`}>
             <Text
@@ -261,7 +264,7 @@ const profile = () => {
             </Formik>
           </View>
         </View>
-      </SideModal>
+      </BottomModal>
     </View>
   );
 };

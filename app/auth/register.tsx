@@ -22,10 +22,10 @@ import TButton from "@/lib/buttons/TButton";
 import InputText from "@/lib/inputs/InputText";
 import tw from "@/lib/tailwind";
 import { PrimaryColor } from "@/utils/utils";
+import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox } from "react-native-ui-lib";
 
 const register = () => {
   const router = useRouter();
