@@ -40,8 +40,11 @@ const login = () => {
   };
 
   return (
-    <View style={tw`flex-1 bg-base gap-2`}>
-      <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
+    <TouchableWithoutFeedback
+      style={tw`flex-1`}
+      onPress={handleKeyboardDismiss}
+    >
+      <View style={tw` bg-base gap-2`}>
         <ScrollView
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
@@ -196,8 +199,8 @@ const login = () => {
             </Link>
           </View>
         </ScrollView>
-      </TouchableWithoutFeedback>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
