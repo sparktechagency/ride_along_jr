@@ -154,7 +154,8 @@
       "buttonText": "Tomar una foto",
       "frontText": "Lado frontal",
       "backText": "Lado trasero",
-      "nextButton": "Enviar para revisión"
+      "nextButton": "Enviar para revisión",
+      "submitButton": "Enviar Solicitud"
     },
     "profilePhoto": {
       "title": "Toma una foto de perfil",

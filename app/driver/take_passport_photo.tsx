@@ -1,14 +1,14 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { FlipType, SaveFormat, manipulateAsync } from "expo-image-manipulator";
-import React, { useRef, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useRef, useState } from "react";
 
-import { ImgPassport } from "@/assets/images";
 import BackButton from "@/lib/backHeader/BackButton";
+import Icon from "@expo/vector-icons/Feather";
+import { ImgPassport } from "@/assets/images";
+import { PrimaryColor } from "@/utils/utils";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
-import Icon from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
@@ -189,7 +189,7 @@ const passport_photo = () => {
               titleStyle={tw`text-deepBlue400`}
             />
             <TButton
-              title={t("driver.profilePhoto.submitButton")}
+              title={t("driver.profilePhoto.nextButton")}
               //   disabled={!imageFont || !imageBack}
 
               onPress={() => {

@@ -16,15 +16,15 @@ import {
 } from "react-native";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import TButton from "@/lib/buttons/TButton";
-import InputText from "@/lib/inputs/InputText";
-import tw from "@/lib/tailwind";
-import { bytesToMB } from "@/utils/utils";
-import { useRouter } from "expo-router";
 import { Formik } from "formik";
+import InputText from "@/lib/inputs/InputText";
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
+import TButton from "@/lib/buttons/TButton";
+import { bytesToMB } from "@/utils/utils";
+import tw from "@/lib/tailwind";
+import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const vehicle_information = () => {
   const router = useRouter();
@@ -200,7 +200,7 @@ const vehicle_information = () => {
                     onPress={() => {
                       router?.push("/driver/in_review");
                     }}
-                    title={t("driver.vehicleInfo.nextButton")}
+                    title={t("driver.vehicleInfo.submitButton")}
                   />
                 </View>
               </>

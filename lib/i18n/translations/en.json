@@ -154,14 +154,15 @@
       "buttonText": "Take a photo",
       "frontText": "Front side",
       "backText": "Back side",
-      "nextButton": "Next 5/6"
+      "nextButton": "Next 6/6",
+      "submitButton": "Submit Application"
     },
     "profilePhoto": {
       "title": "Take a profile photo",
       "subtitle": "This helps parents recognize you.",
       "description": "Please take a clear photo of your face.",
       "buttonText": "Take Photo",
-      "nextButton": "Next 6/6"
+      "nextButton": "Next 5/6"
     },
     "inReview": {
       "title": "Your application is in review",

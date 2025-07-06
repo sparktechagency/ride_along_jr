@@ -1,12 +1,13 @@
 import * as Location from "expo-location";
 
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { IconLocation, IconMapDirection, IconMenu } from "@/assets/icon/Icon";
-import { useNavigation, useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { useNavigation, useRouter } from "expo-router";
 
-import Avatar from "@/lib/ui/Avatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Avatar from "@/lib/ui/Avatar";
+import { PrimaryColor } from "@/utils/utils";
 import React from "react";
 import { SvgXml } from "react-native-svg";
 // import { GoogleMaps } from "expo-maps";
@@ -78,7 +79,7 @@ const home = () => {
       setCurrentLocation({
         location: newLocation,
         addressResponse: addressResponse![0],
-      });
+      } as any);
       setLoading(false);
       await AsyncStorage.setItem(
         "location",
@@ -94,7 +95,7 @@ const home = () => {
     handleGetLocationFormLS();
   }, [isFocused]);
 
-  // console.log(currentLocation);
+  // console.log(currentLocation);P
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -133,20 +134,22 @@ const home = () => {
         </Text>
         <View style={tw`flex-row items-center gap-1`}>
           <SvgXml xml={IconLocation} />
-          <Text style={tw`text-base font-NunitoSansBold text-[#405658]`}>
+          <Text
+            style={tw` flex-1 text-base font-NunitoSansBold text-[#405658]`}
+          >
             {currentLocation?.addressResponse &&
               currentLocation?.addressResponse?.formattedAddress}
           </Text>
         </View>
         {!isFocused || loading ? (
           <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg bg-gray-300`}>
-            <Text>Loading...</Text>
+            <ActivityIndicator color={PrimaryColor} size={"large"} />
           </View>
         ) : (
-          <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg`}>
+          <View style={tw`w-full h-80 my-4 pb-0.5  rounded-lg overflow-hidden`}>
             <MapView
               mapType="standard"
-              style={tw`flex-1 rounded-lg`}
+              style={tw`flex-1 `}
               initialRegion={{
                 latitude: currentLocation?.location?.coords?.latitude || 0.0,
                 longitude: currentLocation?.location?.coords?.longitude || 0.0,
@@ -166,7 +169,7 @@ const home = () => {
               // showsUserLocation={true} // Disable default user location marker
               provider="google"
               showsTraffic={true}
-              mapPadding={{ bottom: -50, left: -50 }} // This pushes the logo off-screen
+              mapPadding={{ bottom: -50, left: -50, right: -50, top: -50 }} // This pushes the logo off-screen
             >
               <Marker
                 coordinate={{

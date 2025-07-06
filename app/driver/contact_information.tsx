@@ -12,20 +12,17 @@ import {
 } from "react-native";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import TButton from "@/lib/buttons/TButton";
+import { Formik } from "formik";
 import InputText from "@/lib/inputs/InputText";
+import React from "react";
+import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
-import { Formik } from "formik";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 const contact_information = () => {
   const router = useRouter();
   const { t } = useTranslation();
-
-  const [checkBox, setCheckBox] = React.useState(false);
-  const [IsShow, setIsShow] = React.useState(false);
 
   const handleKeyboardDismiss = () => {
     Keyboard.dismiss();

@@ -1,13 +1,14 @@
 import { Text, TouchableOpacity, View } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "@/lib/backHeader/BackButton";
+import { OtpInput } from "react-native-otp-entry";
+import { PrimaryColor } from "@/utils/utils";
+import React from "react";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
-import React from "react";
 import { useTranslation } from "react-i18next";
-import { OtpInput } from "react-native-otp-entry";
 
 const otp_verify = () => {
   const router = useRouter();
@@ -42,8 +43,13 @@ const otp_verify = () => {
           // onBlur={() => console.log("Blurred")}
           // onTextChange={(text) => console.log(text)}
           onFilled={async (text) => {
-            console.log(`OTP is ${text}`);
-            router.push("/auth/name");
+            const role = await AsyncStorage.getItem("role");
+            // console.log("OTP Filled: ", text, "Role: ", role);
+            if (role === "driver") {
+              router.push("/driver/name");
+            } else {
+              router.push("/passenger/name");
+            }
           }}
           textInputProps={{
             accessibilityLabel: "One-Time Password",

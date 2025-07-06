@@ -10,17 +10,17 @@ import {
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
 
+import Avatar from "@/lib/ui/Avatar";
+import { Drawer } from "expo-router/drawer";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import IButton from "@/lib/buttons/IButton";
 import IwtButton from "@/lib/buttons/IwtButton";
-import Avatar from "@/lib/ui/Avatar";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { useRouter } from "expo-router";
-import { Drawer } from "expo-router/drawer";
-import { useTranslation } from "react-i18next";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import tw from "twrnc"; // or your preferred tailwind solution
+import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 const CustomDrawerContent = (props) => {
   const insets = useSafeAreaInsets();
