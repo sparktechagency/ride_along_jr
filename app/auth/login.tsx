@@ -6,7 +6,6 @@ import {
   IconOpenEye,
   IconSmallRightTick,
 } from "@/assets/icon/Icon";
-import { Link, useRouter } from "expo-router";
 import {
   Keyboard,
   ScrollView,
@@ -15,17 +14,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Link, useRouter } from "expo-router";
 
-import BackButton from "@/lib/backHeader/BackButton";
-import IwtButton from "@/lib/buttons/IwtButton";
-import TButton from "@/lib/buttons/TButton";
-import InputText from "@/lib/inputs/InputText";
-import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BackButton from "@/lib/backHeader/BackButton";
 import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
+import InputText from "@/lib/inputs/InputText";
+import IwtButton from "@/lib/buttons/IwtButton";
+import { PrimaryColor } from "@/utils/utils";
 import React from "react";
+import TButton from "@/lib/buttons/TButton";
+import tw from "@/lib/tailwind";
 import { useTranslation } from "react-i18next";
 
 const login = () => {
@@ -146,7 +146,6 @@ const login = () => {
                   <Checkbox
                     value={checkBox}
                     onValueChange={setCheckBox}
-                    size={20}
                     color={PrimaryColor}
                   />
                   <TouchableOpacity
