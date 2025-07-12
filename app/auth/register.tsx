@@ -1,12 +1,10 @@
 import {
   IconCloseEye,
   IconEmail,
-  IconGoogleIcon,
   IconLock,
   IconOpenEye,
   IconSmallRightTick,
 } from "@/assets/icon/Icon";
-import { Link, useRouter } from "expo-router";
 import {
   Keyboard,
   ScrollView,
@@ -15,24 +13,49 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Link, useRouter } from "expo-router";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import IwtButton from "@/lib/buttons/IwtButton";
-import TButton from "@/lib/buttons/TButton";
-import InputText from "@/lib/inputs/InputText";
-import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
 import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
+import InputText from "@/lib/inputs/InputText";
+import { PrimaryColor } from "@/utils/utils";
 import React from "react";
+import TButton from "@/lib/buttons/TButton";
+import Toast from "react-native-toast-message";
+import tw from "@/lib/tailwind";
+import { useSignUpMutation } from "@/redux/apiSlices/authApiSlices";
 import { useTranslation } from "react-i18next";
 
 const register = () => {
   const router = useRouter();
   const { t } = useTranslation();
 
+  const [SignUp, signUpResult] = useSignUpMutation();
+
   const [checkBox, setCheckBox] = React.useState(false);
   const [IsShow, setIsShow] = React.useState(false);
+
+  const handleSignUp = async (values: any) => {
+    try {
+      // console.log("SignUp values:", values);
+      const res = await SignUp({
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+      if (res?.success) {
+        router.push(`/auth/otp_verify?email=${values.email}`);
+      }
+      // router.push("/auth/login");
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: "Warning",
+        text2: (error as any)?.message,
+      });
+    }
+  };
 
   const handleKeyboardDismiss = () => {
     Keyboard.dismiss();
@@ -76,9 +99,7 @@ const register = () => {
               }
               return errors;
             }}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
+            onSubmit={handleSignUp}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
               <>
@@ -126,7 +147,6 @@ const register = () => {
                   <Checkbox
                     value={checkBox}
                     onValueChange={setCheckBox}
-                    size={20}
                     color={PrimaryColor}
                   />
                   <TouchableOpacity
@@ -161,18 +181,20 @@ const register = () => {
                 </View>
                 <View style={tw`px-4 mt-5 gap-5`}>
                   <TButton
+                    disabled={!checkBox}
+                    isLoading={signUpResult.isLoading}
                     title={t("auth.register.createAccountButton")}
                     onPress={() => {
-                      // handleSubmit()
-                      router.push("/auth/otp_verify");
+                      handleSubmit();
+                      // router.push("/auth/otp_verify");
                     }}
                   />
-                  <IwtButton
+                  {/* <IwtButton
                     svg={IconGoogleIcon}
                     title={t("auth.login.continueWithGoogle")}
                     containerStyle={tw`bg-[#E8EAED] `}
                     titleStyle={tw`text-black`}
-                  />
+                  /> */}
                 </View>
               </>
             )}

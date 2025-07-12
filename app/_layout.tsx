@@ -7,6 +7,7 @@ import { PrimaryColor } from "@/utils/utils";
 import { Provider } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
+import Toast from "react-native-toast-message";
 import store from "@/redux/store";
 import tw from "@/lib/tailwind";
 
@@ -56,6 +57,7 @@ export default function RootLayout() {
             </BottomSheetModalProvider>
           </GestureHandlerRootView>
         </SafeAreaView>
+        <Toast />
       </LanguageProvider>
     </Provider>
   );

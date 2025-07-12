@@ -3,14 +3,30 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { ActivityIndicator, Image, View } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import tw from "@/lib/tailwind";
-import { useRouter } from "expo-router";
 import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync(); // Prevent Expo's splash screen from auto-hiding
 
 export default function App() {
-  const route = useRouter();
+  const onLayoutRootView = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if (token) {
+      SplashScreen.hideAsync(); // Hide the splash screen once the app is ready
+      const role = await AsyncStorage.getItem("role");
+      // router.push("/auth/otp_verify");
+      if (role === "passenger") {
+        router.replace("/passenger/drawer/home");
+      } else {
+        router.replace("/driver/drawer/home");
+      }
+    } else {
+      SplashScreen.hideAsync(); // Hide the splash screen once the app is ready
+      router.replace("/auth/login");
+    }
+  };
 
   useEffect(() => {
     Font.loadAsync({
@@ -23,10 +39,7 @@ export default function App() {
       NunitoSansRegular: require("@/assets/fonts/NunitoSans/NunitoSansRegular.ttf"),
       NunitoSansSemiBold: require("@/assets/fonts/NunitoSans/NunitoSansSemiBold.ttf"),
     });
-    SplashScreen.hideAsync();
-    setTimeout(() => {
-      route?.replace("/welcome");
-    }, 1000);
+    onLayoutRootView();
   }, []);
 
   return (

@@ -1,7 +1,6 @@
 import {
   IconCloseEye,
   IconEmail,
-  IconGoogleIcon,
   IconLock,
   IconOpenEye,
   IconSmallRightTick,
@@ -21,16 +20,19 @@ import BackButton from "@/lib/backHeader/BackButton";
 import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
 import InputText from "@/lib/inputs/InputText";
-import IwtButton from "@/lib/buttons/IwtButton";
 import { PrimaryColor } from "@/utils/utils";
 import React from "react";
 import TButton from "@/lib/buttons/TButton";
+import Toast from "react-native-toast-message";
 import tw from "@/lib/tailwind";
+import { useLoginMutation } from "@/redux/apiSlices/authApiSlices";
 import { useTranslation } from "react-i18next";
 
 const login = () => {
   const router = useRouter();
   const { t } = useTranslation();
+  const [Login, loginResult] = useLoginMutation();
+  const [loginInfo, setLoginInfo] = React.useState({ email: "", password: "" });
 
   const [checkBox, setCheckBox] = React.useState(false);
   const [IsShow, setIsShow] = React.useState(false);
@@ -38,6 +40,43 @@ const login = () => {
   const handleKeyboardDismiss = () => {
     Keyboard.dismiss();
   };
+
+  const handleSignIn = async (values: any) => {
+    try {
+      const response = await Login({
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+      // console.log("Login response:", response);
+      if (response?.data?.token) {
+        await AsyncStorage.setItem("token", response?.data?.token);
+        const role = await AsyncStorage.getItem("role");
+        // router.push("/auth/otp_verify");
+        if (role === "passenger") {
+          router.push("/passenger/drawer/home");
+        } else {
+          router.push("/driver/drawer/home");
+        }
+      }
+    } catch (error) {
+      console.warn("Login failed:", error);
+      Toast.show({
+        type: "error",
+        text1: "Warning",
+        text2: (error as any)?.message,
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    const fetchLoginInfo = async () => {
+      const storedLoginInfo = await AsyncStorage.getItem("loginInfo");
+      if (storedLoginInfo) {
+        setLoginInfo(JSON.parse(storedLoginInfo));
+      }
+    };
+    fetchLoginInfo();
+  }, []);
 
   return (
     <TouchableWithoutFeedback
@@ -63,7 +102,12 @@ const login = () => {
             </Text>
           </View>
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{
+              email: loginInfo.email || "",
+              password: loginInfo.password || "",
+            }}
+            revalidateOnMount={true}
+            enableReinitialize={true}
             validate={(values) => {
               const errors = {} as any;
               if (!values.email) {
@@ -80,9 +124,7 @@ const login = () => {
               }
               return errors;
             }}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
+            onSubmit={handleSignIn}
           >
             {({
               handleChange,
@@ -93,7 +135,7 @@ const login = () => {
               touched,
             }) => (
               <>
-                <View style={tw`px-4 gap-5 mt-8`}>
+                <View style={tw`px-4 gap-5 mt-8  `}>
                   <View style={tw``}>
                     <InputText
                       value={values.email}
@@ -134,6 +176,19 @@ const login = () => {
                     />
                   </View>
                 </View>
+                {/* <View style={tw`px-4 mt-5 gap-2`}>
+                  {loginResult?.error && (
+                    <View style={tw`flex-row items-center gap-1`}>
+                      <SvgXml
+                        xml={`<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" x="0" y="0" viewBox="0 0 128 128" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path fill="#ee404c" d="M57.362 26.54 20.1 91.075a7.666 7.666 0 0 0 6.639 11.5h74.518a7.666 7.666 0 0 0 6.639-11.5L70.638 26.54a7.665 7.665 0 0 0-13.276 0z" opacity="1" data-original="#ee404c" class=""></path><g fill="#fff7ed"><rect width="9.638" height="29.377" x="59.181" y="46.444" rx="4.333" fill="#fff7ed" opacity="1" data-original="#fff7ed" class=""></rect><circle cx="64" cy="87.428" r="4.819" fill="#fff7ed" opacity="1" data-original="#fff7ed" class=""></circle></g></g></svg>`}
+                      />
+                      <Text style={tw`text-red-500 text-sm`}>
+                        {loginResult.error?.message ||
+                          t("auth.login.loginFailed")}
+                      </Text>
+                    </View>
+                  )}
+                </View> */}
                 <View style={tw`self-end mt-3 px-4`}>
                   <Link
                     href={"/auth/forgot_password"}
@@ -163,24 +218,18 @@ const login = () => {
                 </View>
                 <View style={tw`px-4 mt-5 gap-5`}>
                   <TButton
+                    isLoading={loginResult.isLoading}
                     title={t("auth.login.loginButton")}
                     onPress={async () => {
-                      const role = await AsyncStorage.getItem("role");
-                      // handleSubmit
-                      // router.push("/auth/otp_verify");
-                      if (role === "passenger") {
-                        router.push("/passenger/drawer/home");
-                      } else {
-                        router.push("/driver/drawer/home");
-                      }
+                      handleSubmit();
                     }}
                   />
-                  <IwtButton
+                  {/* <IwtButton
                     svg={IconGoogleIcon}
                     title={t("auth.login.continueWithGoogle")}
                     containerStyle={tw`bg-[#E8EAED] `}
                     titleStyle={tw`text-black`}
-                  />
+                  /> */}
                 </View>
               </>
             )}

@@ -1,6 +1,8 @@
 import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 interface BaseQueryArgs extends AxiosRequestConfig {
   url: string;
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -16,12 +18,12 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
   extraOptions
 ) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = await AsyncStorage.getItem("token");
 
     // console.log(token);
 
     const result: AxiosResponse = await axios({
-      baseURL: "http://182.252.68.227:8003/api",
+      baseURL: "http://10.10.10.70:5051/api",
       // baseURL: "http://157.245.63.191/api",
       ...args,
       url: args.url,
@@ -67,4 +69,4 @@ export const api = createApi({
 });
 
 // export const imageUrl = 'http://192.168.12.160:7000/';
-export const imageUrl = "http://157.245.63.191/";
+export const imageUrl = "http://10.10.10.70:5051";
