@@ -24,9 +24,11 @@ import TButton from "@/lib/buttons/TButton";
 import { bytesToMB } from "@/utils/utils";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const vehicle_information = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [checkBox, setCheckBox] = React.useState(false);
   const [IsShow, setIsShow] = React.useState(false);
@@ -61,7 +63,7 @@ const vehicle_information = () => {
             <Text
               style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
             >
-              Enter your vehicle information
+              {t("driver.vehicleInfo.title")}
             </Text>
           </View>
           <Formik
@@ -69,13 +71,13 @@ const vehicle_information = () => {
             validate={(values) => {
               const errors = {} as any;
               if (errors.name) {
-                errors.name = "Required";
+                errors.name = t("auth.login.emailRequired");
               }
               if (errors.year) {
-                errors.year = "Required";
+                errors.year = t("auth.login.emailRequired");
               }
               if (errors.number) {
-                errors.number = "Required";
+                errors.number = t("auth.login.emailRequired");
               }
               return errors;
             }}
@@ -102,14 +104,14 @@ const vehicle_information = () => {
                       errorText={errors.name}
                       touched={touched.name}
                       // textXValue={-36}
-                      placeholder="Model of Car"
+                      placeholder={t("driver.vehicleInfo.vehicleModel")}
                       svgFirstIcon={IconVehicleOnly}
                       focusSTyle={tw`border border-primary`}
                     />
                   </View>
                   <View style={tw``}>
                     <InputText
-                      placeholder="Year of Manufacture"
+                      placeholder={t("driver.vehicleInfo.vehicleYear")}
                       touched={touched.year}
                       onBlur={handleBlur("year")}
                       onChangeText={handleChange("year")}
@@ -122,7 +124,7 @@ const vehicle_information = () => {
                   </View>
                   <View style={tw``}>
                     <InputText
-                      placeholder="Vehicle Identification Number (VIN)"
+                      placeholder={t("driver.vehicleInfo.licensePlate")}
                       touched={touched.number}
                       onBlur={handleBlur("number")}
                       onChangeText={handleChange("number")}
@@ -198,7 +200,7 @@ const vehicle_information = () => {
                     onPress={() => {
                       router?.push("/driver/in_review");
                     }}
-                    title="Submit for Review"
+                    title={t("driver.vehicleInfo.submitButton")}
                   />
                 </View>
               </>

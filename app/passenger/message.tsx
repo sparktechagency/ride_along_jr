@@ -9,13 +9,15 @@ import {
 import { IconOnlyArrayRight } from "@/assets/icon/Icon";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import Avatar from "@/lib/ui/Avatar";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
 
 const message = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [message, setMessage] = React.useState("");
   const [allMessages, setAllMessages] = React.useState([
     {
@@ -193,12 +195,12 @@ const message = () => {
       >
         <TextInput
           style={tw`flex-1 bg-white px-4 rounded-md`}
-          placeholder="Type a message"
+          placeholder={t("driver.messages.typeMessage")}
           value={message}
           onChangeText={(text) => setMessage(text)}
         />
         <TButton
-          title="Send"
+          title={t("driver.messages.send")}
           onPress={() => {
             // Send message
             setAllMessages((pre) => {

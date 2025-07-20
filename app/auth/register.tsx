@@ -1,12 +1,10 @@
 import {
   IconCloseEye,
   IconEmail,
-  IconGoogleIcon,
   IconLock,
   IconOpenEye,
   IconSmallRightTick,
 } from "@/assets/icon/Icon";
-import { Link, useRouter } from "expo-router";
 import {
   Keyboard,
   ScrollView,
@@ -15,22 +13,49 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Link, useRouter } from "expo-router";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import IwtButton from "@/lib/buttons/IwtButton";
-import TButton from "@/lib/buttons/TButton";
-import InputText from "@/lib/inputs/InputText";
-import tw from "@/lib/tailwind";
-import { PrimaryColor } from "@/utils/utils";
+import Checkbox from "expo-checkbox";
 import { Formik } from "formik";
+import InputText from "@/lib/inputs/InputText";
+import { PrimaryColor } from "@/utils/utils";
 import React from "react";
-import { Checkbox } from "react-native-ui-lib";
+import TButton from "@/lib/buttons/TButton";
+import Toast from "react-native-toast-message";
+import tw from "@/lib/tailwind";
+import { useSignUpMutation } from "@/redux/apiSlices/authApiSlices";
+import { useTranslation } from "react-i18next";
 
 const register = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+
+  const [SignUp, signUpResult] = useSignUpMutation();
 
   const [checkBox, setCheckBox] = React.useState(false);
   const [IsShow, setIsShow] = React.useState(false);
+
+  const handleSignUp = async (values: any) => {
+    try {
+      // console.log("SignUp values:", values);
+      const res = await SignUp({
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+      if (res?.success) {
+        router.push(`/auth/otp_verify?email=${values.email}`);
+      }
+      // router.push("/auth/login");
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: "Warning",
+        text2: (error as any)?.message,
+      });
+    }
+  };
 
   const handleKeyboardDismiss = () => {
     Keyboard.dismiss();
@@ -49,11 +74,11 @@ const register = () => {
             <Text
               style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
             >
-              Booking a fun ride for your kid
+              {t("auth.register.createAccount")}
             </Text>
 
             <Text style={tw`text-base text-deepBlue300 font-NunitoSansMedium`}>
-              Get started by signing up here.
+              {t("auth.register.getStarted")}
             </Text>
           </View>
           <Formik
@@ -61,22 +86,20 @@ const register = () => {
             validate={(values) => {
               const errors = {} as any;
               if (!values.email) {
-                errors.email = "Required";
+                errors.email = t("auth.login.emailRequired");
               } else if (
                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
               ) {
-                errors.email = "Invalid email address";
+                errors.email = t("auth.login.invalidEmail");
               }
               if (!values.password) {
-                errors.password = "Required";
+                errors.password = t("auth.login.passwordRequired");
               } else if (values.password.length < 8) {
-                errors.password = "Password must be at least 8 characters long";
+                errors.password = t("auth.login.passwordLength");
               }
               return errors;
             }}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
+            onSubmit={handleSignUp}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
               <>
@@ -88,7 +111,7 @@ const register = () => {
                       onChangeText={handleChange("email")}
                       errorText={errors.email}
                       textXValue={-36}
-                      placeholder="Email"
+                      placeholder={t("auth.register.email")}
                       svgFirstIcon={IconEmail}
                       svgSecondIcon={
                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
@@ -102,7 +125,7 @@ const register = () => {
                   </View>
                   <View style={tw``}>
                     <InputText
-                      placeholder="Password"
+                      placeholder={t("auth.register.password")}
                       textInputProps={{
                         secureTextEntry: !IsShow,
                       }}
@@ -120,57 +143,58 @@ const register = () => {
                   </View>
                 </View>
 
-                <View style={tw`px-4 flex-row items-center mt-8 gap-2 `}>
+                <View style={tw`flex-1 px-4 flex-row items-center mt-8 gap-2 `}>
                   <Checkbox
                     value={checkBox}
                     onValueChange={setCheckBox}
-                    size={20}
                     color={PrimaryColor}
                   />
                   <TouchableOpacity
                     onPress={() => {
                       setCheckBox(!checkBox);
                     }}
-                    style={tw`flex-row items-center`}
+                    style={tw`flex-1 flex-row items-center flex-wrap`}
                   >
                     <Text
                       style={tw`text-sm font-NunitoSansRegular text-gray-800`}
                     >
-                      Agree to{" "}
+                      {t("auth.register.termsText")}{" "}
                     </Text>
                     <Link
                       href={"/terms_and_conditions"}
                       style={tw`text-sm underline font-NunitoSansRegular text-primary`}
                     >
-                      Terms & conditions{" "}
+                      {t("auth.register.termsLink")}{" "}
                     </Link>
                     <Text
                       style={tw`text-sm font-NunitoSansRegular text-gray-800`}
                     >
-                      and{" "}
+                      {t("auth.register.and")}{" "}
                     </Text>
                     <Link
                       href={"/privacy_policy"}
                       style={tw`text-sm underline font-NunitoSansRegular text-primary`}
                     >
-                      Privacy policy.
+                      {t("auth.register.privacyLink")}
                     </Link>
                   </TouchableOpacity>
                 </View>
                 <View style={tw`px-4 mt-5 gap-5`}>
                   <TButton
-                    title="Sign up"
+                    disabled={!checkBox}
+                    isLoading={signUpResult.isLoading}
+                    title={t("auth.register.createAccountButton")}
                     onPress={() => {
-                      // handleSubmit()
-                      router.push("/auth/otp_verify");
+                      handleSubmit();
+                      // router.push("/auth/otp_verify");
                     }}
                   />
-                  <IwtButton
+                  {/* <IwtButton
                     svg={IconGoogleIcon}
-                    title="Continue with google"
+                    title={t("auth.login.continueWithGoogle")}
                     containerStyle={tw`bg-[#E8EAED] `}
                     titleStyle={tw`text-black`}
-                  />
+                  /> */}
                 </View>
               </>
             )}
@@ -178,13 +202,13 @@ const register = () => {
 
           <View style={tw`flex-row gap-2 justify-center mt-7`}>
             <Text style={tw`text-sm font-NunitoSansRegular text-gray-900`}>
-              Already have an account?
+              {t("auth.register.haveAccount")}
             </Text>
             <Link
               href={"/auth/login"}
               style={tw`text-sm font-NunitoSansRegular text-primary underline`}
             >
-              Login
+              {t("auth.register.loginLink")}
             </Link>
           </View>
         </ScrollView>

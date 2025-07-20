@@ -19,15 +19,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
-import { ILocation } from "./(tabs)";
+
+// Define the ILocation interface locally to avoid the import error
+interface ILocation {
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+  name: string;
+  formatted_address: string;
+}
 
 const estimated_details = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [children, setChildren] = React.useState(2);
-
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
@@ -39,13 +51,7 @@ const estimated_details = () => {
   const snapPoints = React.useMemo(() => ["1%", "60%"], []);
 
   // callbacks
-  const handleSheetChange = React.useCallback((index: number) => {
-    if (index === 0 && !travelData?.destination && !travelData?.pickup) {
-      sheetRef.current?.close();
-
-      router.back();
-    }
-  }, []);
+  const handleSheetChange = React.useCallback((index: number) => {}, []);
 
   const handleClosePress = React.useCallback(() => {
     sheetRef.current?.close();
@@ -63,14 +69,14 @@ const estimated_details = () => {
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("travelData");
-    setTravelReadyData(JSON.parse(location));
+    if (location) {
+      setTravelReadyData(JSON.parse(location));
+    }
   };
 
   React.useEffect(() => {
     handleGetLocationFormLS();
   }, []);
-
-  // console.log(travelData);
 
   return (
     <View style={tw`flex-1 bg-[#EFF2F2]`}>
@@ -109,19 +115,6 @@ const estimated_details = () => {
             zoomEnabled
             zoomControlEnabled
           >
-            {/* Current Location Marker (if no pickup selected) */}
-            {/* {!travelReadyData?.pick && currentLocation?.location?.coords && (
-              <Marker
-                coordinate={{
-                  latitude: currentLocation.location.coords.latitude,
-                  longitude: currentLocation.location.coords.longitude,
-                }}
-                title={travelReadyData?.pick?.name}
-                description={travelReadyData?.pick?.formatted_address}
-                pinColor="blue"
-              />
-            )} */}
-
             {/* Pickup Marker */}
             {travelReadyData?.pickup?.geometry?.location && (
               <Marker
@@ -150,8 +143,8 @@ const estimated_details = () => {
             {travelReadyData?.destination?.geometry?.location && (
               <Marker
                 coordinate={{
-                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
-                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                  latitude: travelReadyData.destination.geometry.location.lat,
+                  longitude: travelReadyData.destination.geometry.location.lng,
                 }}
                 title={travelReadyData.destination.name}
                 description={travelReadyData.destination.formatted_address}
@@ -199,6 +192,18 @@ const estimated_details = () => {
                 />
               )}
           </MapView>
+          <View
+            style={tw`absolute top-10 left-4 right-4 flex-row justify-between`}
+          >
+            <TouchableOpacity
+              style={tw`bg-white p-1 rounded-full`}
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <SvgXml xml={IconBackArray} />
+            </TouchableOpacity>
+          </View>
         </View>
       )}
 
@@ -219,7 +224,7 @@ const estimated_details = () => {
           >
             <SvgXml xml={IconBackArray} />
             <Text style={tw`text-base font-NunitoSansBold`}>
-              Estimated Details
+              {t("passenger.trip.estimatedRide")}
             </Text>
           </TouchableOpacity>
           <View>
@@ -286,7 +291,7 @@ const estimated_details = () => {
           >
             <View>
               <Text style={tw`text-base font-NunitoSansBold text-black  `}>
-                Payment method
+                {t("passenger.trip.paymentMethod")}
               </Text>
             </View>
             <View style={tw`flex-row items-center`}>
@@ -296,7 +301,7 @@ const estimated_details = () => {
           </TouchableOpacity>
           <View style={tw`px-4`}>
             <TButton
-              title="Request Now"
+              title={t("passenger.trip.requestRide")}
               onPress={() => {
                 router?.push("/passenger/request_car");
               }}

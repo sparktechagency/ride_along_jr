@@ -10,9 +10,11 @@ import { PrimaryColor } from "@/utils/utils";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const passport_photo = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
 
@@ -92,7 +94,7 @@ const passport_photo = () => {
           <Text
             style={tw`text-lg font-semibold text-center text-deepBlue300 py-2`}
           >
-            Please take a picture passport size of you
+            {t("driver.profilePhoto.description")}
           </Text>
 
           {isPreview ? (
@@ -147,13 +149,13 @@ const passport_photo = () => {
               <Text
                 style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
               >
-                Take a selfie
+                {t("driver.profilePhoto.title")}
               </Text>
 
               <Text
                 style={tw`text-base text-deepBlue300 font-NunitoSansMedium`}
               >
-                We’ll match your face with your ID card / passport photo.
+                {t("driver.profilePhoto.subtitle")}
               </Text>
             </View>
           </View>
@@ -182,12 +184,12 @@ const passport_photo = () => {
           <View style={tw`gap-3 px-4 py-10`}>
             <TButton
               onPress={startCameraProcess}
-              title="Take a photo"
+              title={t("driver.profilePhoto.buttonText")}
               containerStyle={tw`bg-deepBlue50`}
               titleStyle={tw`text-deepBlue400`}
             />
             <TButton
-              title="Next 5/6"
+              title={t("driver.profilePhoto.nextButton")}
               //   disabled={!imageFont || !imageBack}
 
               onPress={() => {

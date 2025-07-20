@@ -14,12 +14,25 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
-import { ILocation } from "./(tabs)";
+
+// Define the ILocation interface locally to avoid the import error
+interface ILocation {
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+  name: string;
+  formatted_address: string;
+}
 
 const driver_responding = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
@@ -49,7 +62,9 @@ const driver_responding = () => {
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("travelData");
-    setTravelReadyData(JSON.parse(location));
+    if (location) {
+      setTravelReadyData(JSON.parse(location));
+    }
   };
 
   React.useEffect(() => {
@@ -142,8 +157,8 @@ const driver_responding = () => {
             {travelReadyData?.destination?.geometry?.location && (
               <Marker
                 coordinate={{
-                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
-                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                  latitude: travelReadyData.destination.geometry.location.lat,
+                  longitude: travelReadyData.destination.geometry.location.lng,
                 }}
                 title={travelReadyData.destination.name}
                 description={travelReadyData.destination.formatted_address}
@@ -208,10 +223,10 @@ const driver_responding = () => {
           >
             <View style={tw`gap-0.1`}>
               <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Driver responding...
+                {t("passenger.trip.driverResponding")}
               </Text>
               <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Only a few seconds to go
+                {t("passenger.trip.waitingForDriver")}
               </Text>
             </View>
             <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
@@ -224,11 +239,11 @@ const driver_responding = () => {
               style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
             >
               <SvgXml xml={IconPickup} />
-              <View style={tw` `}>
+              <View style={tw`flex-1 `}>
                 <Text
                   style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                 >
-                  Pickup
+                  {t("passenger.trip.pickupLocation")}
                 </Text>
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -241,11 +256,11 @@ const driver_responding = () => {
               style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
             >
               <SvgXml xml={IconDestination} />
-              <View style={tw` `}>
+              <View style={tw`flex-1 `}>
                 <Text
                   style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                 >
-                  Destination
+                  {t("passenger.trip.dropoffLocation")}
                 </Text>
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -259,11 +274,11 @@ const driver_responding = () => {
             >
               <SvgXml xml={IconPaymentMethod} />
               <View style={tw`flex-1 flex-row justify-between items-end`}>
-                <View style={tw``}>
+                <View style={tw`flex-1 `}>
                   <Text
                     style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                   >
-                    Payment method
+                    {t("passenger.trip.paymentMethod")}
                   </Text>
                   <Text
                     style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -271,7 +286,7 @@ const driver_responding = () => {
                     VISA Card
                   </Text>
                 </View>
-                <View>
+                <View style={tw` `}>
                   <Text
                     style={tw` text-base font-NunitoSansBold text-deepBlue300`}
                   >
@@ -284,7 +299,7 @@ const driver_responding = () => {
 
           <IwtButton
             svg={IconCloseRed}
-            title="Cancel Ride"
+            title={t("passenger.trip.cancelRide")}
             containerStyle={tw`mt-4 bg-transparent gap-1 h-14`}
             titleStyle={tw`text-[#D21F18] font-NunitoSansBold `}
             onPress={() => {

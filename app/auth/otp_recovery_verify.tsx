@@ -1,15 +1,18 @@
 import { Text, TouchableOpacity, View } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackButton from "@/lib/backHeader/BackButton";
-import { OtpInput } from "react-native-otp-entry";
-import { PrimaryColor } from "@/utils/utils";
-import React from "react";
 import TButton from "@/lib/buttons/TButton";
-import { router } from "expo-router";
 import tw from "@/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { OtpInput } from "react-native-otp-entry";
 
 const otp_recovery_verify = () => {
+  const { t } = useTranslation();
+
   return (
     <View style={tw`flex-1 bg-base `}>
       <BackButton onPress={() => router.back()} />
@@ -17,10 +20,10 @@ const otp_recovery_verify = () => {
         <Text
           style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
         >
-          Enter OTP
+          {t("auth.otp.title")}
         </Text>
         <Text style={tw`text-base text-deepBlue300 font-NunitoSansMedium`}>
-          Please enter the 4-digit OTP sent to your registered email.
+          {t("auth.otp.pinDescription")}
         </Text>
       </View>
       <View style={tw`px-4 py-12 gap-1`}>
@@ -58,13 +61,13 @@ const otp_recovery_verify = () => {
           <Text
             style={tw`text-center text-deepBlue300 text-base font-NunitoSansMedium `}
           >
-            Didn't receive the OTP?
+            {t("auth.otp.didntReceive")}
           </Text>
           <TouchableOpacity onPress={() => console.log("Resend OTP")}>
             <Text
               style={tw`text-center text-primary underline text-sm font-NunitoSansMedium hover:text-deepBlue600 `}
             >
-              Resend OTP
+              {t("auth.otp.resendCode")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -77,7 +80,7 @@ const otp_recovery_verify = () => {
               router.push("/auth/create_new_pass");
             }
           }}
-          title="Submit OTP"
+          title={t("auth.otp.submitOTP")}
           containerStyle={tw`mt-10`}
           titleStyle={tw`font-NunitoSansBold text-base`}
         />
