@@ -1,14 +1,16 @@
 import { Image, ScrollView, Text, View } from "react-native";
 
-import BackButton from "@/lib/backHeader/BackButton";
 import { ImgRocket } from "@/assets/images";
-import React from "react";
+import BackButton from "@/lib/backHeader/BackButton";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 const InReviewScreen = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <View style={tw`flex-1 bg-white p-4`}>
@@ -40,18 +42,17 @@ const InReviewScreen = () => {
           <Text
             style={tw`text-lg text-center text-[#F5851E] font-NunitoSansSemiBold`}
           >
-            In Review
+            {t("driver.inReview.title")}
           </Text>
         </View>
 
         {/* Review Status */}
         <View style={tw`my-4 bg-deepBlue50 px-4 py-10 rounded-lg gap-4`}>
           <Text style={tw` text-xl text-deepBlue300 font-NunitoSansBold`}>
-            Your application is in review
+            {t("driver.inReview.title")}
           </Text>
           <Text style={tw` text-base text-deepBlue200 font-NunitoSansRegular`}>
-            Thank you for sharing the info. You'll get an email once we're done
-            reviewing.
+            {t("driver.inReview.description")}
           </Text>
           <Text style={tw` text-base text-deepBlue300 font-NunitoSansSemiBold`}>
             Review time: 48 hours
@@ -62,7 +63,7 @@ const InReviewScreen = () => {
       {/* Back to Home Button */}
       <View style={tw`flex-1 items-center my-4`}>
         <TButton
-          title="Back to Home"
+          title={t("driver.inReview.checkStatus")}
           onPress={() => router.push("/driver/drawer/home")}
           containerStyle={tw`w-full bg-transparent `}
           titleStyle={tw`text-primary text-base font-NunitoSansSemiBold`}

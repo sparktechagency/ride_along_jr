@@ -10,20 +10,22 @@ import {
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
 
+import Avatar from "@/lib/ui/Avatar";
+import { Drawer } from "expo-router/drawer";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import IButton from "@/lib/buttons/IButton";
 import IwtButton from "@/lib/buttons/IwtButton";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { useRouter } from "expo-router";
-import { Drawer } from "expo-router/drawer";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
 import tw from "twrnc"; // or your preferred tailwind solution
+import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 const CustomDrawerContent = (props) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <DrawerContentScrollView
@@ -66,54 +68,56 @@ const CustomDrawerContent = (props) => {
           <View style={tw`gap-2`}>
             <TouchableOpacity
               onPress={() => {
-                router?.push("/passenger/profile");
+                router?.push("/driver/profile");
               }}
               style={tw` pt-4 pb-4.5  flex-row items-center gap-3 justify-between border-b border-gray-200`}
             >
               <View style={tw`gap-3 items-center flex-row`}>
                 <SvgXml xml={IconLock} />
                 <Text style={tw`text-base text-gray-800`}>
-                  Account & security
+                  {t("driver.profile.accountSettings")}
                 </Text>
               </View>
               <SvgXml xml={IconLeftCommonArray} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                router?.push("/passenger/payment");
+                router?.push("/driver/payment");
               }}
               style={tw` pt-2 pb-4.5  flex-row items-center gap-3 justify-between border-b border-gray-200`}
             >
               <View style={tw`gap-3 items-center flex-row`}>
                 <SvgXml xml={IconPaymentDrawer} />
-                <Text style={tw`text-base text-gray-800`}>Payment method</Text>
+                <Text style={tw`text-base text-gray-800`}>
+                  {t("driver.payment.paymentMethods")}
+                </Text>
               </View>
               <SvgXml xml={IconLeftCommonArray} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                router?.push("/passenger/about");
+                router?.push("/driver/about");
               }}
               style={tw` pt-2 pb-4.5  flex-row items-center gap-3 justify-between border-b border-gray-200`}
             >
               <View style={tw`gap-3 items-center flex-row`}>
                 <SvgXml xml={IconAboutApplication} />
                 <Text style={tw`text-base text-gray-800`}>
-                  About application
+                  {t("driver.about.title")}
                 </Text>
               </View>
               <SvgXml xml={IconLeftCommonArray} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                router?.push("/passenger/language_setting");
+                router?.push("/language_setting");
               }}
               style={tw` pt-2 pb-4.5  flex-row items-center gap-3 justify-between border-b border-gray-200`}
             >
               <View style={tw`gap-3 items-center flex-row`}>
                 <SvgXml xml={IconLanguageDrawer} />
                 <Text style={tw`text-base text-gray-800`}>
-                  Language settings
+                  {t("languageSettings.title")}
                 </Text>
               </View>
               <SvgXml xml={IconLeftCommonArray} />
@@ -123,12 +127,13 @@ const CustomDrawerContent = (props) => {
           {/* Toggle and Logout */}
           <View style={tw`mt-auto pt-5  `}>
             <IwtButton
-              title="Book a Ride for My Child(ren)"
+              title={t("driver.drawer.bookRideForChild")}
               svg={IconDriver}
               onPress={() => {
                 router?.push("/passenger/drawer/home");
               }}
-              containerStyle={tw`mb-4 shadow-md`}
+              containerStyle={tw`mb-4 shadow-md px-4 `}
+              titleStyle={tw`text-base flex-1`}
             />
             <TouchableOpacity
               onPress={() => {
@@ -137,7 +142,9 @@ const CustomDrawerContent = (props) => {
               style={tw`py-5 border-t border-gray-200 flex-row items-center gap-2`}
             >
               <SvgXml xml={IconLogOut} />
-              <Text style={tw`text-base text-red-500`}>Log out</Text>
+              <Text style={tw`text-base text-red-500`}>
+                {t("driver.profile.logout")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -9,24 +9,36 @@ import {
   IconStar,
   IconTiming,
 } from "@/assets/icon/Icon";
-import MapView, { Marker } from "react-native-maps";
 import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Avatar } from "react-native-ui-lib";
-import BottomSheet from "@gorhom/bottom-sheet";
-import { ILocation } from "./(tabs)";
 import IwtButton from "@/lib/buttons/IwtButton";
-import MapViewDirections from "react-native-maps-directions";
-import React from "react";
-import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import Avatar from "@/lib/ui/Avatar";
+import BottomSheet from "@gorhom/bottom-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import MapViewDirections from "react-native-maps-directions";
+import { SvgXml } from "react-native-svg";
+
+interface ILocation {
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+  name: string;
+  formatted_address: string;
+}
 
 const driver_arriving = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
@@ -62,7 +74,9 @@ const driver_arriving = () => {
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("travelData");
-    setTravelReadyData(JSON.parse(location as any));
+    if (location) {
+      setTravelReadyData(JSON.parse(location));
+    }
   };
 
   React.useEffect(() => {
@@ -231,7 +245,7 @@ const driver_arriving = () => {
               <Text
                 style={tw`text-sm  font-NunitoSansRegular text-deepBlue200`}
               >
-                Until pickup
+                {t("driver.trip.estimatedTime")}
               </Text>
             </View>
             {/* <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
@@ -284,11 +298,11 @@ const driver_arriving = () => {
               style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
             >
               <SvgXml xml={IconPickup} />
-              <View style={tw` `}>
+              <View style={tw`flex-1 `}>
                 <Text
                   style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                 >
-                  Pickup
+                  {t("driver.trip.pickupLocation")}
                 </Text>
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -307,7 +321,7 @@ const driver_arriving = () => {
                   <Text
                     style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                   >
-                    Estimated price
+                    {t("driver.trip.estimatedFare")}
                   </Text>
                   <Text
                     style={tw` text-base font-NunitoSansBold text-deepBlue300`}
@@ -320,7 +334,7 @@ const driver_arriving = () => {
           </View>
 
           <TButton
-            title="Arrived"
+            title={t("driver.trip.arrived")}
             containerStyle={tw`mt-4  gap-1 h-14`}
             titleStyle={tw``}
             onPress={() => {
@@ -329,7 +343,7 @@ const driver_arriving = () => {
           />
           <IwtButton
             svg={IconCloseRed}
-            title="Cancel Ride"
+            title={t("driver.trip.cancelTrip")}
             containerStyle={tw`mt-4 bg-transparent gap-1 h-14`}
             titleStyle={tw`text-[#D21F18] font-NunitoSansBold `}
             onPress={() => {

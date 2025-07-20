@@ -1,20 +1,22 @@
 import * as ImagePicker from "expo-image-picker";
 
-import { CameraView, useCameraPermissions } from "expo-camera";
 import { IconDriverDocument, IconUploadSmall } from "@/assets/icon/Icon";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import React, { useRef, useState } from "react";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import Icon from "@expo/vector-icons/Feather";
-import { PrimaryColor } from "@/utils/utils";
-import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
+import Icon from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
+import { SvgXml } from "react-native-svg";
 
 const document_submit = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
 
@@ -163,7 +165,7 @@ const document_submit = () => {
               <Text
                 style={tw`text-3xl  text-center text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
               >
-                Upload both side of your ID card / passport
+                {t("driver.passport.title")}
               </Text>
             </View>
           </View>
@@ -198,6 +200,7 @@ const document_submit = () => {
                 </>
               )}
             </TouchableOpacity>
+
             <TouchableOpacity
               onPress={pickImageBack}
               style={tw`flex-row gap-3 p-3 border border-gray-400 rounded-lg border-dashed items-center justify-center`}
@@ -227,22 +230,24 @@ const document_submit = () => {
                 </>
               )}
             </TouchableOpacity>
-          </View>
-          <View style={tw`gap-3 px-4 py-10`}>
-            <TButton
-              onPress={startCameraProcess}
-              title="Take a photo"
-              containerStyle={tw`bg-deepBlue50`}
-              titleStyle={tw`text-deepBlue400`}
-            />
-            <TButton
-              title="Next 3/6"
-              //   disabled={!imageFont || !imageBack}
 
+            <TouchableOpacity
+              onPress={startCameraProcess}
+              style={tw`border-primary border px-4 py-2 rounded-xl flex-row justify-center items-center`}
+            >
+              <Icon name="camera" size={24} color={PrimaryColor} />
+              <Text style={tw`ml-2 text-primary font-NunitoSansBold text-base`}>
+                Take Photo
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={tw`px-4 pt-8 pb-4`}>
+            <TButton
               onPress={() => {
-                // Handle next step
-                router?.push("/driver/driving_license");
+                router.push("/driver/driving_license");
               }}
+              title={t("driver.passport.nextButton")}
             />
           </View>
         </ScrollView>

@@ -13,6 +13,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "config": {
+        "googleMapsApiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.arifbiswas.ride-along-jr",
       "infoPlist": {
@@ -24,14 +27,17 @@
       }
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY"
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.arifbiswas.ride_along_jr"
@@ -43,14 +49,20 @@
     },
     "plugins": [
       "expo-router",
+      // [
+      //   "react-native-maps",
+      //   {
+      //     "iosGoogleMapsApiKey": "AIzaSyARXa6r8AXKRaoeWqyesQNBI8Y3EUEWSnY",
+      //     "androidGoogleMapsApiKey": ""
+      //   }
+      // ],
       [
         "expo-splash-screen",
         {
           "image": "./assets/images/iconm.png",
           "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#5c7b7e",
-          "enableFullScreenImage_legacy": true
+          "resizeMode": "cover",
+          "backgroundColor": "#5c7b7e"
         }
       ],
       [
@@ -67,7 +79,8 @@
           "recordAudioAndroid": true
         }
       ],
-     [ "expo-location",
+      [
+        "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
@@ -78,7 +91,8 @@
           "merchantIdentifier": "",
           "enableGooglePay": true
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

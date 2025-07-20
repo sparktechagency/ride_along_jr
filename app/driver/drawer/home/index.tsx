@@ -7,17 +7,18 @@ import {
   IconOverviewClosed,
   IconOverviewDollar,
 } from "@/assets/icon/Icon";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import Avatar from "@/lib/ui/Avatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Avatar } from "react-native-ui-lib";
 import React from "react";
 import { SvgXml } from "react-native-svg";
 // import { GoogleMaps } from "expo-maps";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 export interface ILocation {
   addressResponse: {
@@ -53,6 +54,7 @@ export interface ILocation {
 const home = () => {
   const navigation = useNavigation();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
 
@@ -71,6 +73,8 @@ const home = () => {
       setCurrentLocation(exitLocation);
       setLoading(false);
     } else {
+      Location.requestForegroundPermissionsAsync();
+      Location.requestBackgroundPermissionsAsync();
       const newLocation = await Location.getCurrentPositionAsync({});
       // Reverse geocode to get address
       let addressResponse = await Location.reverseGeocodeAsync({
@@ -111,13 +115,13 @@ const home = () => {
         </TouchableOpacity>
         <View style={tw`flex-row items-center gap-2`}>
           <Text style={tw`font-NunitoSansRegular text-black text-xl`}>
-            Welcome back,
+            {t("driver.home.welcomeBack")}
           </Text>
           <Text style={tw`font-NunitoSansBold text-black text-xl`}>John</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
-            router?.push("/driver /profile");
+            router?.push("/driver/profile");
           }}
         >
           <Avatar
@@ -131,7 +135,7 @@ const home = () => {
       <View style={tw`px-4  gap-3`}>
         <View>
           <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
-            Overview
+            {t("driver.home.overview")}
           </Text>
         </View>
         <ScrollView
@@ -142,7 +146,7 @@ const home = () => {
           <View style={tw`bg-white p-3 rounded-lg gap-2  w-30`}>
             <SvgXml xml={IconOverviewCar} />
             <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue300`}>
-              Completed today
+              {t("driver.home.completedToday")}
             </Text>
             <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
               05
@@ -151,7 +155,7 @@ const home = () => {
           <View style={tw`bg-white p-3 rounded-lg gap-2  w-30`}>
             <SvgXml xml={IconOverviewClosed} />
             <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue300`}>
-              Cancelled today
+              {t("driver.home.cancelledToday")}
             </Text>
             <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
               01
@@ -160,7 +164,7 @@ const home = () => {
           <View style={tw`bg-white p-3 rounded-lg gap-2  w-30`}>
             <SvgXml xml={IconOverviewDollar} />
             <Text style={tw`text-sm font-NunitoSansRegular text-deepBlue300`}>
-              Revenue this week
+              {t("driver.home.revenueThisWeek")}
             </Text>
             <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
               $1240
@@ -238,7 +242,7 @@ const home = () => {
 
         <View style={tw`flex-row items-center  gap-2`}>
           <Text style={tw`text-xl font-NunitoSansBold text-deepBlue300`}>
-            Passenger request's
+            {t("driver.home.passengerRequests")}
           </Text>
           <View style={tw`px-2 py-1 rounded-full bg-primary`}>
             <Text style={tw`text-xs  text-white `}>1</Text>
@@ -253,7 +257,7 @@ const home = () => {
         <View>
           <TouchableOpacity
             onPress={() => {
-              router?.push("/driver/driver_responding");
+              router?.push("/driver/driver_request");
             }}
             style={tw`bg-white p-3 rounded-lg`}
           >
@@ -284,7 +288,7 @@ const home = () => {
                   <Text
                     style={tw`text-sm font-NunitoSansMedium text-deepBlue300`}
                   >
-                    kids : 4
+                    {t("driver.home.kids")}: 4
                   </Text>
                 </View>
               </View>
@@ -293,7 +297,7 @@ const home = () => {
                   onPress={() => {
                     router?.push("/driver/driver_arriving");
                   }}
-                  title="$500 Accept"
+                  title={`$500 ${t("common.accept")}`}
                   containerStyle={tw` w-[70%] self-end rounded-md`}
                   titleStyle={tw`text-xs font-NunitoSansBold text-white`}
                 />

@@ -14,18 +14,31 @@ import MapView, { Marker } from "react-native-maps";
 
 import IwtButton from "@/lib/buttons/IwtButton";
 import tw from "@/lib/tailwind";
+import Avatar from "@/lib/ui/Avatar";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
-import { Avatar } from "react-native-ui-lib";
-import { ILocation } from "./(tabs)";
+
+// Define the ILocation interface locally to avoid the import error
+interface ILocation {
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+  name: string;
+  formatted_address: string;
+}
 
 const arrived_done = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [travelData, setTravelData] = React.useState({
     destination: "",
     pickup: "",
@@ -61,7 +74,9 @@ const arrived_done = () => {
   const handleGetLocationFormLS = async () => {
     // get location from local storage
     const location = await AsyncStorage.getItem("travelData");
-    setTravelReadyData(JSON.parse(location));
+    if (location) {
+      setTravelReadyData(JSON.parse(location));
+    }
   };
 
   React.useEffect(() => {
@@ -150,8 +165,8 @@ const arrived_done = () => {
             {travelReadyData?.destination?.geometry?.location && (
               <Marker
                 coordinate={{
-                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
-                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                  latitude: travelReadyData.destination.geometry.location.lat,
+                  longitude: travelReadyData.destination.geometry.location.lng,
                 }}
                 title={travelReadyData.destination.name}
                 description={travelReadyData.destination.formatted_address}
@@ -216,10 +231,10 @@ const arrived_done = () => {
           >
             <View style={tw`gap-0.1`}>
               <Text style={tw`text-lg font-NunitoSansBold text-deepBlue300`}>
-                Your kids arrived safely
+                {t("passenger.trip.yourKidsTripIsOver")}
               </Text>
               <Text style={tw`text-xs font-NunitoSansRegular text-deepBlue200`}>
-                Share the PIN code with the driver.
+                {t("passenger.trip.sharePinCodeWithDriver")}
               </Text>
             </View>
             {/* <Text style={tw`text-base font-NunitoSansRegular text-deepBlue200`}>
@@ -288,7 +303,7 @@ const arrived_done = () => {
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
                 >
-                  OTP for this ride
+                  {t("passenger.trip.otpForRide")}
                 </Text>
               </View>
               <View style={tw`flex-row gap-1`}>
@@ -312,11 +327,11 @@ const arrived_done = () => {
               style={tw`flex-row items-center gap-2 py-4 border-b border-b-gray-200`}
             >
               <SvgXml xml={IconDestination} />
-              <View style={tw` `}>
+              <View style={tw`flex-1 `}>
                 <Text
                   style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                 >
-                  Destination
+                  {t("passenger.trip.dropoffLocation")}
                 </Text>
                 <Text
                   style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -330,11 +345,11 @@ const arrived_done = () => {
             >
               <SvgXml xml={IconPaymentMethod} />
               <View style={tw`flex-1 flex-row justify-between items-end`}>
-                <View style={tw``}>
+                <View style={tw`flex-1 `}>
                   <Text
                     style={tw`text-base font-NunitoSansRegular text-deepBlue100`}
                   >
-                    Payment method
+                    {t("passenger.trip.paymentMethod")}
                   </Text>
                   <Text
                     style={tw`text-base font-NunitoSansBold text-deepBlue300`}
@@ -342,7 +357,7 @@ const arrived_done = () => {
                     VISA Card
                   </Text>
                 </View>
-                <View>
+                <View style={tw` `}>
                   <Text
                     style={tw` text-base font-NunitoSansBold text-deepBlue300`}
                   >
@@ -357,7 +372,7 @@ const arrived_done = () => {
                   router.push("/passenger/trip_done");
                 }}
                 svg={IconLockWhite}
-                title="Send OTP"
+                title={t("passenger.trip.done")}
               />
             </View>
           </View>

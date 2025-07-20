@@ -1,3 +1,11 @@
+import {
+  Dimensions,
+  Modal,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, {
   createContext,
   forwardRef,
@@ -6,15 +14,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Dimensions,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
 
-import { Modal } from "react-native-ui-lib";
 import tw from "../tailwind";
 
 // import LottieView from 'lottie-react-native';
@@ -78,12 +78,9 @@ const PopUpModal = forwardRef<PopUpModalRef, PopUpModalProps>(
       <Modal
         transparent
         animationType="fade"
-        overlayBackgroundColor="rgba(0, 0, 0, 0.5)" // Semi-transparent background
         visible={visible}
-        useKeyboardAvoidingView
         // statusBarTranslucent
         onDismiss={() => setVisible(false)}
-        onBackgroundPress={() => setVisible(false)} // Close modal on background press
       >
         <Pressable
           onPress={() => {

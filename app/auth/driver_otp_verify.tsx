@@ -1,15 +1,18 @@
 import { Text, View } from "react-native";
 
 import BackButton from "@/lib/backHeader/BackButton";
-import { OtpInput } from "react-native-otp-entry";
-import { PrimaryColor } from "@/utils/utils";
-import React from "react";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
+import { PrimaryColor } from "@/utils/utils";
 import { useRouter } from "expo-router";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { OtpInput } from "react-native-otp-entry";
 
 const driver_otp_verify = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+
   return (
     <View style={tw`flex-1 bg-base `}>
       <BackButton onPress={() => router.back()} />
@@ -17,10 +20,10 @@ const driver_otp_verify = () => {
         <Text
           style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
         >
-          Enter OTP
+          {t("auth.otp.title")}
         </Text>
         <Text style={tw`text-base text-deepBlue300 font-NunitoSansMedium`}>
-          Enter the PIN code sent to the parent's device.
+          {t("auth.otp.driverPinDescription")}
         </Text>
       </View>
       <View style={tw`px-4 py-12 gap-1`}>
@@ -56,7 +59,7 @@ const driver_otp_verify = () => {
           onPress={async () => {
             router.push("/driver/trip_done");
           }}
-          title="Submit OTP"
+          title={t("auth.otp.submitOTP")}
           containerStyle={tw`mt-10`}
           titleStyle={tw`font-NunitoSansBold text-base`}
         />

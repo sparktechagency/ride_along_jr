@@ -5,14 +5,16 @@ import {
 } from "@/assets/icon/Icon";
 import { Image, Text, View } from "react-native";
 
-import React from "react";
-import { SvgXml } from "react-native-svg";
 import TButton from "@/lib/buttons/TButton";
 import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { SvgXml } from "react-native-svg";
 
 const history = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isHistory, setIsHisory] = React.useState(true);
 
   return (
@@ -20,14 +22,14 @@ const history = () => {
       <Text
         style={tw`text-center text-xl font-bold my-5 font-NunitoSansRegular`}
       >
-        Your kid’s ride history
+        {t("passenger.history.title")}
       </Text>
 
       {isHistory ? (
         <>
           <View style={tw`px-4 `}>
             <Text style={tw`font-bold text-sm text-[#3E4F6B]`}>
-              January 2025
+              January 2023
             </Text>
             <View style={tw`border-b border-gray-300`}>
               {/* ------------------ dynamic data ------------ */}
@@ -55,7 +57,7 @@ const history = () => {
                         <SvgXml xml={IconCalendar} /> 30 jan at 8:00{" "}
                       </Text>
                       <Text style={tw`text-sm font-medium text-[#457205] ml-1`}>
-                        Completed
+                        {t("passenger.history.completed")}
                       </Text>
                     </View>
                   </View>
@@ -91,7 +93,7 @@ const history = () => {
                         <SvgXml xml={IconCalendar} /> 30 jan at 8:00{" "}
                       </Text>
                       <Text style={tw`text-sm font-medium text-[#457205] ml-1`}>
-                        Completed
+                        {t("passenger.history.completed")}
                       </Text>
                     </View>
                   </View>
@@ -127,7 +129,7 @@ const history = () => {
                         <SvgXml xml={IconCalendar} /> 30 jan at 8:00{" "}
                       </Text>
                       <Text style={tw`text-sm font-medium text-[#457205] ml-1`}>
-                        Completed
+                        {t("passenger.history.completed")}
                       </Text>
                     </View>
                   </View>
@@ -163,7 +165,7 @@ const history = () => {
                         <SvgXml xml={IconCalendar} /> 30 jan at 8:00{" "}
                       </Text>
                       <Text style={tw`text-sm font-medium text-[#457205] ml-1`}>
-                        Completed
+                        {t("passenger.history.completed")}
                       </Text>
                     </View>
                   </View>
@@ -199,7 +201,7 @@ const history = () => {
                         <SvgXml xml={IconCalendar} /> 30 jan at 8:00{" "}
                       </Text>
                       <Text style={tw`text-sm font-medium text-[#457205] ml-1`}>
-                        Completed
+                        {t("passenger.history.completed")}
                       </Text>
                     </View>
                   </View>
@@ -235,7 +237,7 @@ const history = () => {
                         <SvgXml xml={IconCalendar} /> 30 jan at 8:00{" "}
                       </Text>
                       <Text style={tw`text-sm font-medium text-[#457205] ml-1`}>
-                        Completed
+                        {t("passenger.history.completed")}
                       </Text>
                     </View>
                   </View>
@@ -255,15 +257,15 @@ const history = () => {
           <Text
             style={tw`text-3xl text-center font-bold font-NunitoSansRegular`}
           >
-            No rides yet
+            {t("passenger.history.noRidesYet")}
           </Text>
           <Text style={tw`text-base text-center font-semibold mb-3`}>
-            After your trip, view your kid's ride history here.
+            {t("passenger.history.afterTripMessage")}
           </Text>
           <TButton
-            title="Request a Trip"
+            title={t("passenger.history.requestTrip")}
             onPress={() => {
-              router.push("/");
+              router.push("/passenger/where_go");
             }}
           />
         </View>

@@ -18,12 +18,26 @@ import { useIsFocused } from "@react-navigation/native";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MapViewDirections from "react-native-maps-directions";
 import { SvgXml } from "react-native-svg";
-import { ILocation } from "./(tabs)";
+
+// Define the ILocation interface locally to avoid the import error
+interface ILocation {
+  location?: {
+    coords?: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+  addressResponse?: {
+    formattedAddress: string;
+  };
+}
 
 const where_go = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [travelData, setTravelData] = React.useState({
     destination: "",
@@ -168,8 +182,8 @@ const where_go = () => {
             {travelReadyData?.destination?.geometry?.location && (
               <Marker
                 coordinate={{
-                  latitude: travelReadyData.destination.geometry.location.lat, // CORRECTED
-                  longitude: travelReadyData.destination.geometry.location.lng, // CORRECTED
+                  latitude: travelReadyData.destination.geometry.location.lat,
+                  longitude: travelReadyData.destination.geometry.location.lng,
                 }}
                 title={travelReadyData.destination.name}
                 description={travelReadyData.destination.formatted_address}
@@ -247,7 +261,7 @@ const where_go = () => {
               <SvgXml xml={IconClose} />
             </TouchableOpacity>
             <Text style={tw`text-xl text-deepBlue300 font-NunitoSansBold`}>
-              Where you wanna go?
+              {t("passenger.whereGo.title")}
             </Text>
             <View />
           </View>
@@ -267,7 +281,7 @@ const where_go = () => {
                 placeholderStyle={tw`bg-white`}
                 textXOutRangeFirst={10}
                 textXOutRangeSecond={15}
-                placeholder="Pickup from"
+                placeholder={t("passenger.whereGo.pickupFrom")}
                 containerStyle={tw``}
                 value={travelData?.pickup}
                 onChangeText={(text) => {
@@ -280,7 +294,7 @@ const where_go = () => {
                 placeholderStyle={tw`bg-white`}
                 textXOutRangeFirst={10}
                 textXOutRangeSecond={15}
-                placeholder="Destination"
+                placeholder={t("passenger.whereGo.destination")}
                 containerStyle={tw``}
                 value={travelData?.destination}
                 onChangeText={(text) => {
@@ -305,7 +319,7 @@ const where_go = () => {
                 }}
                 containerStyle={tw` mx-4`}
                 svg={IconSmallSearch}
-                title="Go "
+                title={t("passenger.whereGo.go")}
               />
             )}
           {!travelData?.pickup && (
@@ -313,21 +327,33 @@ const where_go = () => {
               onPress={() => {
                 setTravelData({
                   ...travelData,
-                  pickup: currentLocation?.addressResponse?.formattedAddress,
+                  pickup:
+                    currentLocation?.addressResponse?.formattedAddress || "",
                 });
                 setTravelReadyData({
                   ...travelReadyData,
                   pickup: {
-                    name: currentLocation?.addressResponse?.formattedAddress,
+                    name:
+                      currentLocation?.addressResponse?.formattedAddress || "",
                     geometry: {
                       location: {
                         lat: currentLocation?.location?.coords?.latitude || 0.0,
                         lng:
                           currentLocation?.location?.coords?.longitude || 0.0,
                       },
+                      viewport: {
+                        northeast: {
+                          lat: 0.0,
+                          lng: 0.0,
+                        },
+                        southwest: {
+                          lat: 0.0,
+                          lng: 0.0,
+                        },
+                      },
                     },
                     formatted_address:
-                      currentLocation?.addressResponse?.formattedAddress,
+                      currentLocation?.addressResponse?.formattedAddress || "",
                   },
                 });
                 handleSearchLocation("");
@@ -336,7 +362,7 @@ const where_go = () => {
             >
               <SvgXml xml={IconMyLocation} />
               <Text style={tw`text-lg text-deepBlue400 font-NunitoSansBold`}>
-                Use my current location
+                {t("passenger.whereGo.useMyCurrentLocation")}
               </Text>
             </TouchableOpacity>
           )}
