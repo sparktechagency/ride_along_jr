@@ -11,7 +11,10 @@ import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useTranslation } from "react-i18next";
-import { useSendOtpMutation, useVerifyOtpMutation } from "@/redux/apiSlices/authApiSlices";
+import {
+  useSendOtpMutation,
+  useVerifyOtpMutation,
+} from "@/redux/apiSlices/authApiSlices";
 
 const otp_verify = () => {
   const router = useRouter();
@@ -26,15 +29,15 @@ const otp_verify = () => {
     try {
       await sendOtp({ email });
       Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'OTP has been resent to your email',
+        type: "success",
+        text1: "Success",
+        text2: "OTP has been resent to your email",
       });
     } catch (error) {
       Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Failed to resend OTP. Please try again.',
+        type: "error",
+        text1: "Error",
+        text2: "Failed to resend OTP. Please try again.",
       });
     }
   };
@@ -42,6 +45,7 @@ const otp_verify = () => {
   const handleVerifyOtp = async (otp: string) => {
     try {
       const response = await VerifyOtp({ email, otp }).unwrap();
+
       if (response?.success) {
         const role = await AsyncStorage.getItem("role");
         if (role === "driver") {
@@ -89,13 +93,7 @@ const otp_verify = () => {
           // onBlur={() => console.log("Blurred")}
           // onTextChange={(text) => console.log(text)}
           onFilled={async (text) => {
-            const role = await AsyncStorage.getItem("role");
-            // console.log("OTP Filled: ", text, "Role: ", role);
-            if (role === "driver") {
-              router.push("/driver/name");
-            } else {
-              router.push("/passenger/name");
-            }
+            handleVerifyOtp(text);
           }}
           textInputProps={{
             accessibilityLabel: "One-Time Password",
@@ -113,14 +111,14 @@ const otp_verify = () => {
           >
             {t("auth.otp.enterOTP")}
           </Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleResendOtp}
             disabled={sendOtpResult.isLoading}
           >
             <Text
               style={[
                 tw`text-center text-primary underline text-sm font-NunitoSansMedium hover:text-deepBlue600`,
-                sendOtpResult.isLoading && tw`opacity-50`
+                sendOtpResult.isLoading && tw`opacity-50`,
               ]}
             >
               {t("auth.otp.resendCode")}
