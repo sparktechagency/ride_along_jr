@@ -24,7 +24,7 @@ export default function App() {
       }
     } else {
       SplashScreen.hideAsync(); // Hide the splash screen once the app is ready
-      router.replace("/auth/login");
+      router.replace("/welcome");
     }
   };
 
