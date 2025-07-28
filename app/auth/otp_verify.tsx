@@ -11,7 +11,7 @@ import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useTranslation } from "react-i18next";
-import { useVerifyOtpMutation } from "@/redux/apiSlices/authApiSlices";
+import { useSendOtpMutation, useVerifyOtpMutation } from "@/redux/apiSlices/authApiSlices";
 
 const otp_verify = () => {
   const router = useRouter();
@@ -20,6 +20,24 @@ const otp_verify = () => {
   const params = useSearchParams();
   const email = params?.get("email") || "";
   const [VerifyOtp, optResult] = useVerifyOtpMutation();
+  const [sendOtp, sendOtpResult] = useSendOtpMutation();
+
+  const handleResendOtp = async () => {
+    try {
+      await sendOtp({ email });
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'OTP has been resent to your email',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to resend OTP. Please try again.',
+      });
+    }
+  };
 
   const handleVerifyOtp = async (otp: string) => {
     try {
@@ -95,9 +113,15 @@ const otp_verify = () => {
           >
             {t("auth.otp.enterOTP")}
           </Text>
-          <TouchableOpacity onPress={() => console.log("Resend OTP")}>
+          <TouchableOpacity 
+            onPress={handleResendOtp}
+            disabled={sendOtpResult.isLoading}
+          >
             <Text
-              style={tw`text-center text-primary underline text-sm font-NunitoSansMedium hover:text-deepBlue600 `}
+              style={[
+                tw`text-center text-primary underline text-sm font-NunitoSansMedium hover:text-deepBlue600`,
+                sendOtpResult.isLoading && tw`opacity-50`
+              ]}
             >
               {t("auth.otp.resendCode")}
             </Text>
