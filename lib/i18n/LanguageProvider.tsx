@@ -7,8 +7,6 @@ import React, {
 } from "react";
 import { getCurrentLanguage, setLanguage } from "./i18n";
 
-import { useTranslation } from "react-i18next";
-
 interface LanguageContextType {
   currentLanguage: string;
   changeLanguage: (language: string) => Promise<void>;
@@ -29,7 +27,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
 }) => {
   const [currentLanguage, setCurrentLanguage] = useState<string>("en");
-  const { i18n } = useTranslation();
 
   useEffect(() => {
     const initLanguage = async () => {
