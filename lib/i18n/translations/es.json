@@ -230,6 +230,7 @@
     "profile": {
       "myProfile": "Mi Perfil",
       "editProfile": "Editar Perfil",
+      "saveChanges": "Guardar Cambios",
       "personalInformation": "Información Personal",
       "name": "Nombre",
       "email": "Correo Electrónico",

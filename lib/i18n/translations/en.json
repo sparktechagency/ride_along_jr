@@ -254,6 +254,7 @@
     "profile": {
       "myProfile": "My Profile",
       "editProfile": "Edit Profile",
+      "saveChanges": "Save Changes",
       "personalInformation": "Personal Information",
       "name": "Name",
       "email": "Email",
