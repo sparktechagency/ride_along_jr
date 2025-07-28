@@ -23,15 +23,43 @@ import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
+import { useGetProfileQuery } from "@/redux/apiSlices/authApiSlices";
+import { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
+
+interface ProfileData {
+  email: string;
+  username: string;
+  // Add other fields from the API response as needed
+}
 
 const profile = () => {
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [checkBox, setCheckBox] = React.useState(false);
-  const [IsShow, setIsShow] = React.useState(false);
-  const [isEdit, setIsEdit] = React.useState(false);
-  const [image, setImage] = React.useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [checkBox, setCheckBox] = useState(false);
+  const [IsShow, setIsShow] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
+
+  const { data, error, isLoading, refetch } = useGetProfileQuery({});
+
+  useEffect(() => {
+    if (data?.success && data.data) {
+      setProfileData(data.data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to load profile data",
+      });
+    }
+  }, [error]);
 
   const { BottomModal, close, open } = useBottomModal();
 
@@ -43,17 +71,6 @@ const profile = () => {
           router?.back();
         }}
         title={t("driver.profile.accountSettings")}
-        ComponentBtn={
-          <IwtButton
-            title={isEdit ? t("common.save") : t("driver.profile.editProfile")}
-            svg={IconEdit}
-            containerStyle={tw`bg-transparent h-10 flex-row-reverse gap-1 `}
-            titleStyle={tw`text-primary`}
-            onPress={() => {
-              setIsEdit(!isEdit);
-            }}
-          />
-        }
       />
       <ScrollView contentContainerStyle={tw` pb-6 `}>
         <View style={tw`items-center my-12 `}>
@@ -83,9 +100,12 @@ const profile = () => {
           >
             Lana Yolo
           </Text>
-          <Text style={tw`text-sm font-semibold font-NunitoSansRegular`}>
-            ID: 05745
+          <Text style={tw`text-md  mb-1 text-black font-NunitoSansRegular`}>
+            {profileData?.email}
           </Text>
+          {/* <Text style={tw`text-sm font-semibold font-NunitoSansRegular`}>
+            ID: 05745
+          </Text> */}
         </View>
 
         <View style={tw`w-[370px]  mx-auto rounded-2xl shadow-md bg-white `}>
@@ -95,7 +115,11 @@ const profile = () => {
             {t("driver.profile.personalInformation")}
           </Text>
           <Formik
-            initialValues={{ name: "", email: "" }}
+            initialValues={{
+              name: profileData?.username || "",
+              email: profileData?.email || "",
+            }}
+            enableReinitialize
             validate={(values) => {
               const errors = {} as any;
               if (!values.email) {
@@ -107,11 +131,36 @@ const profile = () => {
               }
               return errors;
             }}
-            onSubmit={(values) => {
-              console.log(values);
+            onSubmit={async (values) => {
+              try {
+                console.log("Updating profile with:", values);
+                // Here you would typically call an update profile mutation
+                // await updateProfile(values).unwrap();
+                Toast.show({
+                  type: "success",
+                  text1: "Success",
+                  text2: "Profile updated successfully",
+                });
+                setIsEdit(false);
+                refetch(); // Refresh profile data
+              } catch (error) {
+                console.error("Error updating profile:", error);
+                Toast.show({
+                  type: "error",
+                  text1: "Error",
+                  text2: "Failed to update profile",
+                });
+              }
             }}
           >
-            {({ handleChange, handleBlur, values, errors, touched }) => (
+            {({
+              handleChange,
+              handleBlur,
+              values,
+              errors,
+              touched,
+              handleSubmit,
+            }) => (
               <>
                 <View style={tw`px-4 gap-5 mt-8`}>
                   <View style={tw`w-full`}>
@@ -122,35 +171,23 @@ const profile = () => {
                       onChangeText={handleChange("name")}
                       errorText={errors.name}
                       touched={touched.name}
-                      editable={isEdit}
                       textXValue={-36}
+                      // textInputProps={{
+                      //   placeholder: "Enter your name",
+                      // }}
                       placeholder={t("driver.profile.name")}
                       svgFirstIcon={IconProfile}
                       focusSTyle={tw`border border-primary`}
                     />
                   </View>
-                  <View style={tw`w-full`}>
-                    <InputText
-                      value={values.email}
-                      placeholderStyle={tw`bg-white`}
-                      onBlur={handleBlur("email")}
-                      onChangeText={handleChange("email")}
-                      errorText={errors.email}
-                      touched={touched.email}
-                      editable={isEdit}
-                      textXValue={-36}
-                      placeholder={t("driver.profile.email")}
-                      svgFirstIcon={IconEmail}
-                      svgSecondIcon={
-                        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                          values.email
-                        )
-                          ? ""
-                          : IconSmallRightTick
-                      }
-                      focusSTyle={tw`border border-primary`}
-                    />
-                  </View>
+                  <TButton
+                    title={t("driver.profile.saveChanges")}
+                    containerStyle={tw`bg-primary`}
+                    titleStyle={tw`text-white`}
+                    onPress={() => {
+                      handleSubmit();
+                    }}
+                  />
                 </View>
                 <View style={tw`px-4 flex-row items-center mt-5 gap-2 `}>
                   <TouchableOpacity
