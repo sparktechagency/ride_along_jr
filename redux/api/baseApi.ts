@@ -69,4 +69,9 @@ export const api = createApi({
 });
 
 // export const imageUrl = 'http://192.168.12.160:7000/';
-export const imageUrl = "http://10.10.10.70:5051";
+const imageUrl = "http://10.10.10.70:5051";
+
+export const makeImage = (image: string | null | undefined) => {
+  if (!image) return null;
+  return `${imageUrl}/${image}`;
+};
