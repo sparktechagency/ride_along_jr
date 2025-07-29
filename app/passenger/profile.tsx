@@ -55,6 +55,63 @@ const profile = () => {
   const { data, error, isLoading, refetch } = useGetProfileQuery({});
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
+  const handleProfileUpdate = async (values: { name: string }) => {
+    try {
+      console.log("Updating profile with:", values);
+
+      // Create FormData to handle file upload
+      const formData = new FormData();
+
+      // Append the name if it's different from the current one
+      if (values.name) {
+        formData.append("name", values.name);
+      }
+
+      // Append image if it's a new one
+      if (image) {
+        // Create a proper file object that matches the backend's expected format
+        const imageUri = image.uri;
+        const imageName = image.fileName || "profile.jpg";
+        const imageType = image.mimeType || "image/jpeg";
+
+        // Create a file-like object that matches the expected format
+        const file = {
+          uri: imageUri,
+          type: imageType,
+          name: imageName,
+        };
+
+        // @ts-ignore - React Native specific FormData append
+        formData.append("image", file);
+
+        console.log("Appending image:", file);
+      }
+
+      console.log("Sending form data:", formData);
+
+      const res = await updateProfile(formData).unwrap();
+      console.log("Response from server:", res);
+
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Profile updated successfully",
+      });
+
+      // Reset the image state and refetch profile data
+      setImage(null);
+      await refetch();
+      setIsEdit(false);
+    } catch (error: any) {
+      console.error("Error updating profile:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error?.data?.message || "Failed to update profile",
+      });
+    }
+  };
+
   useEffect(() => {
     if (data?.success && data.data) {
       setProfileData(data.data);
@@ -134,67 +191,7 @@ const profile = () => {
               }
               return errors;
             }}
-            onSubmit={async (values) => {
-              try {
-                console.log("Updating profile with:", values);
-
-                // Create FormData to handle file upload
-                const formData = new FormData();
-
-                // Append the name if it's different from the current one
-                if (values.name) {
-                  formData.append("name", values.name);
-                }
-
-                // Append image if it's a new one
-                if (image) {
-                  // Create a proper file object that matches the backend's expected format
-                  const imageUri = image.uri;
-                  const imageName = image.fileName || "profile.jpg";
-                  const imageType = image.mimeType || "image/jpeg";
-
-                  // Create a file-like object that matches the expected format
-                  const file = {
-                    uri: imageUri,
-                    type: imageType,
-                    name: imageName,
-                  };
-
-                  // @ts-ignore - React Native specific FormData append
-                  formData.append("image", file);
-
-                  console.log("Appending image:", file);
-                }
-
-                console.log("Sending form data:", formData);
-
-                try {
-                  const res = await updateProfile(formData).unwrap();
-                  console.log("Response from server:", res);
-
-                  Toast.show({
-                    type: "success",
-                    text1: "Success",
-                    text2: "Profile updated successfully",
-                  });
-
-                  // Reset the image state and refetch profile data
-                  setImage(null);
-                  await refetch();
-                  setIsEdit(false);
-                } catch (error: any) {
-                  console.error("API Error:", error);
-                  throw error; // Re-throw to be caught by the outer catch
-                }
-              } catch (error: any) {
-                console.error("Error updating profile:", error);
-                Toast.show({
-                  type: "error",
-                  text1: "Error",
-                  text2: error?.data?.message || "Failed to update profile",
-                });
-              }
-            }}
+            onSubmit={handleProfileUpdate}
           >
             {({
               handleChange,
