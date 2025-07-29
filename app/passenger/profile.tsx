@@ -34,7 +34,7 @@ import { ImagePickerAsset } from "expo-image-picker";
 import { ImageAssets } from "@/assets/images";
 import { makeImage } from "@/redux/api/baseApi";
 
-interface ProfileData {
+export interface ProfileData {
   email: string;
   username: string;
   name: string;
