@@ -16,6 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { ProfileData } from "@/app/passenger/profile";
 import { makeImage } from "@/redux/api/baseApi";
+import { useGetProfileQuery } from "@/redux/apiSlices/authApiSlices";
 
 export interface ILocation {
   addressResponse: {
@@ -59,8 +60,29 @@ const home = () => {
   const [profileData, setProfileData] = React.useState<ProfileData | null>(
     null
   );
-
   const isFocused = useIsFocused();
+
+  // Fetch profile data using RTK Query
+  const {
+    data: profileResponse,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetProfileQuery(undefined, {
+    // Refetch on screen focus to ensure we have the latest data
+    refetchOnFocus: true,
+    // Skip retry on error to prevent infinite loops
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Update local state when profile data is fetched
+  React.useEffect(() => {
+    if (profileResponse?.data) {
+      setProfileData(profileResponse.data);
+      // Update AsyncStorage with latest profile data
+      AsyncStorage.setItem("user", JSON.stringify(profileResponse.data));
+    }
+  }, [profileResponse]);
 
   // console.log(currentLocation);
 
@@ -99,13 +121,21 @@ const home = () => {
   React.useEffect(() => {
     handleGetLocationFormLS();
   }, [isFocused]);
-  const getUserData = async () => {
-    const userData = await AsyncStorage.getItem("user");
-    setProfileData(JSON.parse(userData!));
+  // Fallback to AsyncStorage if needed
+  const getCachedUserData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+      if (userData) {
+        setProfileData(JSON.parse(userData));
+      }
+    } catch (error) {
+      console.error("Error getting cached user data:", error);
+    }
   };
+
+  // Initial data load
   React.useEffect(() => {
-    getUserData();
-    console.log("userData 104", profileData);
+    getCachedUserData();
   }, []);
 
   // console.log(currentLocation);P
@@ -125,9 +155,15 @@ const home = () => {
           <Text style={tw`font-NunitoSansRegular text-black text-xl`}>
             {t("passenger.home.welcomeBack")}
           </Text>
-          <Text style={tw`font-NunitoSansBold text-black text-xl`}>
-            {profileData?.name}
-          </Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={PrimaryColor} />
+          ) : (
+            <Text style={tw`font-NunitoSansBold text-black text-xl`}>
+              {profileResponse?.data?.name ||
+                profileData?.name ||
+                t("common.user")}
+            </Text>
+          )}
         </View>
         <TouchableOpacity
           onPress={() => {
