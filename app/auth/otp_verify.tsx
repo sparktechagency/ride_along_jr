@@ -56,6 +56,7 @@ const otp_verify = () => {
 
       if (response?.success) {
         const role = await AsyncStorage.getItem("role");
+
         if (role === "driver") {
           router.push("/driver/name");
         } else {
