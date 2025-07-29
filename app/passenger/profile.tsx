@@ -23,13 +23,22 @@ import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SvgXml } from "react-native-svg";
-import { useGetProfileQuery } from "@/redux/apiSlices/authApiSlices";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "@/redux/apiSlices/authApiSlices";
+import { Platform } from "react-native";
 import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
+import { ImagePickerAsset } from "expo-image-picker";
+import { ImageAssets } from "@/assets/images";
+import { makeImage } from "@/redux/api/baseApi";
 
 interface ProfileData {
   email: string;
   username: string;
+  name: string;
+  image?: string;
   // Add other fields from the API response as needed
 }
 
@@ -38,12 +47,13 @@ const profile = () => {
   const [checkBox, setCheckBox] = useState(false);
   const [IsShow, setIsShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<ImagePickerAsset | null>(null);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
 
   const { data, error, isLoading, refetch } = useGetProfileQuery({});
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
   useEffect(() => {
     if (data?.success && data.data) {
@@ -77,11 +87,9 @@ const profile = () => {
           <View style={tw`relative`}>
             <Image
               style={tw`mb-6 w-24 h-24 rounded-full`}
-              source={
-                image
-                  ? { uri: image }
-                  : require("@/assets/images/Ellipse118.png")
-              }
+              source={{
+                uri: image?.uri || makeImage(data?.data?.image) || "",
+              }}
             />
             <TouchableOpacity
               onPress={async () => {
@@ -98,7 +106,7 @@ const profile = () => {
           <Text
             style={tw`text-2xl font-bold mb-1 text-black font-NunitoSansRegular`}
           >
-            Lana Yolo
+            {profileData?.name}
           </Text>
           <Text style={tw`text-md  mb-1 text-black font-NunitoSansRegular`}>
             {profileData?.email}
@@ -116,39 +124,74 @@ const profile = () => {
           </Text>
           <Formik
             initialValues={{
-              name: profileData?.username || "",
-              email: profileData?.email || "",
+              name: profileData?.name || "",
             }}
             enableReinitialize
             validate={(values) => {
               const errors = {} as any;
-              if (!values.email) {
-                errors.email = t("auth.login.emailRequired");
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = t("auth.login.invalidEmail");
+              if (!values.name) {
+                errors.name = t("auth.login.nameRequired");
               }
               return errors;
             }}
             onSubmit={async (values) => {
               try {
                 console.log("Updating profile with:", values);
-                // Here you would typically call an update profile mutation
-                // await updateProfile(values).unwrap();
-                Toast.show({
-                  type: "success",
-                  text1: "Success",
-                  text2: "Profile updated successfully",
-                });
-                setIsEdit(false);
-                refetch(); // Refresh profile data
-              } catch (error) {
+
+                // Create FormData to handle file upload
+                const formData = new FormData();
+
+                // Append the name if it's different from the current one
+                if (values.name) {
+                  formData.append("name", values.name);
+                }
+
+                // Append image if it's a new one
+                if (image) {
+                  // Create a proper file object that matches the backend's expected format
+                  const imageUri = image.uri;
+                  const imageName = image.fileName || "profile.jpg";
+                  const imageType = image.mimeType || "image/jpeg";
+
+                  // Create a file-like object that matches the expected format
+                  const file = {
+                    uri: imageUri,
+                    type: imageType,
+                    name: imageName,
+                  };
+
+                  // @ts-ignore - React Native specific FormData append
+                  formData.append("image", file);
+
+                  console.log("Appending image:", file);
+                }
+
+                console.log("Sending form data:", formData);
+
+                try {
+                  const res = await updateProfile(formData).unwrap();
+                  console.log("Response from server:", res);
+
+                  Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: "Profile updated successfully",
+                  });
+
+                  // Reset the image state and refetch profile data
+                  setImage(null);
+                  await refetch();
+                  setIsEdit(false);
+                } catch (error: any) {
+                  console.error("API Error:", error);
+                  throw error; // Re-throw to be caught by the outer catch
+                }
+              } catch (error: any) {
                 console.error("Error updating profile:", error);
                 Toast.show({
                   type: "error",
                   text1: "Error",
-                  text2: "Failed to update profile",
+                  text2: error?.data?.message || "Failed to update profile",
                 });
               }
             }}
@@ -181,12 +224,14 @@ const profile = () => {
                     />
                   </View>
                   <TButton
+                    isLoading={isUpdating}
                     title={t("driver.profile.saveChanges")}
                     containerStyle={tw`bg-primary`}
                     titleStyle={tw`text-white`}
                     onPress={() => {
                       handleSubmit();
                     }}
+                    disabled={isUpdating}
                   />
                 </View>
                 <View style={tw`px-4 flex-row items-center mt-5 gap-2 `}>
