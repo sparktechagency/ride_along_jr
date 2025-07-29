@@ -51,7 +51,12 @@ const login = () => {
       console.log("response", response);
       if (response?.data?.token) {
         await AsyncStorage.setItem("token", response?.data?.token);
-        await AsyncStorage.setItem("user", response?.data?.user);
+        await AsyncStorage.setItem(
+          "user",
+          JSON.stringify(response?.data?.user)
+        );
+
+        console.log("user------", response?.data?.user);
 
         if (checkBox) {
           values.check = true;
