@@ -26,7 +26,7 @@ import Toast from "react-native-toast-message";
 import tw from "@/lib/tailwind";
 import { useSignUpMutation } from "@/redux/apiSlices/authApiSlices";
 import { useTranslation } from "react-i18next";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const register = () => {
   const router = useRouter();
   const { t } = useTranslation();
@@ -44,6 +44,8 @@ const register = () => {
         password: values.password,
       }).unwrap();
       if (res?.success) {
+        await AsyncStorage.setItem("user", JSON.stringify(res?.data?.newUser));
+        await AsyncStorage.setItem("token", res?.data?.token);
         router.push(`/auth/otp_verify?email=${values.email}`);
       }
       // router.push("/auth/login");
