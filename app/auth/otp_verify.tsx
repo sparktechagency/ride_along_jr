@@ -44,7 +44,15 @@ const otp_verify = () => {
 
   const handleVerifyOtp = async (otp: string) => {
     try {
-      const response = await VerifyOtp({ email, otp }).unwrap();
+      console.log("handleVerifyOtp otp", otp);
+      console.log("handleVerifyOtp email", email);
+      const requestData = {
+        email: email, // Make sure this matches exactly what backend expects
+        emailVerifyCode: otp, // Some backends expect 'code' instead of 'otp'
+      };
+      const response = await VerifyOtp(requestData).unwrap();
+
+      console.log("handleVerifyOtp response", response);
 
       if (response?.success) {
         const role = await AsyncStorage.getItem("role");
@@ -55,7 +63,7 @@ const otp_verify = () => {
         }
       }
     } catch (error) {
-      console.warn("Login failed:", error);
+      console.warn("verify otp failed:", error);
       Toast.show({
         type: "error",
         text1: "Warning",
