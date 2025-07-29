@@ -48,8 +48,18 @@ const login = () => {
         password: values.password,
       }).unwrap();
       // console.log("Login response:", response);
+      console.log("response", response);
       if (response?.data?.token) {
         await AsyncStorage.setItem("token", response?.data?.token);
+        await AsyncStorage.setItem("user", response?.data?.user);
+
+        if (checkBox) {
+          values.check = true;
+          await AsyncStorage.setItem("loginInfo", JSON.stringify(values));
+        } else {
+          values.check = false;
+          await AsyncStorage.removeItem("loginInfo");
+        }
         const role = await AsyncStorage.getItem("role");
         // router.push("/auth/otp_verify");
         if (role === "passenger") {
@@ -67,14 +77,16 @@ const login = () => {
       });
     }
   };
+  const fetchLoginInfo = async () => {
+    const storedLoginInfo = await AsyncStorage.getItem("loginInfo");
+    if (storedLoginInfo) {
+      const parsedLoginInfo = JSON.parse(storedLoginInfo);
+      setLoginInfo(parsedLoginInfo);
+      setCheckBox(parsedLoginInfo.check);
+    }
+  };
 
   React.useEffect(() => {
-    const fetchLoginInfo = async () => {
-      const storedLoginInfo = await AsyncStorage.getItem("loginInfo");
-      if (storedLoginInfo) {
-        setLoginInfo(JSON.parse(storedLoginInfo));
-      }
-    };
     fetchLoginInfo();
   }, []);
 
@@ -89,7 +101,12 @@ const login = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={tw`pb-10`}
         >
-          <BackButton onPress={() => router.back()} />
+          <BackButton
+            onPress={() =>
+              router.canGoBack() ? router.back() : router.push("/welcome")
+            }
+          />
+
           <View style={tw`px-4 gap-5 pt-2`}>
             <Text
               style={tw`text-4xl text-deepBlue300 leading-tight font-NunitoSansExtraBold`}
