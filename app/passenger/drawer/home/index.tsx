@@ -14,6 +14,8 @@ import { SvgXml } from "react-native-svg";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { ProfileData } from "@/app/passenger/profile";
+import { makeImage } from "@/redux/api/baseApi";
 
 export interface ILocation {
   addressResponse: {
@@ -54,6 +56,9 @@ const home = () => {
   const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
 
   const [loading, setLoading] = React.useState(false);
+  const [profileData, setProfileData] = React.useState<ProfileData | null>(
+    null
+  );
 
   const isFocused = useIsFocused();
 
@@ -94,6 +99,14 @@ const home = () => {
   React.useEffect(() => {
     handleGetLocationFormLS();
   }, [isFocused]);
+  const getUserData = async () => {
+    const userData = await AsyncStorage.getItem("user");
+    setProfileData(JSON.parse(userData!));
+  };
+  React.useEffect(() => {
+    getUserData();
+    console.log("userData 104", profileData);
+  }, []);
 
   // console.log(currentLocation);P
 
@@ -112,7 +125,9 @@ const home = () => {
           <Text style={tw`font-NunitoSansRegular text-black text-xl`}>
             {t("passenger.home.welcomeBack")}
           </Text>
-          <Text style={tw`font-NunitoSansBold text-black text-xl`}>Lana</Text>
+          <Text style={tw`font-NunitoSansBold text-black text-xl`}>
+            {profileData?.name}
+          </Text>
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -122,7 +137,9 @@ const home = () => {
           <Avatar
             size={32}
             source={{
-              uri: "https://picsum.photos/id/237/200/300",
+              uri:
+                makeImage(profileData?.image) ||
+                "https://picsum.photos/id/237/200/300",
             }}
           />
         </TouchableOpacity>
