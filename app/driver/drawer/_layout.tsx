@@ -9,7 +9,7 @@ import {
   IconPaymentDrawer,
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
-
+import { useState, useEffect } from "react";
 import Avatar from "@/lib/ui/Avatar";
 import { Drawer } from "expo-router/drawer";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
@@ -21,11 +21,23 @@ import tw from "twrnc"; // or your preferred tailwind solution
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-
-const CustomDrawerContent = (props) => {
+import { IProfile } from "../../../interfaces/profile";
+import { useGetProfileQuery } from "@/redux/apiSlices/authApiSlices";
+const CustomDrawerContent = (props: any) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
+  const { data, error, isLoading, refetch } = useGetProfileQuery({});
+
+  const [profileData, setProfileData] = useState<IProfile | null>(null);
+
+  console.log("data", data);
+
+  useEffect(() => {
+    if (data?.success && data.data) {
+      setProfileData(data.data);
+    }
+  }, [data]);
 
   return (
     <DrawerContentScrollView
@@ -59,7 +71,7 @@ const CustomDrawerContent = (props) => {
               />
             </View>
             <View>
-              <Text style={tw`text-lg font-bold `}>Lana Yolo</Text>
+              <Text style={tw`text-lg font-bold `}>{profileData?.name}</Text>
               <Text style={tw`text-sm text-gray-600`}>ID: 05745</Text>
             </View>
           </View>

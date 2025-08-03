@@ -14,7 +14,8 @@ import { SvgXml } from "react-native-svg";
 import tw from "@/lib/tailwind";
 import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { ProfileData } from "@/app/passenger/profile";
+// import { ProfileData } from "@/app/passenger/profile";
+import { IProfile } from "../../../../interfaces/profile";
 import { makeImage } from "@/redux/api/baseApi";
 import { useGetProfileQuery } from "@/redux/apiSlices/authApiSlices";
 
@@ -57,9 +58,7 @@ const home = () => {
   const [currentLocation, setCurrentLocation] = React.useState<ILocation>();
 
   const [loading, setLoading] = React.useState(false);
-  const [profileData, setProfileData] = React.useState<ProfileData | null>(
-    null
-  );
+  const [profileData, setProfileData] = React.useState<IProfile | null>(null);
   const isFocused = useIsFocused();
 
   // Fetch profile data using RTK Query

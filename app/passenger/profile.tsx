@@ -33,14 +33,7 @@ import Toast from "react-native-toast-message";
 import { ImagePickerAsset } from "expo-image-picker";
 import { ImageAssets } from "@/assets/images";
 import { makeImage } from "@/redux/api/baseApi";
-
-export interface ProfileData {
-  email: string;
-  username: string;
-  name: string;
-  image?: string;
-  // Add other fields from the API response as needed
-}
+import { IProfile } from "../../interfaces/profile";
 
 const profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -48,7 +41,7 @@ const profile = () => {
   const [IsShow, setIsShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [image, setImage] = useState<ImagePickerAsset | null>(null);
-  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [profileData, setProfileData] = useState<IProfile | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
 

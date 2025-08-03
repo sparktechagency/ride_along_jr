@@ -9,7 +9,7 @@ import {
   IconPaymentDrawer,
 } from "@/assets/icon/Icon";
 import { Text, TouchableOpacity, View } from "react-native";
-
+import { useState, useEffect } from "react";
 import Avatar from "@/lib/ui/Avatar";
 import { Drawer } from "expo-router/drawer";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
@@ -21,11 +21,25 @@ import tw from "twrnc"; // or your preferred tailwind solution
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-
-const CustomDrawerContent = (props) => {
+import { IProfile } from "../../../interfaces/profile";
+import { useGetProfileQuery } from "@/redux/apiSlices/authApiSlices";
+import { makeImage } from "@/redux/api/baseApi";
+const CustomDrawerContent = (props: any) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
+
+  const { data, error, isLoading, refetch } = useGetProfileQuery({});
+
+  const [profileData, setProfileData] = useState<IProfile | null>(null);
+
+  console.log("data", data);
+
+  useEffect(() => {
+    if (data?.success && data.data) {
+      setProfileData(data.data);
+    }
+  }, [data]);
 
   return (
     <DrawerContentScrollView
@@ -43,7 +57,7 @@ const CustomDrawerContent = (props) => {
         <View style={tw`flex-1 `}>
           {/* User Profile Section */}
           <View
-            style={tw`flex-row pt-4 items-center border-b gap-3 border-gray-200`}
+            style={tw`flex-row pt-4 items-center  border-b gap-3 border-gray-200`}
           >
             {/* <View
               style={tw`w-15 h-15 rounded-full bg-gray-300 justify-center items-center mb-2.5`}
@@ -54,13 +68,15 @@ const CustomDrawerContent = (props) => {
               <Avatar
                 containerStyle={tw` bg-gray-300 justify-center items-center `}
                 source={{
-                  uri: "https://s3-alpha-sig.figma.com/img/65be/568f/c2c1207c7799d895e6d7cb113b985966?Expires=1743984000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=iGUXDODfI90BJrZlJTrLvxyVXCmXhkTivTmYFXa-F2-IqtTtP20sEZ4Yh6dpktn7wamMxz-qkZsDWvkhY5w03-YH3L2ozmVplL2asAyPBTHjbiJ0Xj~Amxuf~~mEGXy7gPLGN7jZUChGRpb7Yep29Cu-nmx3ZWPtUct7GBoCW62gTplN-TMAw7I8dUb9o3oKVp51yyj0NGyNpawZNUEFnLK9U4qjR69nySSm1ZJBRHO2~ZEjux-XYzJ8AKDYQcqOgjAyMgRMBa5khzwsZSryr6thMwp4LWEheKlVSn7KBga9CHJAFiW7N2MRbwZeHFaAVflPCpSVsjkQ3rEqG~DSZg__",
+                  uri:
+                    makeImage(profileData?.image) ||
+                    "https://s3-alpha-sig.figma.com/img/65be/568f/c2c1207c7799d895e6d7cb113b985966?Expires=1743984000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=iGUXDODfI90BJrZlJTrLvxyVXCmXhkTivTmYFXa-F2-IqtTtP20sEZ4Yh6dpktn7wamMxz-qkZsDWvkhY5w03-YH3L2ozmVplL2asAyPBTHjbiJ0Xj~Amxuf~~mEGXy7gPLGN7jZUChGRpb7Yep29Cu-nmx3ZWPtUct7GBoCW62gTplN-TMAw7I8dUb9o3oKVp51yyj0NGyNpawZNUEFnLK9U4qjR69nySSm1ZJBRHO2~ZEjux-XYzJ8AKDYQcqOgjAyMgRMBa5khzwsZSryr6thMwp4LWEheKlVSn7KBga9CHJAFiW7N2MRbwZeHFaAVflPCpSVsjkQ3rEqG~DSZg__",
                 }}
               />
             </View>
             <View>
-              <Text style={tw`text-lg font-bold `}>Lana Yolo</Text>
-              <Text style={tw`text-sm text-gray-600`}>ID: 05745</Text>
+              <Text style={tw`text-lg font-bold `}>{profileData?.name}</Text>
+              {/* <Text style={tw`text-sm text-gray-600`}>ID: 05745</Text> */}
             </View>
           </View>
 
