@@ -81,7 +81,9 @@
       "requirement2": "Usa una combinación de letras, números y caracteres especiales (ej: #$!%)",
       "saveChanges": "Guardar cambios",
       "successTitle": "¡Todo listo!",
-      "successMessage": "Tu contraseña ha sido cambiada exitosamente"
+      "successMessage": "Tu contraseña ha sido cambiada exitosamente",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "oldPassword": "Contraseña anterior"
     },
     "location": {
       "enableLocation": "Habilitar ubicación",

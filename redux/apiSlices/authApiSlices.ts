@@ -107,19 +107,19 @@ const authSlice = api.injectEndpoints({
     updateProfile: builder.mutation<any, any>({
       query: (formData) => {
         const headers = {
-          'Content-Type': 'multipart/form-data',
-          'Accept': 'application/json',
+          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
         };
-        
+
         return {
-          url: '/users/auth/update-profile-by-user',
-          method: 'PATCH',
+          url: "/users/auth/update-profile-by-user",
+          method: "PATCH",
           body: formData,
           headers: headers,
           formData: true, // This tells the API to not stringify the FormData
         };
       },
-      invalidatesTags: ['user'],
+      invalidatesTags: ["user"],
     }),
     updateUserLocation: builder.mutation<any, any>({
       query: (data) => ({

@@ -35,6 +35,8 @@ import { ImageAssets } from "@/assets/images";
 import { makeImage } from "@/redux/api/baseApi";
 import { IProfile } from "../../interfaces/profile";
 
+import { useChangePasswordMutation } from "@/redux/apiSlices/authApiSlices";
+
 const profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [checkBox, setCheckBox] = useState(false);
@@ -47,6 +49,10 @@ const profile = () => {
 
   const { data, error, isLoading, refetch } = useGetProfileQuery({});
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+  const [
+    changePassword,
+    { error: changePasswordError, isLoading: isChanging },
+  ] = useChangePasswordMutation();
 
   const handleProfileUpdate = async (values: { name: string }) => {
     try {
@@ -258,84 +264,140 @@ const profile = () => {
 
       {/* ============= Modal for Updating Password =============== */}
 
-      <BottomModal _height={HIGHT * 0.4}>
-        <View style={tw` bg-black bg-opacity-50 justify-center items-center`}>
-          <View style={tw`w-full bg-white py-5  shadow-lg`}>
-            <Text
-              style={tw`px-4 text-2xl font-bold text-[#172B4D] font-NunitoSansRegular`}
-            >
-              {t("driver.profile.changePassword")}
-            </Text>
-            <Formik
-              initialValues={{ password: "" }}
-              validate={(values) => {
-                const errors = {} as any;
-                if (!values.password) {
-                  errors.password = t("auth.login.passwordRequired");
-                } else if (values.password.length < 8) {
-                  errors.password = t("auth.login.passwordLength");
-                }
-                return errors;
-              }}
-              onSubmit={(values) => {
-                console.log(values);
-              }}
-            >
-              {({ handleChange, handleBlur, values, errors, touched }) => (
-                <>
-                  <View style={tw`px-4 gap-5 mt-8`}>
-                    <View style={tw``}>
-                      <InputText
-                        placeholder={t("auth.newPassword.newPassword")}
-                        textInputProps={{
-                          secureTextEntry: !IsShow,
-                        }}
-                        placeholderStyle={tw`bg-white`}
-                        touched={touched.password}
-                        onBlur={handleBlur("password")}
-                        onChangeText={handleChange("password")}
-                        value={values.password}
-                        svgFirstIcon={IconLock}
-                        errorText={errors.password}
-                        focusSTyle={tw`border border-primary`}
-                        svgSecondOnPress={() => {
-                          setIsShow(!IsShow);
-                        }}
-                      />
-                    </View>
-                    <View style={tw``}>
-                      <InputText
-                        placeholder={t("auth.newPassword.confirmPassword")}
-                        textInputProps={{
-                          secureTextEntry: !IsShow,
-                        }}
-                        placeholderStyle={tw`bg-white`}
-                        touched={touched.password}
-                        onBlur={handleBlur("password")}
-                        onChangeText={handleChange("password")}
-                        value={values.password}
-                        svgFirstIcon={IconLock}
-                        errorText={errors.password}
-                        svgSecondIcon={IsShow ? IconOpenEye : IconCloseEye}
-                        focusSTyle={tw`border border-primary`}
-                        svgSecondOnPress={() => {
-                          setIsShow(!IsShow);
-                        }}
-                      />
-                    </View>
-                  </View>
+      <BottomModal _height={HIGHT * 0.49}>
+        <ScrollView contentContainerStyle={tw`pb-4`}>
+          <View style={tw` bg-black bg-opacity-50 justify-center items-center`}>
+            <View style={tw`w-full bg-white py-5  shadow-lg`}>
+              <Text
+                style={tw`px-4 text-2xl font-bold text-[#172B4D] font-NunitoSansRegular`}
+              >
+                {t("driver.profile.changePassword")}
+              </Text>
+              <Formik
+                initialValues={{
+                  password: "",
+                  oldPassword: "",
+                  newPassword: "",
+                  confirmNewPassword: "",
+                }}
+                validate={(values) => {
+                  const errors = {} as any;
+                  if (!values.oldPassword) {
+                    errors.oldPassword = t("auth.login.passwordRequired");
+                  } else if (values.newPassword.length < 8) {
+                    errors.newPassword = t("auth.login.passwordLength");
+                  } else if (values.confirmNewPassword) {
+                    if (values.newPassword !== values.confirmNewPassword) {
+                      errors.confirmPassword = t(
+                        "auth.newPassword.passwordMismatch"
+                      );
+                    }
+                  }
+                  return errors;
+                }}
+                onSubmit={async (values) => {
+                  const res: any = await changePassword(values);
+                  if (!res?.error?.success) {
+                    Toast.show({
+                      type: "error",
+                      text1: "Error",
+                      text2: res?.error?.message,
+                    });
+                  }
 
-                  <View style={tw`px-4 mt-14 gap-5`}>
-                    <TButton
-                      title={t("auth.newPassword.saveChanges")}
-                      onPress={() => setModalVisible(!modalVisible)}
-                    />
-                  </View>
-                </>
-              )}
-            </Formik>
+                  if (res?.data?.success) {
+                    console.log("res?.data?.success running:");
+                    Toast.show({
+                      type: "success",
+                      text1: "Success",
+                      text2: res?.data?.message,
+                    });
+                    setModalVisible(!modalVisible);
+                  }
+                }}
+              >
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                }) => (
+                  <>
+                    <View style={tw`px-4 gap-5 mt-8`}>
+                      <View style={tw``}>
+                        <InputText
+                          placeholder={t("auth.newPassword.oldPassword")}
+                          textInputProps={{
+                            secureTextEntry: !IsShow,
+                          }}
+                          placeholderStyle={tw`bg-white`}
+                          touched={touched.oldPassword}
+                          onBlur={handleBlur("oldPassword")}
+                          onChangeText={handleChange("oldPassword")}
+                          value={values.oldPassword}
+                          svgFirstIcon={IconLock}
+                          errorText={errors.oldPassword}
+                          focusSTyle={tw`border border-primary`}
+                          svgSecondOnPress={() => {
+                            setIsShow(!IsShow);
+                          }}
+                        />
+                      </View>
+                      <View style={tw``}>
+                        <InputText
+                          placeholder={t("auth.newPassword.newPassword")}
+                          textInputProps={{
+                            secureTextEntry: !IsShow,
+                          }}
+                          placeholderStyle={tw`bg-white`}
+                          touched={touched.newPassword}
+                          onBlur={handleBlur("newPassword")}
+                          onChangeText={handleChange("newPassword")}
+                          value={values.newPassword}
+                          svgFirstIcon={IconLock}
+                          errorText={errors.newPassword}
+                          focusSTyle={tw`border border-primary`}
+                          svgSecondOnPress={() => {
+                            setIsShow(!IsShow);
+                          }}
+                        />
+                      </View>
+                      <View style={tw``}>
+                        <InputText
+                          placeholder={t("auth.newPassword.confirmPassword")}
+                          textInputProps={{
+                            secureTextEntry: !IsShow,
+                          }}
+                          placeholderStyle={tw`bg-white`}
+                          touched={touched.confirmNewPassword}
+                          onBlur={handleBlur("confirmNewPassword")}
+                          onChangeText={handleChange("confirmNewPassword")}
+                          value={values.confirmNewPassword}
+                          svgFirstIcon={IconLock}
+                          errorText={errors.confirmNewPassword}
+                          svgSecondIcon={IsShow ? IconOpenEye : IconCloseEye}
+                          focusSTyle={tw`border border-primary`}
+                          svgSecondOnPress={() => {
+                            setIsShow(!IsShow);
+                          }}
+                        />
+                      </View>
+                    </View>
+
+                    <View style={tw`px-4 mt-14 gap-5`}>
+                      <TButton
+                        title={t("auth.newPassword.saveChanges")}
+                        onPress={() => handleSubmit()}
+                      />
+                    </View>
+                  </>
+                )}
+              </Formik>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </BottomModal>
     </View>
   );

@@ -50,12 +50,10 @@
       "passwordMismatch": "Passwords do not match"
     },
     "forgotPassword": {
-      "title": "Forgot Password",
       "description": "Enter the email associated with your account and we'll send an email with instructions to reset your password.",
       "email": "Email",
       "sendInstructions": "Send Instructions",
       "title": "Forgot Password?",
-      "description": "Don't worry! It happens. Please enter email associated with your account.",
       "emailPlaceholder": "Email",
       "sendCodeButton": "Send Code",
       "emailRequired": "Email is required"
@@ -74,6 +72,7 @@
     "newPassword": {
       "title": "Create New Password",
       "description": "Your new password must be different from previously used passwords.",
+      "oldPassword": "Old Password",
       "newPassword": "New Password",
       "confirmPassword": "Confirm Password",
       "resetPassword": "Reset Password",
@@ -82,7 +81,8 @@
       "requirement2": "Use a mix of letters, numbers, and special character (e.g. : #$!%)",
       "saveChanges": "Save Changes",
       "successTitle": "You're All Set!",
-      "successMessage": "Your password has been changed successfully!"
+      "successMessage": "Your password has been changed successfully!",
+      "passwordMismatch": "Passwords do not match"
     },
     "location": {
       "enableLocation": "Enable location",
